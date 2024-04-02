@@ -117,7 +117,9 @@ Route::get('assistant',function(){
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+//Route::get('/sendEmail', [EmailController::class, 'send']);
+
 
 // Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
