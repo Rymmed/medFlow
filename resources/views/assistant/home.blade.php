@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user_type.auth')
 
 @section('content')
     <div class="container">
@@ -14,7 +14,7 @@
                             </div>
                         @endif
 
-                        You are in ADMIN Dashboard!
+                        You are in Assistant Dashboard!
                     </div>
                 </div>
             </div>

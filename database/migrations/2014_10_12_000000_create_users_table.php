@@ -18,7 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('role')->default(1); // superadmin-1, admin-2, doctor-3, patient-4, assistant-5 
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('role')->default('super-admin');
             $table->rememberToken();
             $table->timestamps();
         });
