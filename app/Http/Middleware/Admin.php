@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use Auth;
 
 class Admin
 {
@@ -21,24 +21,25 @@ class Admin
         }
 
         $user = Auth::user();
-        if($user->role==2){
+        if($user->role=="admin"){
             return $next($request);
         }
 
-        if($user->role==1){
-            return redirect('/Superadmin');
+        if($user->role=="super-admin"){
+            return redirect('/superadmin');
         }
 
-        if($user->role==3){
+        if($user->role=="doctor"){
             return redirect('/doctor');
         }
 
-        if($user->role==4){
+        if($user->role=="patient"){
             return redirect('/patient');
         }
 
-        if($user->role==5){
+        if($user->role=="assistant"){
             return redirect('/assistant');
         }
+        return redirect('/login');
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\user\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
@@ -93,32 +94,37 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('superadmin',function(){
-    return view('superadmin');
-})->name('superadmin')->middleware('superadmin');
+Route::get('super-admin',function(){
+    return view('super-admin.home');
+})->name('super-admin')->middleware('super-admin');
 
 Route::get('admin',function(){
-    return view('admin');
+    return view('admin.home');
 })->name('admin')->middleware('admin');
 
 Route::get('doctor',function(){
-    return view('doctor');
+    return view('doctor.home');
 })->name('doctor')->middleware('doctor');
 
 Route::get('patient',function(){
-    return view('patient');
+    return view('patient.home');
 })->name('patient')->middleware('patient');
 
 Route::get('assistant',function(){
-    return view('assistant');
+    return view('assistant.home');
 })->name('assistant')->middleware('assistant');
 
-// Route::resource('permissions', \App\Http\Controllers\PermissionController::class);
 
 Auth::routes();
 
+Route::middleware('auth')->group(function(){
+    Route::get('user/profile', [ProfileController::class, 'index'])->name('user.profile');
+    Route::get('user/card', [ProfileController::class, 'index'])->name('user.card');
+    Route::get('user/setting', [ProfileController::class, 'index'])->name('user.setting');
+});
+
+Auth::routes(['verify' => true]);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-//Route::get('/sendEmail', [EmailController::class, 'send']);
 
 
 // Route::group(['middleware' => ['role:super-admin|admin']], function() {

@@ -4,15 +4,15 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use Auth;
 
 class Assistant
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,24 +21,25 @@ class Assistant
         }
 
         $user = Auth::user();
-        if($user->role==5){
+        if($user->role=="assistant"){
             return $next($request);
         }
 
-        if($user->role==2){
+        if($user->role=="admin"){
             return redirect('/admin');
         }
 
-        if($user->role==3){
+        if($user->role=="doctor"){
             return redirect('/doctor');
         }
 
-        if($user->role==4){
+        if($user->role=="patient"){
             return redirect('/patient');
         }
 
-        if($user->role==1){
-            return redirect('/Superadmin');
+        if($user->role=="super-admin"){
+            return redirect('/superadmin');
         }
+        return redirect('/login');
     }
 }
