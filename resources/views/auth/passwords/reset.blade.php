@@ -1,4 +1,4 @@
-@extends('layouts.user_type.guest')
+@extends('layouts.app')
 
 @section('content')
 
@@ -11,13 +11,13 @@
                             <h4 class="mb-0">Change password</h4>
                         </div>
                         <div class="card-body">
-                            <form role="form" action="/reset-password" method="POST">
+                            <form role="form" action="{{ route('password.update') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="token" value="{{ $token }}">
                                 <div>
                                     <label for="email">Email</label>
                                     <div class="">
-                                        <input id="email" name="email" type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                                        <input id="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror" value="{{ $email ?? old('email') }}" aria-label="Email" aria-describedby="email-addon">
                                         @error('email')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -26,16 +26,16 @@
                                 <div>
                                     <label for="password">New Password</label>
                                     <div class="">
-                                        <input id="password" name="password" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                                        <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
                                         @error('password')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="password_confirmation">Confirm Password</label>
+                                    <label for="password-confirm">Confirm Password</label>
                                     <div class="">
-                                        <input id="password-confirmation" name="password_confirmation" type="password" class="form-control" placeholder="Password-confirmation" aria-label="Password-confirmation" aria-describedby="Password-addon">
+                                        <input id="password-confirm" name="password_confirmation" type="password" class="form-control" placeholder="Password-confirmation" aria-label="Password-confirmation" aria-describedby="Password-addon">
                                         @error('password')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('../assets/img/curved-images/curved6.jpg')"></div>
+                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/curved-images/curved6.jpg')}}')"></div>
                     </div>
                 </div>
             </div>

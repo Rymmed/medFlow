@@ -1,4 +1,4 @@
-@extends('layouts.user_type.guest')
+@extends('layouts.app')
 
 @section('content')
 
@@ -30,12 +30,12 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="/forgot-password" method="POST" role="form text-left">
+                            <form action="{{ route('password.email') }}" method="POST" role="form text-left">
                                 @csrf
                                 <div>
                                     <label for="email">Email</label>
                                     <div class="">
-                                        <input id="email" name="email" type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                                        <input id="email" name="email" type="email" class="form-control  @error('email') is-invalid @enderror" placeholder="Email" required autocomplete="email" aria-label="Email" aria-describedby="email-addon">
                                         @error('email')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('../assets/img/curved-images/curved6.jpg')"></div>
+                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/curved-images/curved6.jpg')}}')"></div>
                     </div>
                 </div>
             </div>

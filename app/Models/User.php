@@ -22,12 +22,20 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'lastName',
+        'firstName',
         'email',
         'password',
+//        'avatar',
+//        'city',
+//        'town',
         'role',
-        'phone',
-        'location',
+        'phone_number',
+        'dob',
+        'insurance_number',
+        'cin_number',
+        'speciality',
+        'registration_number'
     ];
 
     /**
@@ -49,14 +57,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles() : BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-
-    public function permissions() : BelongsToMany
-    {
-        return $this->belongsToMany(Permission::class);
-    }
+//    public function roles() : BelongsToMany
+//    {
+//        return $this->belongsToMany(Role::class);
+//    }
+//
+//
+//    public function permissions() : BelongsToMany
+//    {
+//        return $this->belongsToMany(Permission::class);
+//    }
 }

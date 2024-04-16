@@ -34,7 +34,7 @@ class Patient
         }
 
         if($user->role=="super-admin"){
-            return redirect('/superadmin');
+            return redirect('/super-admin');
         }
 
         if($user->role=="assistant"){

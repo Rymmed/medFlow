@@ -38,7 +38,7 @@ class Assistant
         }
 
         if($user->role=="super-admin"){
-            return redirect('/superadmin');
+            return redirect('/super-admin');
         }
         return redirect('/login');
     }

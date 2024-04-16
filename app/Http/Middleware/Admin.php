@@ -26,7 +26,7 @@ class Admin
         }
 
         if($user->role=="super-admin"){
-            return redirect('/superadmin');
+            return redirect('/super-admin');
         }
 
         if($user->role=="doctor"){

@@ -27,8 +27,8 @@ class HomeController extends Controller
     {
         $user_role=Auth::user()->role;
         switch($user_role) {
-            case "super-admin":
-                return view('superadmin.home');
+            case ("super-admin"):
+                return view('super-admin.home');
                 break;
             case "admin":
                 return view('admin.home');
