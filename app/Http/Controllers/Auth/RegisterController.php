@@ -49,11 +49,19 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'lastName' => ['required', 'string', 'max:255'],
+            'firstName' => ['required', 'string', 'max:255'],
+            'email' => ['required','string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', 'max:255']
+            'role' => ['required', 'string', 'max:255'],
+            'dob' => ['required','date'],
+            'phone_number' => ['required', 'string', 'max:255'],
+//            'insurance_number' => ['required_if:role,patient', 'string', 'max:255'],
+//            'cin_number' => ['required_if:role,patient','string', 'max:255'],
+//            'speciality' => ['required_if:role,doctor', 'string', 'max:255'],
+//            'registration_number' => ['required_if:role,doctor', 'string', 'max:255'],
         ]);
     }
 
@@ -66,10 +74,17 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'lastName' => ucwords($data['lastName']),
+            'firstName' => ucwords($data['firstName']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
+            'dob' => $data['dob'],
+            'phone_number' => $data['phone_number'],
+            'insurance_number' => $data['insurance_number'],
+            'cin_number' => $data['cin_number'],
+            'speciality' => $data['speciality'],
+            'registration_number' => $data['registration_number']
         ]);
     }
 }

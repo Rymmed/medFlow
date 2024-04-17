@@ -115,11 +115,11 @@ Route::get('assistant',function(){
 })->name('assistant')->middleware('assistant');
 
 
-Auth::routes();
+
 
 Route::middleware('auth')->group(function(){
     Route::get('user/profile', [ProfileController::class, 'index'])->name('user.profile');
-    Route::get('user/card', [ProfileController::class, 'index'])->name('user.card');
+    Route::put('user/profile-update', [ProfileController::class, 'update'])->name('user.update-profile');
     Route::get('user/setting', [ProfileController::class, 'index'])->name('user.setting');
 });
 

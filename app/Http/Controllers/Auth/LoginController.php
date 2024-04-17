@@ -41,42 +41,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-//    public function login(Request $request)
-//    {
-//        $credentials = $request->validate([
-//            'email' => 'required | email',
-//            'password' => 'required',
-//        ]);
-//
-//        if(Auth::attempt($credentials)){
-//            $user_role=Auth::user()->role;
-//            switch($user_role){
-//                case 1:
-//                    return redirect('/superadmin');
-//                    break;
-//                case 2:
-//                    return redirect('/admin');
-//                    break;
-//                case 3:
-//                    return redirect('/doctor');
-//                    break;
-//                case 4:
-//                    return redirect('/patient');
-//                    break;
-//                case 5:
-//                    return redirect('/assistant');
-//                    break;
-//                default:
-//                   Auth::logout();
-//                   return redirect('/login')->with('error','oops something went wrong');
-//
-//            }
-//
-//        }else{
-//            return redirect('login')->with('error','The credentials do not match our records');
-//        }
-//
-//    }
     public function logout(Request $request)
     {
         $this->guard()->logout();

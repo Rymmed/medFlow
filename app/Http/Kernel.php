@@ -67,7 +67,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 //        'role.guard' => \App\Http\Middleware\RoleBasedGuard::class,
-        'superadmin' => \App\Http\Middleware\SuperAdmin::class,
+        'super-admin' => \App\Http\Middleware\SuperAdmin::class,
         'admin' =>  \App\Http\Middleware\Admin::class,
         'doctor' => \App\Http\Middleware\Doctor::class,
         'patient' =>  \App\Http\Middleware\Patient::class,
