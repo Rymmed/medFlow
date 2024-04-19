@@ -31,9 +31,6 @@
         @guest
             @yield('guest')
         @endguest
-        @guest
-            @yield('content')
-        @endguest
     @if(session()->has('success'))
         <div x-data="{ show: true}"
              x-init="setTimeout(() => show = false, 4000)"
@@ -51,15 +48,15 @@
     <script src="{{asset('assets/js/plugins/chartjs.min.js')}}"></script>
     @stack('rtl')
     @stack('dashboard')
-    <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-            var options = {
-                damping: '0.5'
-            }
-            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-        }
-    </script>
+{{--    <script>--}}
+{{--        var win = navigator.platform.indexOf('Win') > -1;--}}
+{{--        if (win && document.querySelector('#sidenav-scrollbar')) {--}}
+{{--            var options = {--}}
+{{--                damping: '0.5'--}}
+{{--            }--}}
+{{--            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);--}}
+{{--        }--}}
+{{--    </script>--}}
 
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
