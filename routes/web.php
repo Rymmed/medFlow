@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\user\ProfileController;
@@ -23,9 +24,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('super-admin',function(){
-    return view('super-admin.home');
-})->name('super-admin')->middleware('super-admin');
+Route::middleware(['super-admin'])->group(function () {
+    Route::get('super-admin', function () {
+        return view('super-admin.home');
+    })->name('super-admin.home');
+
+    Route::get('super-admin/admins', [AdminController::class, 'index'])->name('super-admin.admins');
+
+    Route::post('super-admin/admins/add',[AdminController::class, 'addAdmin'])->name('super-admin.admins.add');
+});
 
 Route::get('admin',function(){
     return view('admin.home');
