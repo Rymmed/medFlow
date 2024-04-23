@@ -35,7 +35,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'insurance_number',
         'cin_number',
         'speciality',
-        'registration_number'
+        'registration_number',
+        'status'
     ];
 
     /**

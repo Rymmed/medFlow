@@ -28,10 +28,10 @@ Route::middleware(['super-admin'])->group(function () {
     Route::get('super-admin', function () {
         return view('super-admin.home');
     })->name('super-admin.home');
-
-    Route::get('super-admin/admins', [AdminController::class, 'index'])->name('super-admin.admins');
-
-    Route::post('super-admin/admins/add',[AdminController::class, 'addAdmin'])->name('super-admin.admins.add');
+    Route::resource('admins', AdminController::class);
+//    Route::get('super-admin/admins', [AdminController::class, 'index'])->name('super-admin.admins');
+//
+//    Route::post('super-admin/admins/create',[AdminController::class, 'create'])->name('super-admin.admins.create');
 });
 
 Route::get('admin',function(){
@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function(){
     Route::put('user/update-password', [ProfileController::class, 'updatePassword'])->name('user.update-password');
 });
 
-Auth::routes(['verify' => true]);
+Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
