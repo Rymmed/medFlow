@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NewAdminWelcome;
+use App\Mail\NewUserWelcome;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -40,7 +40,7 @@ class AdminController extends Controller
         $admin->password = bcrypt($request->password);
         $admin->role = 'admin';
         $admin->save();
-        Mail::to($admin->email)->send(new NewAdminWelcome($admin));
+        Mail::to($admin->email)->send(new NewUserWelcome($admin));
         return redirect()->back()->with('success', 'Administrateur ajouté avec succès.');
     }
 
@@ -71,20 +71,32 @@ class AdminController extends Controller
         }
 
         // Mise à jour des données de l'utilisateur
-        $user = User::findOrFail($id);
-        $user->lastName = $request->lastName;
-        $user->firstName = $request->firstName;
-        $user->email = $request->email;
+        $admin = User::findOrFail($id);
+        $admin->lastName = $request->lastName;
+        $admin->firstName = $request->firstName;
+        $admin->email = $request->email;
 
-        $user->save();
+        $admin->save();
 
         return redirect()->back()->with('success', 'Profil utilisateur mis à jour avec succès.');
     }
 
-    public function destroy($id)
+    public function activate($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->update(['status' => true]);
+        return redirect()->route('admins.index')->with('success', 'Le compte de l\'administrateur a été activé avec succès.');
+    }
+    public function deactivate($id)
     {
         $admin = User::findOrFail($id);
         $admin->update(['status' => false]);
         return redirect()->route('admins.index')->with('success', 'Le compte de l\'administrateur a été désactivé avec succès.');
+    }
+    public function destroy($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->delete();
+        return redirect()->route('admins.index')->with('success', 'Administrateur supprimé avec succès.');
     }
 }

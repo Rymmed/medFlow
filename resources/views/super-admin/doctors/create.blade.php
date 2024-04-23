@@ -4,10 +4,10 @@
     <div class="container-fluid py-4">
         <div class="card" id="profile-form">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('Ajouter un administrateur ') }}</h6>
+                <h6 class="mb-0">{{ __('Ajouter un médecin ') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('admins.store') }}" method="POST" role="form text-left">
+                <form action="{{ route('doctors.store') }}" method="POST" role="form text-left">
                     @csrf
                     @if($errors->any())
                         <div class="mt-3  alert alert-primary alert-dismissible fade show" role="alert">
@@ -66,6 +66,22 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label for="speciality" class="form-control-label">{{ __('Spécialité') }}</label>
+                                <div class="@error('speciality')border border-danger rounded-3 @enderror">
+                                    <select class="form-select" name="speciality" id="speciality">
+                                        <option value="" disabled selected>{{ __('Sélectionner une spécialité') }}</option>
+                                        @foreach(config('specialities') as $speciality)
+                                            <option value="{{ $speciality }}">{{ $speciality }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('speciality')
+                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label for="password" class="form-control-label">{{ __('Mot de passe') }}</label>
                                 <div class="@error('password') border border-danger rounded-3 @enderror">
                                     <input class="form-control" type="password" placeholder="{{ __('Entrez votre nouveau mot de passe') }}" id="password" name="password">
@@ -86,7 +102,17 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Numéro de téléphone -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="phone_number" class="form-control-label">{{ __('Numéro de téléphone') }}</label>
+                                <div class="@error('user.phone_number')border border-danger rounded-3 @enderror">
+                                    <input class="form-control" type="text" placeholder="{{ __('Entrez le numéro de téléphone') }}" id="phone_number" name="phone_number">
+                                    @error('phone_number')
+                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="phone_number" class="form-control-label">{{ __('Numéro de téléphone') }}</label>

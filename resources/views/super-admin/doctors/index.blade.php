@@ -18,9 +18,9 @@
                     <div class="card-header pb-0">
                         <div class="d-flex flex-row justify-content-between">
                             <div>
-                                <h5 class="mb-0">Administrateurs</h5>
+                                <h5 class="mb-0">Médecins</h5>
                             </div>
-                            <a href="{{ route('admins.create') }}" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; Nouveau Admin</a>
+                            <a href="{{ route('doctors.create') }}" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; Nouveau Médecin</a>
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -56,11 +56,15 @@
                                         Prénom
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Status
-                                    </th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Email
                                     </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Spécialité
+                                    </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Status
+                                    </th>
+
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Date de Création
                                     </th>
@@ -70,23 +74,30 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($admins as $admin)
+                                @foreach($doctors as $doctor)
                                 <tr>
                                     <td>
                                         <div>
                                             <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                                         </div>
 {{--                                        <div>--}}
-{{--                                            <img src="{{ asset('path/to/admin/photos/'.$admin->avatar) }}" class="avatar avatar-sm me-3">--}}
+{{--                                            <img src="{{ asset('path/to/doctor/photos/'.$doctor->avatar) }}" class="avatar avatar-sm me-3">--}}
 {{--                                        </div>--}}
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->lastName }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $doctor->lastName }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->firstName }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $doctor->firstName }}</p>
                                     </td>
-                                    @if ($admin->status === 0)
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $doctor->email }}</p>
+                                    </td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $doctor->speciality }}</p>
+
+                                    </td>
+                                    @if ($doctor->status === 0)
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-secondary">Désactivé</span>
                                         </td>
@@ -95,18 +106,16 @@
                                             <span class="badge badge-sm bg-gradient-success">Activé</span>
                                         </td>
                                     @endif
+
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->email }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $doctor->created_at->format('d/m/Y') }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->created_at->format('d/m/Y') }}</p>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ route('admins.edit', $admin->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
+                                        <a href="{{ route('doctors.edit', $doctor->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
                                             <i class="fa fa-user-edit text-secondary"></i>
                                         </a>
-                                        @if ($admin->status === 0)
-                                        <form id="activate-status" action="{{ route('admins.activate', $admin->id) }}" method="POST" class="d-inline">
+                                        @if ($doctor->status === 0)
+                                        <form id="activate-status" action="{{ route('doctors.activate', $doctor->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PUT')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">
@@ -114,7 +123,7 @@
                                             </button>
                                         </form>
                                         @else
-                                            <form id="deactivate-status" action="{{ route('admins.deactivate', $admin->id) }}" method="POST" class="d-inline">
+                                            <form id="deactivate-status" action="{{ route('doctors.deactivate', $doctor->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PUT')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">
@@ -122,7 +131,7 @@
                                             </button>
                                         </form>
                                         @endif
-                                        <form id="deactivate-status" action="{{ route('admins.destroy', $admin->id) }}" method="POST" class="d-inline">
+                                        <form id="deactivate-status" action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Supprimer">

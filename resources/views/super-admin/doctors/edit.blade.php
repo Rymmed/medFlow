@@ -4,10 +4,10 @@
     <div class="container-fluid py-4">
         <div class="card" id="profile-form">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('Modifier Administrateur') }}</h6>
+                <h6 class="mb-0">{{ __('Modifier Médecin') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('admins.update', $admin->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('doctors.update', $doctor->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT')
                     @if($errors->any())
@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label for="lastName" class="form-control-label">{{ __('Nom') }}</label>
                                 <div class="@error('user.lastName')border border-danger rounded-3 @enderror">
-                                    <input class="form-control" value="{{ $admin->lastName }}" type="text" placeholder="{{ __('Entrez le nom') }}" id="lastName" name="lastName">
+                                    <input class="form-control" value="{{ $doctor->lastName }}" type="text" placeholder="{{ __('Entrez le nom') }}" id="lastName" name="lastName">
                                     @error('lastName')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -46,7 +46,7 @@
                             <div class="form-group">
                                 <label for="firstName" class="form-control-label">{{ __('Prénom') }}</label>
                                 <div class="@error('user.firstName')border border-danger rounded-3 @enderror">
-                                    <input class="form-control" value="{{ $admin->firstName }}"  type="text" placeholder="{{ __('Entrez le prénom') }}" id="firstName" name="firstName">
+                                    <input class="form-control" value="{{ $doctor->firstName }}"  type="text" placeholder="{{ __('Entrez le prénom') }}" id="firstName" name="firstName">
                                     @error('firstName')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -58,8 +58,24 @@
                             <div class="form-group">
                                 <label for="email" class="form-control-label">{{ __('Email') }}</label>
                                 <div class="@error('email')border border-danger rounded-3 @enderror">
-                                    <input class="form-control" value="{{ $admin->email }}"  type="email" placeholder="{{ __('Entrez l\'adresse email') }}" id="email" name="email">
+                                    <input class="form-control" value="{{ $doctor->email }}"  type="email" placeholder="{{ __('Entrez l\'adresse email') }}" id="email" name="email">
                                     @error('email')
+                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="speciality" class="form-control-label">{{ __('Spécialité') }}</label>
+                                <div class="@error('speciality')border border-danger rounded-3 @enderror">
+                                    <select class="form-select" name="speciality" id="speciality"   >
+                                        <option value="{{ $doctor->speciality }}" disabled selected>{{ $doctor->speciality }}</option>
+                                        @foreach(config('specialities') as $speciality)
+                                            <option value="{{ $speciality }}">{{ $speciality }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('speciality')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -70,7 +86,7 @@
                             <div class="form-group">
                                 <label for="phone_number" class="form-control-label">{{ __('Numéro de téléphone') }}</label>
                                 <div class="@error('user.phone_number')border border-danger rounded-3 @enderror">
-                                    <input class="form-control" value="{{ $admin->phone_number }}" type="text" placeholder="{{ __('Entrez le numéro de téléphone') }}" id="phone_number" name="phone_number">
+                                    <input class="form-control" value="{{ $doctor->phone_number}}" type="text" placeholder="{{ __('Entrez le numéro de téléphone') }}" id="phone_number" name="phone_number">
                                     @error('phone_number')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror

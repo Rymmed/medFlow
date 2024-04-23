@@ -18,9 +18,9 @@
                     <div class="card-header pb-0">
                         <div class="d-flex flex-row justify-content-between">
                             <div>
-                                <h5 class="mb-0">Administrateurs</h5>
+                                <h5 class="mb-0">Patients</h5>
                             </div>
-                            <a href="{{ route('admins.create') }}" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; Nouveau Admin</a>
+                            <a href="{{ route('patients.create') }}" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; Nouveau Patient</a>
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -70,23 +70,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($admins as $admin)
+                                @foreach($patients as $patient)
                                 <tr>
                                     <td>
                                         <div>
                                             <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                                         </div>
 {{--                                        <div>--}}
-{{--                                            <img src="{{ asset('path/to/admin/photos/'.$admin->avatar) }}" class="avatar avatar-sm me-3">--}}
+{{--                                            <img src="{{ asset('path/to/patient/photos/'.$patient->avatar) }}" class="avatar avatar-sm me-3">--}}
 {{--                                        </div>--}}
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->lastName }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->lastName }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->firstName }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->firstName }}</p>
                                     </td>
-                                    @if ($admin->status === 0)
+                                    @if ($patient->status === 0)
                                         <td class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-secondary">Désactivé</span>
                                         </td>
@@ -96,17 +96,17 @@
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->email }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->email }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $admin->created_at->format('d/m/Y') }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->created_at->format('d/m/Y') }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('admins.edit', $admin->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
+                                        <a href="{{ route('patients.edit', $patient->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
                                             <i class="fa fa-user-edit text-secondary"></i>
                                         </a>
-                                        @if ($admin->status === 0)
-                                        <form id="activate-status" action="{{ route('admins.activate', $admin->id) }}" method="POST" class="d-inline">
+                                        @if ($patient->status === 0)
+                                        <form id="activate-status" action="{{ route('patients.activate', $patient->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PUT')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">
@@ -114,7 +114,7 @@
                                             </button>
                                         </form>
                                         @else
-                                            <form id="deactivate-status" action="{{ route('admins.deactivate', $admin->id) }}" method="POST" class="d-inline">
+                                            <form id="deactivate-status" action="{{ route('patients.deactivate', $patient->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PUT')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">
@@ -122,7 +122,7 @@
                                             </button>
                                         </form>
                                         @endif
-                                        <form id="deactivate-status" action="{{ route('admins.destroy', $admin->id) }}" method="POST" class="d-inline">
+                                        <form id="deactivate-status" action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Supprimer">

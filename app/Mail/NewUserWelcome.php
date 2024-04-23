@@ -10,16 +10,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewAdminWelcome extends Mailable
+class NewUserWelcome extends Mailable
 {
     use Queueable, SerializesModels;
-    public $admin;
+    public $user;
     /**
      * Create a new message instance.
      */
-    public function __construct(User $admin)
+    public function __construct(User $user)
     {
-        $this->admin = $admin;
+        $this->user = $user;
     }
 
     /**
@@ -28,7 +28,7 @@ class NewAdminWelcome extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenue comme nouvel administrateur',
+            subject: 'Bienvenue dans notre Plateforme',
         );
     }
 
@@ -38,7 +38,7 @@ class NewAdminWelcome extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.new_admin_welcome',
+            view: 'emails.new_user_welcome',
         );
     }
 

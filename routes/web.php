@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\user\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,15 +30,26 @@ Route::middleware(['super-admin'])->group(function () {
     Route::get('super-admin', function () {
         return view('super-admin.home');
     })->name('super-admin.home');
+
     Route::resource('admins', AdminController::class);
-//    Route::get('super-admin/admins', [AdminController::class, 'index'])->name('super-admin.admins');
-//
-//    Route::post('super-admin/admins/create',[AdminController::class, 'create'])->name('super-admin.admins.create');
+    Route::put('admins/{admin}/activate', [AdminController::class, 'activate'])->name('admins.activate');
+    Route::put('admins/{admin}/deactivate', [AdminController::class, 'deactivate'])->name('admins.deactivate');
+
+    Route::resource('patients', PatientController::class);
+    Route::put('patients/{patient}/activate', [PatientController::class, 'activate'])->name('patients.activate');
+    Route::put('patients/{patient}/deactivate', [PatientController::class, 'deactivate'])->name('patients.deactivate');
+
+    Route::resource('doctors', DoctorController::class);
+    Route::put('doctors/{doctor}/activate', [DoctorController::class, 'activate'])->name('doctors.activate');
+    Route::put('doctors/{doctor}/deactivate', [DoctorController::class, 'deactivate'])->name('doctors.deactivate');
 });
 
-Route::get('admin',function(){
-    return view('admin.home');
-})->name('admin')->middleware('admin');
+Route::middleware(['admin'])->group(function () {
+    Route::get('admin', function () {
+        return view('admin.home');
+    })->name('admin.home');
+
+});
 
 Route::get('doctor',function(){
     return view('doctor.home');
@@ -59,7 +72,7 @@ Route::middleware('auth')->group(function(){
     Route::put('user/update-password', [ProfileController::class, 'updatePassword'])->name('user.update-password');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
