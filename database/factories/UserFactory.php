@@ -14,13 +14,26 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $roles = ['super-admin', 'admin', 'doctor', 'patient', 'assistant'];
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            // 'email_verified_at' => now(),
-            'role' => fake()->unique()->numberBetween(1,5),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'lastName' => $this->faker->lastName,
+            'firstName' => $this->faker->firstName,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('password'), // You can replace 'password' with any default password you want
+            'email_verified_at' => now(),
+            'role' => $this->faker->randomElement($roles),
+            'avatar' => null,
+            'city' => $this->faker->city,
+            'town' => $this->faker->streetName,
+            'dob' => $this->faker->date,
+            'phone_number' => $this->faker->phoneNumber,
+            'insurance_number' => $this->faker->numerify('##########'),
+            'cin_number' => $this->faker->numerify('#########'),
+            'speciality' => $this->faker->word,
+            'registration_number' => $this->faker->numerify('##########'),
             'remember_token' => Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 

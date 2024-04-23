@@ -25,9 +25,21 @@ class ProfileController extends Controller
         return view('user.profile');
     }
 
-    public function update(UpdateProfileRequest $request)
+    public function update(Request $request)
     {
         $user = auth()->user();
+        $request->validate([
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'email' => 'required', 'email', Rule::unique('users')->ignore($user->id),
+            'password' => 'nullable|min:8|confirmed',
+            'phone_number' => 'required',
+            'dob' => 'required|date',
+            'insurance_number' => 'nullable',
+            'cin_number' => 'nullable',
+            'speciality' => 'nullable',
+            'registration_number' => 'nullable',
+        ]);
 
         $user->update([
             'lastName' => $request->lastName,

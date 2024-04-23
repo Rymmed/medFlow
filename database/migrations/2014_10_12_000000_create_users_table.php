@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('cin_number')->nullable();
             $table->string('speciality')->nullable();
             $table->string('registration_number')->nullable();
+            $table->boolean('status')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

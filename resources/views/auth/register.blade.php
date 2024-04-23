@@ -91,7 +91,12 @@
                                                 <div id="doctorFields" class="specific-fields" style="display: none;">
                                                     <label for="speciality">{{ __('Spécialité') }}</label>
                                                     <div class="mb-3">
-                                                        <input type="text" class="form-control" name="speciality" id="speciality" placeholder="{{ __('') }}">
+                                                        <select class="form-select" name="speciality" id="speciality">
+                                                            <option value="" disabled selected>{{ __('Sélectionner une spécialité') }}</option>
+                                                            @foreach(config('specialities') as $speciality)
+                                                                <option value="{{ $speciality }}">{{ $speciality }}</option>
+                                                            @endforeach
+                                                        </select>
                                                         @error('speciality')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
