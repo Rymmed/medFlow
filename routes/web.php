@@ -26,7 +26,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['super-admin'])->group(function () {
+Route::middleware(['has.role:super-admin'])->group(function () {
     Route::get('super-admin', function () {
         return view('super-admin.home');
     })->name('super-admin.home');
@@ -34,6 +34,17 @@ Route::middleware(['super-admin'])->group(function () {
     Route::resource('admins', AdminController::class);
     Route::put('admins/{admin}/activate', [AdminController::class, 'activate'])->name('admins.activate');
     Route::put('admins/{admin}/deactivate', [AdminController::class, 'deactivate'])->name('admins.deactivate');
+
+});
+
+Route::middleware(['has.role:admin'])->group(function () {
+    Route::get('admin', function () {
+        return view('admin.home');
+    })->name('admin.home');
+
+});
+
+Route::middleware(['has.role:super-admin,admin'])->group(function () {
 
     Route::resource('patients', PatientController::class);
     Route::put('patients/{patient}/activate', [PatientController::class, 'activate'])->name('patients.activate');
@@ -44,27 +55,26 @@ Route::middleware(['super-admin'])->group(function () {
     Route::put('doctors/{doctor}/deactivate', [DoctorController::class, 'deactivate'])->name('doctors.deactivate');
 });
 
-Route::middleware(['admin'])->group(function () {
-    Route::get('admin', function () {
-        return view('admin.home');
-    })->name('admin.home');
+Route::middleware(['has.role:doctor'])->group(function () {
+    Route::get('doctor', function () {
+        return view('doctor.home');
+    })->name('doctor.home');
 
 });
 
-Route::get('doctor',function(){
-    return view('doctor.home');
-})->name('doctor')->middleware('doctor');
+Route::middleware(['has.role:patient'])->group(function () {
+    Route::get('patient', function () {
+        return view('patient.home');
+    })->name('patient.home');
 
-Route::get('patient',function(){
-    return view('patient.home');
-})->name('patient')->middleware('patient');
+});
 
-Route::get('assistant',function(){
-    return view('assistant.home');
-})->name('assistant')->middleware('assistant');
+Route::middleware(['has.role:assistant'])->group(function () {
+    Route::get('assistant', function () {
+        return view('assistant.home');
+    })->name('assistant.home');
 
-
-
+});
 
 Route::middleware('auth')->group(function(){
     Route::get('user/profile', [ProfileController::class, 'index'])->name('user.profile');

@@ -90,7 +90,30 @@
                     </a>
                 </li>
             @elseif((auth()->user()->role === 'admin'))
-
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('patients') ? 'active' : '') }}" href="{{ route('patients.index') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-bed ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Patients</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('doctors') ? 'active' : '') }}" href="{{ route('doctors.index') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-stethoscope ps-2 pe-2 text-center text-dark {{ (Request::is('doctors') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Médecins</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('assistants') ? 'active' : '') }}" href="{{ url('assistants.index') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('assistants') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Assistants</span>
+                    </a>
+                </li>
             @elseif(auth()->user()->role === 'doctor')
                 <!-- Items for doctor -->
                 <li class="nav-item pb-2">
