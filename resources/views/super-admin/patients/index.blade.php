@@ -86,15 +86,9 @@
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $patient->firstName }}</p>
                                     </td>
-                                    @if ($patient->status === 0)
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-secondary">Désactivé</span>
-                                        </td>
-                                    @else
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm bg-gradient-success">Activé</span>
-                                        </td>
-                                    @endif
+                                    <td class="align-middle text-center text-sm">
+                                        <x-status-badge :status="$patient->status" />
+                                    </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $patient->email }}</p>
                                     </td>
@@ -122,10 +116,10 @@
                                             </button>
                                         </form>
                                         @endif
-                                        <form id="deactivate-status" action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="d-inline">
+                                        <form id="destroy" action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Supprimer">
+                                            <button type="button" class="mx-3 border-0" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-original-title="Supprimer">
                                                 <i class="fa fa-trash text-secondary"></i>
                                             </button>
                                         </form>
@@ -139,15 +133,32 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel">Confirmer la suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir supprimer ce patient ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn bg-gradient-danger" id="confirmDelete">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
-        document.getElementById('status').addEventListener('click', function() {
+        document.getElementById('deactivate-status').addEventListener('click', function() {
             document.getElementById('activate-status').style.display = 'none';
             document.getElementById('deactivate-status').style.display = 'block';
         });
-        document.getElementById('activate-status').addEventListener('click', function() {
-            document.getElementById('deactivate-status').style.display = 'none';
-            document.getElementById('activate-status').style.display = 'block';
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            const form = document.querySelector('#destroy');
+            form.submit();
         });
     </script>
 @endsection

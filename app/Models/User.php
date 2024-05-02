@@ -4,7 +4,8 @@ namespace App\Models;
 
  use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+ use Illuminate\Database\Eloquent\Relations\BelongsTo;
+ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -36,7 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'cin_number',
         'speciality',
         'registration_number',
-        'status'
+        'status',
+        'doctor_id'
     ];
 
     /**
@@ -58,14 +60,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-//    public function roles() : BelongsToMany
-//    {
-//        return $this->belongsToMany(Role::class);
-//    }
-//
-//
-//    public function permissions() : BelongsToMany
-//    {
-//        return $this->belongsToMany(Permission::class);
-//    }
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    public function patients(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id');
+    }
+    public function assistants()
+    {
+        return $this->hasMany(User::class, 'doctor_id');
+    }
 }

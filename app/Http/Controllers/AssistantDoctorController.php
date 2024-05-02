@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
-class AssistantController extends Controller
+class AssistantDoctorController extends Controller
 {
     public function index()
     {
-        $assistants = User::where('role', 'assistant')->get();
-        return view('super-admin.assistants.index', compact('assistants'));
+        $doctor = auth()->user();
+        $assistants = $doctor->assistants;
+        return view('doctor.assistants.index', compact('assistants'));
     }
 
     public function create()
     {
-        $doctors = User::where('role', 'doctor')->get();
-        return view('super-admin.assistants.create', compact('doctors'));
+        return view('doctor.assistants.create');
     }
     public function store(Request $request)
     {
@@ -41,7 +41,7 @@ class AssistantController extends Controller
         $assistant->email = $request->email;
         $assistant->password = Hash::make($request->password);
         $assistant->role = 'assistant';
-        $assistant->doctor_id = $request->input('doctor_id');
+        $assistant->doctor_id = auth()->user()->id;
         $assistant->save();
         Mail::to($assistant->email)->send(new NewUserWelcome($assistant));
         return redirect()->back()->with('success', 'Assistant ajouté avec succès.');
@@ -50,14 +50,13 @@ class AssistantController extends Controller
     public function show($id)
     {
         $assistant = User::findOrFail($id);
-        return view('super-admin.assistants.show', compact('assistant'));
+        return view('doctor.assistants.show', compact('assistant'));
     }
 
     public function edit($id)
     {
         $assistant = User::findOrFail($id);
-        $doctors = User::where('role', 'doctor')->get();
-        return view('super-admin.assistants.edit', compact(['assistant', 'doctors']));
+        return view('doctor.assistants.edit', compact('assistant'));
     }
 
     public function update(Request $request, $id)
@@ -78,7 +77,6 @@ class AssistantController extends Controller
         $assistant->lastName = $request->lastName;
         $assistant->firstName = $request->firstName;
         $assistant->email = $request->email;
-        $assistant->doctor_id = $request->input('doctor_id');
 
         $assistant->save();
 
@@ -89,18 +87,18 @@ class AssistantController extends Controller
     {
         $assistant = User::findOrFail($id);
         $assistant->update(['status' => true]);
-        return redirect()->route('assistants.index')->with('success', 'Le compte du assistant a été activé avec succès.');
+        return redirect()->route('doctor-assistants.index')->with('success', 'Le compte du assistant a été activé avec succès.');
     }
     public function deactivate($id)
     {
         $assistant = User::findOrFail($id);
         $assistant->update(['status' => false]);
-        return redirect()->route('assistants.index')->with('success', 'Le compte du assistant a été désactivé avec succès.');
+        return redirect()->route('doctor-assistants.index')->with('success', 'Le compte du assistant a été désactivé avec succès.');
     }
     public function destroy($id)
     {
         $assistant = User::findOrFail($id);
         $assistant->delete();
-        return redirect()->route('assistants.index')->with('success', 'assistant supprimé avec succès.');
+        return redirect()->route('doctor-assistants.index')->with('success', 'assistant supprimé avec succès.');
     }
 }
