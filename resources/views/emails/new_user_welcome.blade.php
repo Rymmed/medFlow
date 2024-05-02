@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue comme nouvel administrateur</title>
+    <title>Bienvenue</title>
 </head>
 <body>
 <p>Bonjour {{ $user->firstName }} {{ $user->lastName }},</p>
 
-<p>Merci de vous être inscrit comme nouvel administrateur sur notre site.</p>
+<p>Merci de vous être inscrit sur notre site.</p>
 
 <p>Voici vos informations de connexion :</p>
 
