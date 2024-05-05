@@ -1,9 +1,6 @@
 @extends('layouts.user_type.guest')
 
 @section('content')
-
-    <main class="main-content  mt-0">
-        <section>
             <div class="page-header min-vh-75">
                 <div class="container">
                     <div class="row">
@@ -72,7 +69,7 @@
                                                         <option value="doctor">Médecin</option>
                                                     </select>
                                                 </div>
-                                                <div id="patientFields" class="specific-fields" style="display: none;">
+                                                <div id="patientFields" class="specific-fields" style="display: block;">
                                                     <label for="cin_number">{{ __('Numéro de CIN') }}</label>
                                                     <div class="mb-3">
                                                         <input type="text" class="form-control" name="cin_number" id="cin_number" placeholder="{{ __('Entrez votre numéro d\'identité nationnale') }}">
@@ -80,7 +77,7 @@
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
                                                     </div>
-                                                    <label for="insurance_number">{{ __('Numéro d\'assurance') }}</label>
+                                                    <label for="insurance_number">{{ __('N° d\'assurance') }}</label>
                                                     <div class="mb-3">
                                                         <input type="text" class="form-control" name="insurance_number" id="insurance_number" placeholder="{{ __('Entrez votre numéro d\'assurance') }}">
                                                         @error('insurance_number')
@@ -101,7 +98,7 @@
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
                                                     </div>
-                                                    <label for="registration_number">{{ __('Numéro d\'inscription à l\'ordre des médecins') }}</label>
+                                                    <label for="registration_number">{{ __('N° d\'inscription à l\'ordre des médecins') }}</label>
                                                     <div class="mb-3">
                                                         <input type="text" class="form-control" name="registration_number" id="registration_number" placeholder="{{ __('Entrez votre numéro d\'inscription dans l\'ordre des médecins') }}">
                                                         @error('registration_number')
@@ -129,14 +126,12 @@
 
                         <div class="col-md-6">
                             <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/curved-images/curved6.jpg')}}')"></div>
+                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/bg/pngtree.jpg')}}')"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
     <script>
         document.getElementById('role').addEventListener('change', function() {
             var role = this.value;
