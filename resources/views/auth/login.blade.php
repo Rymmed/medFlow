@@ -28,22 +28,23 @@
                                     </div>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
-                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <label class="form-check-label" for="rememberMe">{{__('Se souvenir de moi')}}</label>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
+                                        <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">{{__('Se connecter')}}</button>
                                     </div>
                                 </form>
                             </div>
                             <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                 @if (Route::has('password.request'))
-                                    <small class="text-muted">Forgot you password? Reset you password
-                                        <a href="{{ route('password.request') }}" class="text-info text-gradient font-weight-bold">here</a>
+                                    <small class="text-muted">{{__('Mot de passe oublié ?')}} {{__('Réinitialiser votre mot
+                                        de passe ')}}
+                                        <a href="{{ route('password.request') }}" class="text-info text-gradient font-weight-bold">{{__('ici')}}</a>
                                     </small>
                                 @endif
                                 <p class="mb-4 text-sm mx-auto">
-                                    Don't have an account?
-                                    <a href="{{ route('register')}}" class="text-info text-gradient font-weight-bold">Sign up</a>
+                                    Vous n’avez pas de compte ?
+                                    <a href="{{ route('register')}}" class="text-info text-gradient font-weight-bold">{{__('S’inscrire')}}</a>
                                 </p>
                             </div>
                         </div>

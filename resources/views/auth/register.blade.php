@@ -110,15 +110,15 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign up</button>
+                                            <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">{{__('S’inscrire')}}</button>
                                         </div>
                                     </form>
                                 </div>
 
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        Already have an account?
-                                        <a href="{{ route('login')}}" class="text-info text-gradient font-weight-bold">Sign in</a>
+                                        {{__('Vous avez déjà un compte ?')}}
+                                        <a href="{{ route('login')}}" class="text-info text-gradient font-weight-bold">{{__('Se connecter')}}</a>
                                     </p>
                                 </div>
                             </div>

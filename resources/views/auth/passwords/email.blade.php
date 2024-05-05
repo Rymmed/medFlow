@@ -26,7 +26,7 @@
                             </div>
                         @endif
                         <div class="card-header pb-0 text-left bg-transparent">
-                            <h4 class="mb-0">Forgot your password? Enter your email here</h4>
+                            <h4 class="mb-0">{{__('Mot de passe oublié ?')}} {{ __('Entrez votre adresse email') }} {{__('ici')}}</h4>
                         </div>
                         <div class="card-body">
 
@@ -35,7 +35,7 @@
                                 <div>
                                     <label for="email">Email</label>
                                     <div class="">
-                                        <input id="email" name="email" type="email" class="form-control  @error('email') is-invalid @enderror" placeholder="Email" required autocomplete="email" aria-label="Email" aria-describedby="email-addon">
+                                        <input id="email" name="email" type="email" class="form-control  @error('email') is-invalid @enderror" placeholder="{{ __('Entrez votre adresse email') }}" required autocomplete="email" aria-label="Email" aria-describedby="email-addon">
                                         @error('email')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
