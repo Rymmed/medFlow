@@ -6,14 +6,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
  use Illuminate\Database\Eloquent\Relations\BelongsTo;
  use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+ use Illuminate\Database\Eloquent\Relations\HasMany;
+ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;
 
-class User extends Authenticatable implements MustVerifyEmail
+ /**
+  * @method static where(string $string, string $string1)
+  */
+ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -27,12 +31,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'firstName',
         'email',
         'password',
-//        'avatar',
-//        'city',
-//        'town',
+        'avatar',
+        'city',
+        'town',
         'role',
         'phone_number',
         'dob',
+        'gender',
         'insurance_number',
         'cin_number',
         'speciality',
@@ -69,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id');
     }
-    public function assistants()
+    public function assistants(): HasMany
     {
         return $this->hasMany(User::class, 'doctor_id');
     }
