@@ -28,14 +28,14 @@
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{ __('Email') }}</label>
+                                                <label>{{__('Email')}}</label>
                                                 <div class="mb-3">
                                                     <input type="email" class="form-control" name="email" id="email" placeholder="{{ __('Entrez votre adresse email') }}" aria-label="Email" aria-describedby="email-addon">
                                                     @error('email')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>Mot de passe</label>
+                                                <label>{{__('Mot de passe')}}</label>
                                                 <div class="mb-3">
                                                     <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
                                                     @error('password')

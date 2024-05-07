@@ -33,7 +33,7 @@
                             <form action="{{ route('password.email') }}" method="POST" role="form text-left">
                                 @csrf
                                 <div>
-                                    <label for="email">Email</label>
+                                    <label for="email">{{__('Email')}}</label>
                                     <div class="">
                                         <input id="email" name="email" type="email" class="form-control  @error('email') is-invalid @enderror" placeholder="{{ __('Entrez votre adresse email') }}" required autocomplete="email" aria-label="Email" aria-describedby="email-addon">
                                         @error('email')

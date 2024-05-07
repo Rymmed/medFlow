@@ -16,11 +16,14 @@
     <!-- Nucleo Icons -->
     <link href="{{asset('assets/css/nucleo-icons.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
+
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="{{asset('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="{{asset('assets/css/soft-ui-dashboard.css?v=1.0.3')}}" rel="stylesheet" />
+    <!--calendar -->
+
     <!-- Scripts -->
 {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
@@ -46,7 +49,9 @@
     <script src="{{asset('assets/js/plugins/smooth-scrollbar.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins/fullcalendar.min.js')}}"></script>
     <script src="{{asset('assets/js/plugins/chartjs.min.js')}}"></script>
-    @stack('rtl')
+    <!--calendar -->
+
+{{--    @stack('rtl')--}}
     @stack('dashboard')
 {{--    <script>--}}
 {{--        var win = navigator.platform.indexOf('Win') > -1;--}}

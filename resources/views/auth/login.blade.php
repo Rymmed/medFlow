@@ -7,19 +7,19 @@
                     <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
                         <div class="card card-plain mt-8">
                             <div class="card-header pb-0 text-left bg-transparent">
-                                <h3 class="font-weight-bolder text-info text-gradient">Bienvenue</h3>
+                                <h3 class="font-weight-bolder text-info text-gradient">{{ __('Bienvenue') }}</h3>
                             </div>
                             <div class="card-body">
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
-                                    <label>Email</label>
+                                    <label>{{__('Email')}}</label>
                                     <div class="mb-3">
                                         <input type="email" class="form-control" name="email" id="email" placeholder="{{ __('Entrez votre adresse email') }}" aria-label="Email" aria-describedby="email-addon">
                                         @error('email')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    <label>Mot de passe</label>
+                                    <label>{{__('Mot de passe')}}</label>
                                     <div class="mb-3">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
                                         @error('password')
@@ -43,7 +43,7 @@
                                     </small>
                                 @endif
                                 <p class="mb-4 text-sm mx-auto">
-                                    Vous n’avez pas de compte ?
+                                    {{__('Vous n’avez pas de compte ?')}}
                                     <a href="{{ route('register')}}" class="text-info text-gradient font-weight-bold">{{__('S’inscrire')}}</a>
                                 </p>
                             </div>
