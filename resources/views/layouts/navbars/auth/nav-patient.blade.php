@@ -1,26 +1,26 @@
 <!-- Navbar Dark -->
-<nav class="navbar navbar-main navbar-expand-lg  bg-gradient-dark px-0  shadow-none border-radius-sm" id="navbarBlur" navbar-scroll="false">
+<nav class="navbar navbar-main navbar-expand-lg navbar-dark  bg-gradient-blue px-0  shadow-none border-radius-sm" id="navbarBlur" navbar-scroll="false">
     <div class="container-fluid py-1 px-3">
         <a class="navbar-brand text-white" href="" rel="tooltip" title="Designed and Coded by Envast" data-placement="bottom" target="_blank">
             {{ config('app.name', 'Laravel') }}
         </a>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link text-white {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
-                    <i style="font-size: 1rem;" class="fas fa-solid fa-house-user ps-1 pe-1 text-center text-white {{ (Request::is('home') ? 'text-gray-200' : 'text-primary') }}"></i>
-                    <span class="nav-link-text ms-1 d-sm-inline d-none">Tableau de bord</span>
+                <a class="nav-link  {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
+{{--                    <i style="font-size: 1rem;" class="fas fa-solid fa-house-user ps-1 pe-1 text-center " aria-hidden="true"></i>--}}
+                    <span class="nav-link-text ms-1 d-sm-inline d-none text-white font-weight-normal {{ (Request::is('home') ? 'font-weight-bolder' : 'font-weight-normal') }}">Tableau de bord</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white {{ (Request::is('user/profile') ? 'active' : '') }} " href="{{ route('user.profile') }}">
-                    <i style="font-size: 1rem;" class="fa fa-solid fa-id-card"></i>
-                    <span class="nav-link-text ms-1 d-sm-inline d-none">Mon Profil</span>
+                <a class="nav-link {{ (Request::is('user/profile') ? 'active' : '') }} " href="{{ route('user.profile') }}">
+{{--                    <i style="font-size: 1rem;" class="fa fa-solid fa-id-card"></i>--}}
+                    <span class="nav-link-text ms-1 d-sm-inline d-none text-white font-weight-normal {{ (Request::is('user/profile') ? 'font-weight-bolder' : 'font-weight-normal') }}">Mon Profil</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white {{ (Request::is('user/profile') ? 'active' : '') }} " href="{{ route('user.profile') }}">
-                    <i class="fas fa-search" aria-hidden="true"></i></span>
-                    <span class="nav-link-text ms-1 d-sm-inline d-none">Trouver un médecin</span>
+                <a class="nav-link  {{ (Request::is('user/profile') ? 'active' : '') }} " href="{{ route('user.profile') }}">
+{{--                    <i class="fas fa-search" aria-hidden="true"></i></span>--}}
+                    <span class="nav-link-text ms-1 d-sm-inline d-none text-white font-weight-normal {{ (Request::is('user/profile') ? 'font-weight-bolder' : 'font-weight-normal') }}">Trouver un médecin</span>
                 </a>
             </li>
         </ul>
@@ -39,12 +39,12 @@
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item px-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-white p-0">
-                        <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                        <i class="fa fa-cog text-white fixed-plugin-button-nav cursor-pointer"></i>
                     </a>
                 </li>
                 <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                    <a href="javascript:" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-bell cursor-pointer"></i>
+                    <a href="javascript:" class="nav-link  p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell text-white cursor-pointer"></i>
                     </a>
 {{--                    <ul class="dropdown-menu dropdown-menu-right px-2 py-3 ms-n4" aria-labelledby="dropdownMenuButton">--}}
 {{--                        <li class="mb-2">--}}
@@ -116,10 +116,10 @@
 {{--                    </ul>--}}
                 </li>
                 <li class="nav-item d-flex align-items-center">
-                    <a href="{{ route('logout') }}" class="nav-link text-white font-weight-bold px-0" onclick="event.preventDefault();
+                    <a href="{{ route('logout') }}" class="nav-link font-weight-bold px-0" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                        <i class="fas fa-sign-out-alt me-sm-1"></i>
-                        <span class="d-sm-inline d-none">Sign Out</span>
+                        <i class="fas fa-sign-out-alt text-white me-sm-1"></i>
+                        <span class="d-sm-inline d-none text-white">Sign Out</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf

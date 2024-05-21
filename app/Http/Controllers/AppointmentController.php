@@ -4,75 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    /**
-     *
-     * @param  Request  $request
-     * @return JsonResponse
-     */
-    public function searchDoctors(Request $request): JsonResponse
+
+    public function index($doctor_id)
     {
-
-        $speciality = $request->input('speciality');
-        $city = $request->input('city');
-        $country = $request->input('country');
-        $town = $request->input('town');
-        $firstName = $request->input('firstName');
-        $lastName = $request->input('lastName');
-
-        $doctors = User::where('role', 'doctor');
-
-        if ($speciality) {
-            $doctors->where('speciality', $speciality);
-        }
-
-        if ($city) {
-            $doctors->where('city', $city);
-        }
-
-        if ($country) {
-            $doctors->where('country', $country);
-        }
-
-        if ($town) {
-            $doctors->where('region', $town);
-        }
-
-        if ($firstName) {
-            $doctors->where('name', 'like', '%' . $firstName . '%');
-        }
-        if ($lastName) {
-            $doctors->where('name', 'like', '%' . $lastName . '%');
-        }
-
-        $results = $doctors->get();
-
-        return response()->json($results);
+        return view('appointment.request', compact('doctor_id'));
     }
 
     /**
      * Envoyer une demande de rendez-vous au médecin.
      *
      * @param int $doctorId
-     * @param  Request  $request
-     * @return JsonResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function sendAppointmentRequest(int $doctorId, Request $request): JsonResponse
+    public function sendAppointmentRequest(Request $request): RedirectResponse
     {
-        $appointment = new Appointment();
-        $appointment->doctor_id = $doctorId;
-        $appointment->patient_id = Auth::id(); // ID du patient connecté
-        $appointment->date = $request->input('date');
-        $appointment->time = $request->input('time');
-        $appointment->consultation_reason = $request->input('reason');
-        $appointment->consultation_type = $request->input('type');
-        $appointment->save();
+        $doctor_id = $request->doctor_id;
+        $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'start_date' => 'required|date|after_or_equal:today',
+            'finish_date' => 'required|date|after:start_date',
+            'consultation_reason' => 'required|string|max:255',
+            'consultation_type' => 'required|in:En ligne,En présentiel,Service à domicile',
+        ]);
 
-        return response()->json(['message' => 'Demande de rendez-vous envoyée avec succès']);
+        $appointment = Appointment::create([
+            'patient_id' => $request->patient_id,
+            'doctor_id' => $doctor_id,
+            'start_date' => $request->start_date,
+            'finish_date' => $request->finish_date,
+            'consultation_reason' => $request->consultation_reason,
+            'consultation_type' => $request->consultation_type,
+            'status' => 'En attente',
+        ]);
+        return redirect()->back()->with('success', 'La demande de rendez-vous a été envoyée avec succès.');
     }
+
 }

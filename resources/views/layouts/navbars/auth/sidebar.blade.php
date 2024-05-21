@@ -1,10 +1,24 @@
 <aside class="sidenav navbar navbar-vertical bg-white navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
   <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-    <a class="align-items-center d-flex m-0 navbar-brand text-wrap" href="">
-        <img src="{{asset('assets/img/logo-ct.png')}}" class="navbar-brand-img h-100" alt="...">
-        <span class="ms-3 font-weight-bold">{{ config('app.name', 'Laravel') }}</span>
-    </a>
+    <div class="row">
+        <div class="col-8">
+            <a class="align-items-center d-flex m-0 navbar-brand text-wrap" href="">
+                <img src="{{asset('assets/img/medi-blue.png')}}" class="navbar-brand-img h-100" alt="...">
+                <span class="ms-3 text-lg font-weight-bold text-light-blue">{{ config('app.name', 'Laravel') }}</span>
+            </a>
+        </div>
+{{--        <div class="col-4 nav-item d-xl ps-3 d-flex align-items-center">--}}
+{{--            <a href="javascript:" class="nav-link text-body p-0 ps-3" id="iconNavbarSidenav2">--}}
+{{--                <div class="sidenav-toggler-inner">--}}
+{{--                    <i class="sidenav-toggler-line"></i>--}}
+{{--                    <i class="sidenav-toggler-line"></i>--}}
+{{--                    <i class="sidenav-toggler-line"></i>--}}
+{{--                </div>--}}
+{{--            </a>--}}
+{{--        </div>--}}
+    </div>
+
   </div>
   <hr class="horizontal dark mt-0">
     <div class="w-auto" id="sidenav-collapse-main">
@@ -116,6 +130,13 @@
             @elseif(auth()->user()->role === 'doctor')
                 <!-- Items for doctor -->
                 <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}" href="{{ route('myCalendar.index') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('myCalendar') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Mon Calendrier</span>
+                    </a>
+                </li>
                 <li class="nav-item pb-2">
                     <a class="nav-link {{ (Request::is('assistants') ? 'active' : '') }}" href="{{ route('doctor-assistants.index') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -123,7 +144,6 @@
                         </div>
                         <span class="nav-link-text ms-1">Assistants</span>
                     </a>
-                </li>
                 </li>
             @elseif(auth()->user()->role === 'patient')
                 <!-- Items for patient -->

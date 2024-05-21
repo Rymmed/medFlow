@@ -27,8 +27,7 @@
   --bs-danger: #ea0606;
   --bs-light: #e9ecef;
   --bs-dark: #344767;
-  --bs-white: #fff;
-  --bs-font-sans-serif: "Open Sans";
+  --bs-font-sans-serif: "Josefin Sans";
   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
 }
@@ -16109,7 +16108,7 @@ textarea.form-control-lg {
   padding: 1.5rem;
 }
 .card .card-body {
-  font-family: "Open Sans";
+  font-family: "Josefin Sans";
   padding: 1.5rem;
 }
 .card.card-plain {
@@ -19202,7 +19201,7 @@ p {
 }
 
 .text-sans-serif {
-  font-family: "Open Sans" !important;
+    font-family: "Josefin Sans" ,sans-serif !important;
 }
 
 .text-monospace {

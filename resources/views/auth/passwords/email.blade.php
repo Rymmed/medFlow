@@ -42,7 +42,8 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Recover your password</button>
+                                    <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">{{ __('Récupérer votre
+                                        mot de passe') }}</button>
                                 </div>
                             </form>
                         </div>

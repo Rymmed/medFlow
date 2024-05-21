@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AssistantDoctorController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\user\ProfileController;
@@ -69,14 +71,21 @@ Route::middleware(['has.role:doctor'])->group(function () {
     Route::resource('doctor-assistants', AssistantDoctorController::class);
     Route::put('doctor-assistants/{assistant}/activate', [AssistantDoctorController::class, 'activate'])->name('doctor-assistants.activate');
     Route::put('doctor-assistants/{assistant}/deactivate', [AssistantDoctorController::class, 'deactivate'])->name('doctor-assistants.deactivate');
+
+    Route::get('myCalendar', [FullCalendarController::class, 'index'])->name('myCalendar.index');
 });
 
 Route::middleware(['has.role:patient'])->group(function () {
     Route::get('patient', function () {
         return view('patient.home');
     })->name('patient.home');
-
 });
+
+
+Route::get('search', [DoctorController::class, 'search'])->name('search');
+Route::post('search_doctors', [DoctorController::class, 'searchDoctors'])->name('search_doctors');
+Route::get('/appointment/request/{doctor_id}', [AppointmentController::class, 'index'])->name('appointment.request');
+Route::post('/appointment/send-request', [AppointmentController::class, 'sendAppointmentRequest'])->name('appointment.sendRequest');
 
 Route::middleware(['has.role:assistant'])->group(function () {
     Route::get('assistant', function () {
@@ -94,34 +103,3 @@ Route::middleware('auth')->group(function(){
 Auth::routes(['verify' => true]);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-
-// Route::group(['middleware' => ['role:super-admin|admin']], function() {
-
-//     Route::resource('permissions', App\Http\Controllers\PermissionController::class);
-//     Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
-
-//     Route::resource('roles', App\Http\Controllers\RoleController::class);
-//     Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy']);
-//     Route::get('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'addPermissionToRole']);
-//     Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
-
-//     Route::resource('users', App\Http\Controllers\UserController::class);
-//     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
-
-// });
-
-// Route::group(['middleware' => ['auth', 'role.guard:admin']], function () {
-
-// });
-
-// Route::group(['middleware' => ['auth', 'role.guard:doctor']], function () {
-
-// });
-
-// Route::group(['middleware' => ['auth', 'role.guard:patient']], function () {
-
-// });
-
-// Route::group(['middleware' => ['auth', 'role.guard:assistant']], function () {
-
-// });

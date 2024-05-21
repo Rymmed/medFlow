@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Mail\NewUserWelcome;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class DoctorController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $doctors = User::where('role', 'doctor')->get();
         return view('super-admin.doctors.index', compact('doctors'));
     }
 
-    public function create()
+    public function create(): View
     {
         return view('super-admin.doctors.create');
     }
@@ -47,13 +50,13 @@ class DoctorController extends Controller
         return redirect()->back()->with('success', 'Médecin ajouté avec succès.');
     }
 
-    public function show($id)
+    public function show($id): View
     {
         $doctor = User::findOrFail($id);
         return view('super-admin.doctors.show', compact('doctor'));
     }
 
-    public function edit($id)
+    public function edit($id): View
     {
         $doctor = User::findOrFail($id);
         return view('super-admin.doctors.edit', compact('doctor'));
@@ -83,13 +86,13 @@ class DoctorController extends Controller
         return redirect()->back()->with('success', 'Profil médecin mis à jour avec succès.');
     }
 
-    public function activate($id)
+    public function activate($id): RedirectResponse
     {
         $doctor = User::findOrFail($id);
         $doctor->update(['status' => true]);
         return redirect()->route('doctors.index')->with('success', 'Le compte du médecin a été activé avec succès.');
     }
-    public function deactivate($id)
+    public function deactivate($id): RedirectResponse
     {
         $doctor = User::findOrFail($id);
         $doctor->update(['status' => false]);
@@ -101,4 +104,45 @@ class DoctorController extends Controller
         $doctor->delete();
         return redirect()->route('doctors.index')->with('success', 'Médecin supprimé avec succès.');
     }
+
+    public function search(): View
+    {
+        $results = User::where('role', 'doctor');
+        return view('search_doctors', compact('results'));
+    }
+    public function searchDoctors(Request $request): View
+    {
+        $speciality = $request->input('speciality');
+        $city = $request->input('city');
+        $country = $request->input('country');
+        $firstName = $request->input('firstName');
+        $lastName = $request->input('lastName');
+
+        $doctors = User::where('role', 'doctor');
+
+        if ($speciality) {
+            $doctors->where('speciality', $speciality);
+        }
+
+        if ($city) {
+            $doctors->where('city', $city);
+        }
+
+        if ($country) {
+            $doctors->where('country', $country);
+        }
+
+        if ($firstName) {
+            $doctors->where('firstName', 'like', '%' . $firstName . '%');
+        }
+
+        if ($lastName) {
+            $doctors->where('lastName', 'like', '%' . $lastName . '%');
+        }
+
+        $results = $doctors->get();
+
+        return view('partials.search_results', compact('results'));
+    }
+
 }
