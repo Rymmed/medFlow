@@ -42,15 +42,13 @@
 
         @else
             @include('layouts.navbars.auth.sidebar')
-            <main class="main-content position-relative max-height-vh-100 h-100 mt-0 border-radius-sm {{ (Request::is('rtl') ? 'overflow-hidden' : '') }}">
+            <div class="main-content position-relative max-height-vh-100 h-100 mt-0">
                 @include('layouts.navbars.auth.nav')
-                <div class="container-fluid py-4">
+                <main class="container-fluid py-4">
                     @yield('content')
-                </div>
-                <div class="container-fluid py-4">
                     @include('layouts.footers.auth.footer')
-                </div>
-            </main>
+                </main>
+            </div>
         @endif
         @include('components.fixed-plugin')
 

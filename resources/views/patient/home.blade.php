@@ -181,10 +181,50 @@
                                 Aug 12
                             </div>
                         </div>
-                        <a href="{{ route('search') }}" class="bg-gradient-dark text-white text-center border-radius-md mt-2 px-2 py-2">
+                        <a type="button" class="bg-gradient-dark text-white text-center btn btn-block btn-default mt-3 mb-3 px-2 py-2" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">
                             <i class="far fa-calendar-plus me-1"></i>
                             <span>Réserver un autre rendez-vous</span>
                         </a>
+                        <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered " role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Trouver un médecin </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span class="text-dark" aria-hidden="true"><i class="fa fa-close"></i></span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form role="form" action="{{ route('search_doctors') }}" method="POST">
+                                            @csrf
+                                            <div class="form-group mb-3">
+                                                <select id="speciality" name="speciality[]" class="form-control" aria-label="speciality" multiple>
+                                                    @foreach(config('specialities') as $speciality)
+                                                        <option value="{{ $speciality }}">{{ $speciality }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group mb-3 col-6">
+                                                    <input type="text" id="city" name="city" class="form-control" aria-label="city" placeholder="Ville">
+                                                </div>
+                                                <div class="form-group mb-3 col-6">
+                                                    <input type="text" id="town" name="town" class="form-control" aria-label="town" placeholder="Pays">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                {{--                                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>--}}
+                                                <button type="submit" class="btn bg-gradient-primary">Rechercher</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+{{--                        <a href="{{ route('search') }}" class="bg-gradient-dark text-white text-center border-radius-md mt-2 px-2 py-2">--}}
+{{--                            <i class="far fa-calendar-plus me-1"></i>--}}
+{{--                            <span>Réserver un autre rendez-vous</span>--}}
+{{--                        </a>--}}
 
                     </div>
                         </div>
@@ -230,6 +270,17 @@
             chevronDownIcon.style.display = "inline";
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const specialitySelect = document.getElementById('speciality');
+        const choices = new Choices(specialitySelect, {
+            removeItemButton: true,
+            placeholder: true,
+            placeholderValue: 'Sélectionnez des spécialités',
+            itemSelectText: 'Appuyer pour séléctionner',
+            allowHTML: true,
+        });
+    });
 </script>
 @endsection
 

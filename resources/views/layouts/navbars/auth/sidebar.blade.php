@@ -130,17 +130,17 @@
             @elseif(auth()->user()->role === 'doctor')
                 <!-- Items for doctor -->
                 <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}" href="{{ route('myCalendar.index') }}">
+                    <a class="nav-link {{ (Request::is('myAppointments') ? 'active' : '') }}" href="{{ route('appointments.myAppointments') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('myCalendar') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('myAppointments') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Mon Calendrier</span>
+                        <span class="nav-link-text ms-1">Rendez-Vous</span>
                     </a>
                 </li>
                 <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('assistants') ? 'active' : '') }}" href="{{ route('doctor-assistants.index') }}">
+                    <a class="nav-link {{ (Request::is('doctor-assistants') ? 'active' : '') }}" href="{{ route('doctor-assistants.index') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('assistants') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+                            <i style="font-size: 1rem;" class="fas fa-lg fa-user-nurse ps-2 pe-2 text-center text-dark {{ (Request::is('doctor-assistants') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1">Assistants</span>
                     </a>

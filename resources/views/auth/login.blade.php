@@ -20,8 +20,11 @@
                                         @enderror
                                     </div>
                                     <label>{{__('Mot de passe')}}</label>
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
+                                        <a type="button" class="btn-outline-secondary position-absolute end-0 top-50 translate-middle-y" onclick="togglePasswordVisibility('password')">
+                                            <i class="fa fa-eye-slash me-2 text-xs" id="togglePasswordIcon"></i>
+                                        </a>
                                         @error('password')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -58,3 +61,19 @@
             </div>
         </div>
 @endsection
+<script>
+    function togglePasswordVisibility(fieldId) {
+        var passwordField = document.getElementById(fieldId);
+        var toggleIcon = document.querySelector(`#${fieldId} ~ a .fa`);
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        }
+    }
+</script>

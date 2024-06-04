@@ -14,55 +14,62 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>{{ __('Nom') }}</label>
+                                                <label for="lastName">{{ __('Nom') }}</label>
                                                 <div class="mb-3">
                                                     <input type="text" class="form-control" placeholder="{{ __('Entrez votre nom') }}" name="lastName" id="lastName" aria-label="lastName" aria-describedby="lastName" value="{{ old('lastName') }}">
-                                                    @error('nom')
+                                                    @error('lastName')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{ __('Prénom') }}</label>
+                                                <label for="firstName">{{ __('Prénom') }}</label>
                                                 <div class="mb-3">
                                                     <input type="text" class="form-control" placeholder="{{ __('Entrez votre prénom') }}" name="firstName" id="firstName" aria-label="firstName" aria-describedby="firstName" value="{{ old('firstName') }}">
-                                                    @error('prenom')
+                                                    @error('firstName')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{__('Email')}}</label>
+                                                <label for="email">{{__('Email')}}</label>
                                                 <div class="mb-3">
                                                     <input type="email" class="form-control" name="email" id="email" placeholder="{{ __('Entrez votre adresse email') }}" aria-label="Email" aria-describedby="email-addon">
                                                     @error('email')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{__('Mot de passe')}}</label>
-                                                <div class="mb-3">
+                                                <label for="password">{{ __('Mot de passe') }}</label>
+                                                <div class="mb-3 position-relative">
                                                     <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
+                                                    <a type="button" class="btn-outline-secondary position-absolute end-0 top-50 translate-middle-y" onclick="togglePasswordVisibility('password')">
+                                                        <i class="fa fa-eye-slash me-2 text-xs" id="togglePasswordIcon"></i>
+                                                    </a>
                                                     @error('password')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{ __('Confirmation du mot de passe') }}</label>
-                                                <div class="mb-3">
+
+                                                <label for="password-confirm">{{ __('Confirmation du mot de passe') }}</label>
+                                                <div class="mb-3 position-relative align-content-center">
                                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{ __('Confirmez votre mot de passe') }}" required autocomplete="new-password">
+                                                    <a type="button" class="btn-outline-secondary position-absolute end-0 top-50 translate-middle-y" onclick="togglePasswordVisibility('password-confirm')">
+                                                        <i class="fa fa-eye-slash me-2 text-xs" id="togglePasswordConfirmIcon"></i>
+                                                    </a>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <label>{{ __('Date de naissance') }}</label>
+                                                <label for="dob">{{ __('Date de naissance') }}</label>
                                                 <div class="mb-3">
                                                     <input type="date" class="form-control" name="dob" id="dob" required>
                                                     @error('dob')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{ __('Numéro de téléphone') }}</label>
+                                                <label for="phone_number">{{ __('Numéro de téléphone') }}</label>
                                                 <div class="mb-3">
-                                                    <input type="tel" class="form-control" name="phone_number" id="phone_number" placeholder="{{ __('Entrez votre numéro de téléphone') }}">
+                                                    <input type="tel" class="form-control" name="phone_number" id="phone_number" placeholder="{{ __('Entrez votre n° de téléphone') }}">
                                                     @error('phone_number')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
                                                 </div>
-                                                <label>{{ __('Type de compte') }}</label>
+                                                <label for="role">{{ __('Type de compte') }}</label>
                                                 <div class="mb-3">
                                                     <select id="role" class="form-control" name="role" required>
                                                         <option value="patient">Patient</option>
@@ -72,14 +79,14 @@
                                                 <div id="patientFields" class="specific-fields" style="display: block;">
                                                     <label for="cin_number">{{ __('Numéro de CIN') }}</label>
                                                     <div class="mb-3">
-                                                        <input type="text" class="form-control" name="cin_number" id="cin_number" placeholder="{{ __('Entrez votre numéro d\'identité nationnale') }}">
+                                                        <input type="text" class="form-control" name="cin_number" id="cin_number" placeholder="{{ __('Entrez votre n° d\'identité nationnale') }}">
                                                         @error('cin_number')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
                                                     </div>
                                                     <label for="insurance_number">{{ __('N° d\'assurance') }}</label>
                                                     <div class="mb-3">
-                                                        <input type="text" class="form-control" name="insurance_number" id="insurance_number" placeholder="{{ __('Entrez votre numéro d\'assurance') }}">
+                                                        <input type="text" class="form-control" name="insurance_number" id="insurance_number" placeholder="{{ __('Entrez votre n° d\'assurance') }}">
                                                         @error('insurance_number')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -100,7 +107,7 @@
                                                     </div>
                                                     <label for="registration_number">{{ __('N° d\'inscription à l\'ordre des médecins') }}</label>
                                                     <div class="mb-3">
-                                                        <input type="text" class="form-control" name="registration_number" id="registration_number" placeholder="{{ __('Entrez votre numéro d\'inscription dans l\'ordre des médecins') }}">
+                                                        <input type="text" class="form-control" name="registration_number" id="registration_number" placeholder="{{ __('Entrez votre n° d\'inscription dans l\'ordre des médecins') }}">
                                                         @error('registration_number')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -167,5 +174,19 @@
                 });
             }
         });
+        function togglePasswordVisibility(fieldId) {
+            var passwordField = document.getElementById(fieldId);
+            var toggleIcon = document.querySelector(`#${fieldId} ~ a .fa`);
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            }
+        }
     </script>
 @endsection

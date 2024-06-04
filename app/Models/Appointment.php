@@ -13,8 +13,8 @@ class Appointment extends Model
     protected $fillable = [
         'patient_id',
         'doctor_id',
-        'start_date',
-        'finish_date',
+        'date',
+        'time',
         'consultation_reason',
         'consultation_type',
         'status',
@@ -22,11 +22,11 @@ class Appointment extends Model
 
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->where('role', 'patient');
     }
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->where('role', 'doctor');
     }
 }

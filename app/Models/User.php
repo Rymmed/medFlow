@@ -7,15 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  use Illuminate\Database\Eloquent\Relations\BelongsTo;
  use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  use Illuminate\Database\Eloquent\Relations\HasMany;
+ use Illuminate\Database\Eloquent\Relations\HasOne;
  use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+ use Illuminate\Support\Carbon;
+ use Laravel\Sanctum\HasApiTokens;
  use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;
 
 
- class User extends Authenticatable implements MustVerifyEmail
+ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -31,10 +33,10 @@ use Spatie\Permission\Models\Role;
         'password',
         'avatar',
         'city',
-        'town',
+        'country',
         'role',
-        'phone_number',
         'dob',
+        'phone_number',
         'gender',
         'insurance_number',
         'cin_number',
@@ -65,15 +67,52 @@ use Spatie\Permission\Models\Role;
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'doctor_id');
+        return $this->belongsTo(User::class, 'doctor_id')->where('role', 'doctor');
     }
 
     public function patients(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id');
+        return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id')->where('role', 'patient');
     }
     public function assistants(): HasMany
     {
-        return $this->hasMany(User::class, 'doctor_id');
+        return $this->hasMany(User::class, 'doctor_id')->where('role', 'doctor');
+    }
+     public function doctorAppointments(): HasMany
+     {
+         return $this->hasMany(Appointment::class, 'doctor_id');
+     }
+
+     public function patientAppointments(): HasMany
+     {
+         return $this->hasMany(Appointment::class, 'patient_id');
+     }
+
+     public function availability(): HasOne
+     {
+         return $this->hasOne(Availability::class, 'doctor_id');
+     }
+
+    public function isAvailable($appointmentDate, $appointmentTime): bool
+    {
+        $dayOfWeek = Carbon::parse($appointmentDate)->dayOfWeek;
+
+        $isAvailable = $this->availability()
+            ->whereRaw("JSON_CONTAINS(`days_of_week`, '\"$dayOfWeek\"')")
+            ->where('start_time', '<=', $appointmentTime)
+            ->where('end_time', '>=', $appointmentTime)
+            ->exists();
+
+        $appointmentExists= $this->doctorAppointments()
+            ->where('date', $appointmentDate)
+            ->where('time', $appointmentTime)
+            ->where('status', 'confirmed')
+            ->exists();
+
+        if (!$isAvailable) {
+            return false;
+        }
+
+        return !$appointmentExists;
     }
 }

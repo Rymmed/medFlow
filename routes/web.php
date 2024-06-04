@@ -4,14 +4,13 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AssistantDoctorController;
-use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\user\ProfileController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +71,12 @@ Route::middleware(['has.role:doctor'])->group(function () {
     Route::put('doctor-assistants/{assistant}/activate', [AssistantDoctorController::class, 'activate'])->name('doctor-assistants.activate');
     Route::put('doctor-assistants/{assistant}/deactivate', [AssistantDoctorController::class, 'deactivate'])->name('doctor-assistants.deactivate');
 
-    Route::get('myCalendar', [FullCalendarController::class, 'index'])->name('myCalendar.index');
+    Route::get('myAppointments', [AppointmentController::class, 'myAppointments'])->name('appointments.myAppointments');
+    Route::post('/myAppointments/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
+
+    Route::put('availability/{availability}', [AvailabilityController::class, 'update'])->name('availability.update');
+    Route::get('/appointments/calendar/{doctor_id}', 'AppointmentController@calendar')->name('appointments.calendar');
+
 });
 
 Route::middleware(['has.role:patient'])->group(function () {
@@ -82,10 +86,11 @@ Route::middleware(['has.role:patient'])->group(function () {
 });
 
 
-Route::get('search', [DoctorController::class, 'search'])->name('search');
-Route::post('search_doctors', [DoctorController::class, 'searchDoctors'])->name('search_doctors');
+//Route::get('search', [DoctorController::class, 'search'])->name('search');
+Route::match(['get', 'post'], 'search_doctors', [DoctorController::class, 'searchDoctors'])->name('search_doctors');
+
 Route::get('/appointment/request/{doctor_id}', [AppointmentController::class, 'index'])->name('appointment.request');
-Route::post('/appointment/send-request', [AppointmentController::class, 'sendAppointmentRequest'])->name('appointment.sendRequest');
+Route::post('/appointment/send-request/{doctor_id}', [AppointmentController::class, 'sendAppointmentRequest'])->name('appointment.sendRequest');
 
 Route::middleware(['has.role:assistant'])->group(function () {
     Route::get('assistant', function () {
@@ -100,6 +105,6 @@ Route::middleware('auth')->group(function(){
     Route::put('user/update-password', [ProfileController::class, 'updatePassword'])->name('user.update-password');
 });
 
-Auth::routes(['verify' => true]);
+Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 

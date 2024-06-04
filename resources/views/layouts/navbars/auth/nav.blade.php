@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-md sticky-top bg-gradient-faded-light mt-4 top-1 z-index-1" id="navbarBlur" navbar-scroll="false">
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-md bg-gradient-faded-light mt-4 top-1 z-index-1" id="navbarBlur" navbar-scroll="false">
     <div class="container-fluid py-1 px-3 ">
 {{--        <nav aria-label="breadcrumb">--}}
 {{--            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">--}}
@@ -139,9 +139,9 @@
     </div>
 </nav>
 <!-- End Navbar -->
-<script>
-    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
-    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-        return new bootstrap.Dropdown(dropdownToggleEl)
-    })
-</script>
+{{--<script>--}}
+{{--    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))--}}
+{{--    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {--}}
+{{--        return new bootstrap.Dropdown(dropdownToggleEl)--}}
+{{--    })--}}
+{{--</script>--}}

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Availability;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
@@ -29,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -58,7 +62,7 @@ class RegisterController extends Controller
             'role' => ['required', 'string', 'max:255'],
             'dob' => ['required','date'],
             'phone_number' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'boolean'],
+//            'gender' => ['required', 'boolean'],
 //            'insurance_number' => ['required_if:role,patient', 'string', 'max:255'],
 //            'cin_number' => ['required_if:role,patient','string', 'max:255'],
 //            'speciality' => ['required_if:role,doctor', 'string', 'max:255'],
@@ -74,19 +78,41 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+//        return User::create([
+//            'lastName' => ucwords($data['lastName']),
+//            'firstName' => ucwords($data['firstName']),
+//            'email' => $data['email'],
+//            'password' => Hash::make($data['password']),
+//            'role' => $data['role'],
+//            'dob' => $data['dob'],
+//            'gender' => $data['gender'],
+//            'phone_number' => $data['phone_number'],
+//            'insurance_number' => $data['insurance_number'],
+//            'cin_number' => $data['cin_number'],
+//            'speciality' => $data['speciality'],
+//            'registration_number' => $data['registration_number']
+//        ]);
+        $user = User::create([
             'lastName' => ucwords($data['lastName']),
             'firstName' => ucwords($data['firstName']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
             'dob' => $data['dob'],
-            'gender' => $data['gender'],
+//            'gender' => $data['gender'],
             'phone_number' => $data['phone_number'],
             'insurance_number' => $data['insurance_number'],
             'cin_number' => $data['cin_number'],
             'speciality' => $data['speciality'],
             'registration_number' => $data['registration_number']
+
         ]);
+        if ($user->role === 'doctor'){
+            $availability = new Availability();
+            $availability->doctor_id = $user->id ;
+            $availability->save();
+        }
+        return $user ;
+
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\user\UpdateProfileRequest;
+use App\Models\Availability;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -22,7 +23,14 @@ class ProfileController extends Controller
     }
     public function index()
     {
-        return view('user.profile');
+        $user = Auth::user();
+        if ($user->role === 'doctor') {
+            $availability = Availability::where('doctor_id', $user->id)->first() ;
+            return view('user.profile', compact('availability'));
+        }
+        else {
+            return view('user.profile');
+        }
     }
 
     public function update(Request $request)
@@ -52,7 +60,7 @@ class ProfileController extends Controller
             'speciality' => $request->speciality,
             'registration_number' => $request->registration_number
         ]);
-        return redirect('user/profile')->with('success', 'Profil mis à jour');
+        return redirect('user/profile')->with('success', 'Profil mis à jour avec succès');
     }
 
     public function updatePassword(Request $request)
@@ -74,15 +82,6 @@ class ProfileController extends Controller
             $request->session()->flash('error', 'Le mot de passe actuel est incorrect.');
             return redirect()->route('user.profile');
         }
-//        dd($request->all());
 
-//        if (Hash::check($request->current_password, $user->password)) {
-//            $user->password = Hash::make($request->new_password);
-//            $user->save();
-//
-//            return redirect('user/profile')->with('success', 'Mot de passe mis à jour avec succès.');
-//        } else {
-//            return redirect()->back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.'])->withInput();
-//        }
     }
 }
