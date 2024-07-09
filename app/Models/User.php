@@ -31,7 +31,7 @@ use Spatie\Permission\Models\Role;
         'firstName',
         'email',
         'password',
-        'avatar',
+        'profile_image',
         'city',
         'country',
         'role',
@@ -67,13 +67,18 @@ use Spatie\Permission\Models\Role;
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'doctor_id')->where('role', 'doctor');
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
-    public function patients(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id')->where('role', 'patient');
-    }
+     public function doctors(): BelongsToMany
+     {
+         return $this->belongsToMany(User::class, 'doctor_patient', 'patient_id', 'doctor_id');
+     }
+
+     public function patients(): BelongsToMany
+     {
+         return $this->belongsToMany(User::class, 'doctor_patient', 'doctor_id', 'patient_id');
+     }
     public function assistants(): HasMany
     {
         return $this->hasMany(User::class, 'doctor_id')->where('role', 'doctor');
@@ -93,26 +98,79 @@ use Spatie\Permission\Models\Role;
          return $this->hasOne(Availability::class, 'doctor_id');
      }
 
-    public function isAvailable($appointmentDate, $appointmentTime): bool
+    public function isAvailable($appointmentStartTime): array
     {
-        $dayOfWeek = Carbon::parse($appointmentDate)->dayOfWeek;
-
-        $isAvailable = $this->availability()
+        $dayOfWeek = Carbon::parse($appointmentStartTime)->dayOfWeek;
+        $appointmentTime = Carbon::parse($appointmentStartTime)->format('H:i:s');
+        $errors = [];
+        $isAvailableDate = $this->availability()
             ->whereRaw("JSON_CONTAINS(`days_of_week`, '\"$dayOfWeek\"')")
+            ->exists();
+        if (!$isAvailableDate) {
+            $errors[] = "Le médecin n'est pas disponible dans ce jour!";
+        }
+        $isAvailableStartTime = $this->availability()
             ->where('start_time', '<=', $appointmentTime)
-            ->where('end_time', '>=', $appointmentTime)
             ->exists();
 
+        if(!$isAvailableStartTime){
+            $errors[] = "Le cabinet s'ouvre après l'heure choisie!";
+        }
+
+        $isAvailableEndTime = $this->availability()
+            ->where('end_time', '>=', $appointmentTime)
+            ->exists();
+        if(!$isAvailableEndTime) {
+            $errors[] = "Le cabinet se ferme avant cette heure!";
+        }
+        $isAvailable = $isAvailableDate && $isAvailableStartTime && $isAvailableEndTime;
+
+        if (!$isAvailable) {
+            return ['isAvailable' => false, 'errors' => $errors];
+        }
+
+        $availability = $this->availability()->where('doctor_id', $this->id)->first();
+        $end_time= $availability->end_time;
         $appointmentExists= $this->doctorAppointments()
-            ->where('date', $appointmentDate)
-            ->where('time', $appointmentTime)
+            ->where('start_time', $appointmentTime)
+            ->where('finish_time', $end_time)
             ->where('status', 'confirmed')
             ->exists();
 
-        if (!$isAvailable) {
-            return false;
+        if ($appointmentExists) {
+            $errors[] = "Le médecin a un rendez-vous confirmé.";
+            return ['isAvailable' => false, 'errors' => $errors];
         }
 
-        return !$appointmentExists;
+        return ['isAvailable' => true, 'errors' => []];
     }
+
+     public function consultationReportsAsPatient(): HasMany
+     {
+         return $this->hasMany(ConsultationReport::class, 'patient_id');
+     }
+
+     public function consultationReportsAsDoctor(): HasMany
+     {
+         return $this->hasMany(ConsultationReport::class, 'doctor_id');
+     }
+     public function allergies(): HasMany
+     {
+         return $this->hasMany(Allergy::class);
+     }
+
+     public function medicalHistories(): HasMany
+     {
+         return $this->hasMany(MedicalHistory::class);
+     }
+
+     public function vaccinations(): HasMany
+     {
+         return $this->hasMany(Vaccination::class);
+     }
+
+     public function examResults(): HasMany
+     {
+         return $this->hasMany(ConsultationReport::class);
+     }
 }

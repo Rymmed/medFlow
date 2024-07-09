@@ -1,7 +1,7 @@
 :root {
     --blue: #186272;
     --light-blue: #8390f6;
-    --transparent-light-blue: rgba(231, 251, 251, 0.41);
+    --transparent-light-blue: rgba(231, 249, 251, 0.41);
 
 }
 
@@ -55,21 +55,50 @@
 }
 
 
+
 .badge-primary {
     background-color: #f883dd;
+    color: #a3017e;
 }
 .badge-secondary {
     background-color: #e4e8ed;
+    color: #5974a2;
 }
 .badge-info {
     background-color: #abe9f7;
+    color: #08a1c4;
 }
 .badge-success {
     background-color: #cdf59b;
+    color: #67b108;
 }
 .badge-danger {
     background-color: #fc9797;
+    color: #bd0000;
 }
 .badge-warning {
     background-color: #fef5d3;
+    color: #fbc400;
 }
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin: 1em;
+}
+
+.fc .fc-button-group {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    padding: 0.25rem;
+}
+
+.appointments-list {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.appointments-list .list-group-item {
+    max-height: 50%;
+}
+
+.navbar-vertical .navbar-logo-img,.navbar-vertical .navbar-logo>img{max-height:3rem;max-width:100%}

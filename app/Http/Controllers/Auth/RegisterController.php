@@ -55,13 +55,14 @@ class RegisterController extends Controller
     {
 
         return Validator::make($data, [
-            'lastName' => ['required', 'string', 'max:255'],
-            'firstName' => ['required', 'string', 'max:255'],
-            'email' => ['required','string', 'email', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', 'max:255'],
-            'dob' => ['required','date'],
-            'phone_number' => ['required', 'string', 'max:255'],
+            'lastName' => 'required|string|max:255',
+            'firstName' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'phone_number' => 'required|string|max:255',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
 //            'gender' => ['required', 'boolean'],
 //            'insurance_number' => ['required_if:role,patient', 'string', 'max:255'],
 //            'cin_number' => ['required_if:role,patient','string', 'max:255'],
@@ -103,10 +104,17 @@ class RegisterController extends Controller
             'phone_number' => $data['phone_number'],
             'insurance_number' => $data['insurance_number'],
             'cin_number' => $data['cin_number'],
-            'speciality' => $data['speciality'],
+//            'speciality' => $data['speciality'],
             'registration_number' => $data['registration_number']
 
         ]);
+        if (request()->hasFile('profile_image')) {
+            $image = request()->file('profile_image');
+            $path = $image->store('profile_images', 'public');
+            $user->profile_image = $path;
+            $user->save();
+        }
+
         if ($user->role === 'doctor'){
             $availability = new Availability();
             $availability->doctor_id = $user->id ;

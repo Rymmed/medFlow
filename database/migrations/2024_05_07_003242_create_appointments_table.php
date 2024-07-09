@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('doctor_id');
-            $table->Date('date');
-            $table->Time('time');
-            $table->string('consultation_reason', 255);
+            $table->dateTime('start_time');
+            $table->dateTime('finish_time')->nullable();
+            $table->string('consultation_reason', 255)->nullable();
             $table->enum('consultation_type', ['En ligne', 'En présentiel', 'Service à domicile']);
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();

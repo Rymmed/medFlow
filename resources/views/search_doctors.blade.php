@@ -3,9 +3,9 @@
 @section('content')
     <div class="row">
         <div class="container col-md-4 col-lg-3 card px-1">
-            <div class="card-header">
-                <h6>Trouver un médecin</h6>
-            </div>
+{{--            <div class="card-header">--}}
+                <h6 class="m-3">Trouver un médecin</h6>
+{{--            </div>--}}
             <div class="card-body">
                 <form action="{{ route('search_doctors') }}" method="POST" id="search-form">
                     @csrf

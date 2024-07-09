@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Availability;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -20,14 +22,19 @@ class AvailabilityController extends Controller
             'end_time' => 'required|after:start_time',
             'consultation_duration' => 'required|numeric|min:1',
         ]);
-//        dd($validator['start_time']);
+
         $availability = Availability::where('doctor_id', $doctor_id)->firstOrFail();
         $availability->days_of_week = json_encode($validator['days_of_week']);
         $availability->start_time = $validator['start_time'];
         $availability->end_time = $validator['end_time'];
         $availability->consultation_duration = $validator['consultation_duration'];
         $availability->save();
-//        dd($availability->start_time);
+        $appointments = Appointment::where('doctor_id', $doctor_id)->get();
+        foreach ($appointments as $appointment){
+            $start = Carbon::parse($appointment->start_time);
+            $appointment->finish_time = $start->copy()->addMinutes($availability->consultation_duration);
+            $appointment->save();
+        }
 
         return redirect()->back()->with('success', 'Horaires fixés avec succès.');
     }

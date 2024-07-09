@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Availability;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -29,59 +32,67 @@ class AppointmentController extends Controller
     {
         $doctor = User::find($doctor_id);
         $request->validate([
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'start_date' => 'required|datetime|after_or_equal:now',
             'consultation_reason' => 'required|string|max:255',
-            'consultation_type' => 'required|in:En ligne,En présentiel,Service à domicile',
+            'consultation_type' => 'required|in:Online,In person,Home service',
         ]);
-        $appointmentDate = $request->date;
-        $appointmentTime = $request->time;
 
-        if ($doctor->isAvailable($appointmentDate, $appointmentTime)) {
-            $appointment = Appointment::create([
-                'patient_id' => Auth::user()->id,
-                'doctor_id' => $doctor_id,
-                'date' => $appointmentDate,
-                'time' => $appointmentTime,
-                'consultation_reason' => $request->consultation_reason,
-                'consultation_type' => $request->consultation_type,
-            ]);
-
-            return redirect()->back()->with('success', 'La demande de rendez-vous a été envoyée avec succès.');
-        } else {
-            return redirect()->back()->with('error', 'Le médecin n\'est pas disponible! S\'il vous plait choisir une autre date.');
+        $appointmentStartDate = $request->start_date;
+        $availabilityCheck = $doctor->isAvailable($appointmentStartDate);
+        if (!$availabilityCheck['isAvailable']) {
+            return back()->withErrors($availabilityCheck['errors']);
         }
+        $appointment = Appointment::create([
+            'patient_id' => Auth::id(),
+            'doctor_id' => $doctor_id,
+            'start_date' => $appointmentStartDate,
+            'consultation_reason' => $request->consultation_reason,
+            'consultation_type' => $request->consultation_type,
+        ]);
+        return back()->with('success', 'La demande de rendez-vous a été envoyée avec succès.');
     }
 
-    public function myAppointments() : View
+    public function myAppointments(): View
     {
         $doctor = Auth::user();
         $appointments = $doctor->doctorAppointments()->with('patient')->get();
         $pendingAppointments = $appointments->where('status', 'pending');
         $confirmedAppointments = $appointments->where('status', 'confirmed');
-
-        return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments'));
+        $refusedAppointments = $appointments->where('status', 'refused');
+        return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments', 'refusedAppointments'));
     }
 
     public function updateStatus(Request $request)
     {
-        $appointment = Appointment::find($request->id);
-
-        if ($appointment) {
-            $appointment->status = $request->status;
+        $doctor = auth()->user();
+        $appointment = Appointment::findOrFail($request->appointment_id);
+        $availability = Availability::where('doctor_id', $doctor->id)->first();
+        $consultationDuration = $availability->consultation_duration;
+        $start = Carbon::parse($appointment->start_date);
+        $appointment->status = $request->status;
+        if ($request->status === 'confirmed') {
+            $appointment->finish_date = $start->copy()->addMinutes($consultationDuration);
+            if (!$doctor->patients()->where('patient_id', $appointment->patient_id)->exists()) {
+                $doctor->patients()->attach($appointment->patient_id);
+            }
             $appointment->save();
-
-            return response()->json(['success' => true, 'status' => $appointment->status]);
         }
+        $appointment->save();
+        switch ($appointment->status) {
+            case ('confirmed'):
+                $message = 'Rendez-vous confirmé';
+                break;
+            case ('refused'):
+                $message = 'Rendez-vous réfusé';
+                break;
+            case ('cancelled'):
+                $message = 'Rendez-vous annulé';
+                break;
+            default:
+                $message = "";
+                break;
+        }
+        return back()->with(['success' => $message, 'status' => $appointment->status]);
 
-        return response()->json(['success' => false]);
-    }
-    public function calendar($doctor_id)
-    {
-        $appointments = Appointment::where('doctor_id', $doctor_id)
-            ->where('status', 'confirmed')
-            ->get(['id', 'title', 'start', 'end']);
-
-        return response()->json($appointments);
     }
 }

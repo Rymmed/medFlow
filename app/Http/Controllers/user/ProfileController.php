@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -33,6 +34,26 @@ class ProfileController extends Controller
         }
     }
 
+    public function updateProfileImg(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
+        $user = auth()->user();
+        if ($request->hasFile('profile_image')) {
+
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $path;
+            $user->save();
+        }
+
+        return redirect()->back()->with('success', 'Image de profile modifiée avec succès.');
+    }
     public function update(Request $request)
     {
         $user = auth()->user();

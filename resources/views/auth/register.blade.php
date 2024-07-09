@@ -10,8 +10,9 @@
                                     <h3 class="font-weight-bolder text-info text-gradient">{{ __('Bienvenue') }}</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" action="{{ route('register') }}">
+                                    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                                         @csrf
+                                        <input type="file" name="profile_image">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label for="lastName">{{ __('Nom') }}</label>

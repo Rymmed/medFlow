@@ -72,11 +72,15 @@ Route::middleware(['has.role:doctor'])->group(function () {
     Route::put('doctor-assistants/{assistant}/deactivate', [AssistantDoctorController::class, 'deactivate'])->name('doctor-assistants.deactivate');
 
     Route::get('myAppointments', [AppointmentController::class, 'myAppointments'])->name('appointments.myAppointments');
-    Route::post('/myAppointments/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
+    Route::put('myAppointments/updateStatus', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
 
     Route::put('availability/{availability}', [AvailabilityController::class, 'update'])->name('availability.update');
-    Route::get('/appointments/calendar/{doctor_id}', 'AppointmentController@calendar')->name('appointments.calendar');
 
+    Route::get('/myCalendar', [FullCalendarController::class, 'index'])->name('myCalendar');
+    Route::get('/myCalendar/appointments', [FullCalendarController::class, 'getAppointments'])->name('myCalendar.appointments');
+    Route::post('/myCalendar/update-appointment/{id}', [FullCalendarController::class, 'updateAppointment'])->name('myCalendar.update-appointment');
+    Route::post('/myCalendar/cancel-appointment/{id}', [FullCalendarController::class, 'updateAppointment'])->name('myCalendar.cancel-appointment');
+    Route::post('/myCalendar/add-appointment', [FullCalendarController::class, 'createAppointment'])->name('myCalendar.add-appointment');
 });
 
 Route::middleware(['has.role:patient'])->group(function () {
@@ -103,6 +107,7 @@ Route::middleware('auth')->group(function(){
     Route::get('user/profile', [ProfileController::class, 'index'])->name('user.profile');
     Route::put('user/update-profile', [ProfileController::class, 'update'])->name('user.update-profile');
     Route::put('user/update-password', [ProfileController::class, 'updatePassword'])->name('user.update-password');
+    Route::put('user/updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('user.updateProfileImg');
 });
 
 Auth::routes();
