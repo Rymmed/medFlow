@@ -1,11 +1,10 @@
 @extends('layouts.user_type.guest')
 
 @section('content')
-            <div class="page-header min-vh-75">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 d-flex flex-column mx-auto">
-                            <div class="card card-plain mt-8">
+                            <div class="card card-plain mt-6">
                                 <div class="card-header pb-0 text-left bg-transparent">
                                     <h3 class="font-weight-bolder text-info text-gradient">{{ __('Bienvenue') }}</h3>
                                 </div>
@@ -39,9 +38,7 @@
                                                 <label for="password">{{ __('Mot de passe') }}</label>
                                                 <div class="mb-3 position-relative">
                                                     <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
-                                                    <a type="button" class="btn-outline-secondary position-absolute end-0 top-50 translate-middle-y" onclick="togglePasswordVisibility('password')">
-                                                        <i class="fa fa-eye-slash me-2 text-xs" id="togglePasswordIcon"></i>
-                                                    </a>
+                                                    <x-show-password></x-show-password>
                                                     @error('password')
                                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                     @enderror
@@ -50,9 +47,7 @@
                                                 <label for="password-confirm">{{ __('Confirmation du mot de passe') }}</label>
                                                 <div class="mb-3 position-relative align-content-center">
                                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{ __('Confirmez votre mot de passe') }}" required autocomplete="new-password">
-                                                    <a type="button" class="btn-outline-secondary position-absolute end-0 top-50 translate-middle-y" onclick="togglePasswordVisibility('password-confirm')">
-                                                        <i class="fa fa-eye-slash me-2 text-xs" id="togglePasswordConfirmIcon"></i>
-                                                    </a>
+                                                    <x-show-password></x-show-password>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -139,7 +134,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
     <script>
         document.getElementById('role').addEventListener('change', function() {
             var role = this.value;
@@ -175,19 +169,6 @@
                 });
             }
         });
-        function togglePasswordVisibility(fieldId) {
-            var passwordField = document.getElementById(fieldId);
-            var toggleIcon = document.querySelector(`#${fieldId} ~ a .fa`);
 
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            } else {
-                passwordField.type = "password";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            }
-        }
     </script>
 @endsection

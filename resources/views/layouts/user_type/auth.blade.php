@@ -42,13 +42,13 @@
 
         @else
             @include('layouts.navbars.auth.sidebar')
-            <div class="main-content position-relative max-height-vh-100 h-100 mt-0">
+            <div class="main-content border-radius-xl bg-gray-100 position-relative h-100 my-4 me-4">
                 @include('layouts.navbars.auth.nav')
                 <main class="container-fluid py-4">
                     @yield('content')
-                    @include('layouts.footers.auth.footer')
                 </main>
             </div>
+            @include('layouts.footers.auth.footer')
         @endif
         @include('components.fixed-plugin')
 

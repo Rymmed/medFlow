@@ -104,10 +104,10 @@ Route::middleware(['has.role:assistant'])->group(function () {
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('user/profile', [ProfileController::class, 'index'])->name('user.profile');
-    Route::put('user/update-profile', [ProfileController::class, 'update'])->name('user.update-profile');
-    Route::put('user/update-password', [ProfileController::class, 'updatePassword'])->name('user.update-password');
-    Route::put('user/updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('user.updateProfileImg');
+    Route::get('myProfile', [ProfileController::class, 'index'])->name('myProfile');
+    Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
+    Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
+    Route::put('updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('updateProfileImg');
 });
 
 Auth::routes();

@@ -1,6 +1,6 @@
 <!-- Navbar -->
 <nav
-    class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-md bg-gradient-faded-light mt-4 top-1 z-index-1"
+    class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none"
     id="navbarBlur" navbar-scroll="false">
     <div class="container-fluid py-1 px-3 ">
         {{--        <nav aria-label="breadcrumb">--}}
@@ -134,7 +134,7 @@
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                         aria-labelledby="dropdownMenuButton">
                         <li>
-                            <a class="dropdown-item border-radius-md" href="{{ route('user.profile') }}">
+                            <a class="dropdown-item border-radius-md" href="{{ route('myProfile') }}">
                                 Profile
                             </a>
                         </li>

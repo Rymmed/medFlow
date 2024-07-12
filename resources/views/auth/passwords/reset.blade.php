@@ -1,8 +1,6 @@
 @extends('layouts.user_type.guest')
 
 @section('content')
-
-    <div class="page-header section-height-75">
         <div class="container">
             <div class="row">
                 <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
@@ -25,8 +23,9 @@
                                 </div>
                                 <div>
                                     <label for="password">{{ __('Nouveau mot de passe') }}</label>
-                                    <div class="">
-                                        <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                                    <div class="mb-3 position-relative">
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
+                                        <x-show-password></x-show-password>
                                         @error('password')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -34,11 +33,9 @@
                                 </div>
                                 <div>
                                     <label for="password-confirm">{{ __('Confirmer le mot de passe') }}</label>
-                                    <div class="">
-                                        <input id="password-confirm" name="password_confirmation" type="password" class="form-control" placeholder="Password-confirmation" aria-label="Password-confirmation" aria-describedby="Password-addon">
-                                        @error('password')
-                                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                        @enderror
+                                    <div class="mb-3 position-relative align-content-center">
+                                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{ __('Confirmez votre mot de passe') }}" required autocomplete="new-password">
+                                        <x-show-password></x-show-password>
                                     </div>
                                 </div>
                                 <div class="text-center">
@@ -51,11 +48,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/curved-images/curved6.jpg')}}')"></div>
+                        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('{{url('assets/img/bg/pngtree.jpg')}}')"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
 
 @endsection

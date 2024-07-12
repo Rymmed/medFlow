@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\user\UpdateProfileRequest;
 use App\Models\Availability;
 use App\Models\User;
+use Closure;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -25,12 +27,13 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $role = $user->role;
         if ($user->role === 'doctor') {
             $availability = Availability::where('doctor_id', $user->id)->first() ;
-            return view('user.profile', compact('availability'));
+            return view('doctor.profile', compact('availability'));
         }
         else {
-            return view('user.profile');
+            return view($role . '.profile');
         }
     }
 
@@ -54,7 +57,8 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Image de profile modifiée avec succès.');
     }
-    public function update(Request $request)
+
+    public function update(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $request->validate([
@@ -81,10 +85,10 @@ class ProfileController extends Controller
             'speciality' => $request->speciality,
             'registration_number' => $request->registration_number
         ]);
-        return redirect('user/profile')->with('success', 'Profil mis à jour avec succès');
+        return redirect('myProfile')->with('success', 'Profil mis à jour avec succès');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): RedirectResponse
     {
         $request->validate([
             'current_password' => 'required',
@@ -97,12 +101,13 @@ class ProfileController extends Controller
             ])->save();
 
             $request->session()->flash('success', 'Mot de passe mis à jour avec succès.');
-            return redirect()->route('user.profile');
+            return redirect()->route('myProfile');
 
         } else {
             $request->session()->flash('error', 'Le mot de passe actuel est incorrect.');
-            return redirect()->route('user.profile');
+            return redirect()->route('myProfile');
         }
 
     }
+
 }

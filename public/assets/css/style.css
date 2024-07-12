@@ -12,12 +12,13 @@
 .text-light-blue {
     color: var(--light-blue);
 }
+
 .bg-blue {
     background: var(--blue);
 }
 
-.bg-gradient-blue{
-    background-image:linear-gradient(10deg,var(--blue),var(--light-blue));
+.bg-gradient-blue {
+    background-image: linear-gradient(10deg, var(--blue), var(--light-blue));
 }
 
 .bg-transparent-blue {
@@ -47,35 +48,41 @@
     color: white;
     margin-right: 0.5rem;
 }
+
 .select2 .select2-container .select2-container--bootstrap5 .select2-container--below .select2-container--focus .select2-container--open {
     border-color: #e293d3;
 }
+
 .select2-container .select2-container--bootstrap5 .select2-container--open {
 
 }
-
 
 
 .badge-primary {
     background-color: #f883dd;
     color: #a3017e;
 }
+
 .badge-secondary {
     background-color: #e4e8ed;
     color: #5974a2;
 }
+
 .badge-info {
     background-color: #abe9f7;
     color: #08a1c4;
 }
+
 .badge-success {
     background-color: #cdf59b;
     color: #67b108;
 }
+
 .badge-danger {
     background-color: #fc9797;
     color: #bd0000;
 }
+
 .badge-warning {
     background-color: #fef5d3;
     color: #fbc400;
@@ -101,4 +108,34 @@
     max-height: 50%;
 }
 
-.navbar-vertical .navbar-logo-img,.navbar-vertical .navbar-logo>img{max-height:3rem;max-width:100%}
+.navbar-vertical .navbar-logo-img, .navbar-vertical .navbar-logo > img {
+    max-height: 4rem;
+    max-width: 100%
+}
+
+aside.sidenav {
+    display: flex;
+    /* Full height of the viewport */
+}
+
+.sidenav-body {
+    height: 65vh;
+}
+.sidenav-footer {
+    margin-top: auto;
+    padding: 0.5rem;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    text-align: center;
+}

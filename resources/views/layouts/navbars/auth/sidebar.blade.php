@@ -1,27 +1,22 @@
-<aside class="sidenav navbar navbar-vertical bg-white navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
-       id="sidenav-main">
+<aside class="sidenav navbar navbar-vertical bg-white  navbar-expand-xs border-0 fixed-start">
     <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
-        <div class="row">
-            <a class="align-items-center justify-content-center mt-3 navbar-logo text-center" href="">
-                <img src="{{asset('assets/img/medixa.png')}}" class="navbar-logo-img  h-100"
-                     alt="...">
-            </a>
-            {{--        <div class="col-4 nav-item d-xl ps-3 d-flex align-items-center">--}}
-            {{--            <a href="javascript:" class="nav-link text-body p-0 ps-3" id="iconNavbarSidenav2">--}}
-            {{--                <div class="sidenav-toggler-inner">--}}
-            {{--                    <i class="sidenav-toggler-line"></i>--}}
-            {{--                    <i class="sidenav-toggler-line"></i>--}}
-            {{--                    <i class="sidenav-toggler-line"></i>--}}
-            {{--                </div>--}}
-            {{--            </a>--}}
-            {{--        </div>--}}
+        <div class="row mt-3">
+            <div class="col-10 mx-2">
+                <a class="align-items-center justify-content-center navbar-logo  text-center" href="">
+                    <img src="{{asset('assets/img/logos/medflow-trans.png')}}" class="navbar-logo-img"
+                         alt="...">
+                    <img src="{{asset('assets/img/logos/logo-1.png')}}" class="navbar-logo-img  h-100"
+                         id="minimized-img"
+                         alt="..." style="display: none">
+                </a>
+            </div>
         </div>
 
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="w-auto" id="sidenav-collapse-main">
+    <div class="sidenav-body w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
@@ -47,12 +42,12 @@
                     <span class="nav-link-text ms-1">Tableau de bord</span>
                 </a>
             </li>
-            <li class="nav-item mt-2">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laravel Examples</h6>
-            </li>
+            {{--            <li class="nav-item mt-2">--}}
+            {{--                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laravel Examples</h6>--}}
+            {{--            </li>--}}
             <li class="nav-item">
-                <a class="nav-link {{ (Request::is('user/profile') ? 'active' : '') }} "
-                   href="{{ route('user.profile') }}">
+                <a class="nav-link {{ (Request::is('myProfile') ? 'active' : '') }} "
+                   href="{{ route('myProfile') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1"
@@ -219,6 +214,46 @@
                 </li>
             @endif
         </ul>
-    </div>
+        <div class="mb-0 bottom-0">
+            <ul class="navbar-nav">
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
+                       href="javascript:;">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa fa-bell fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Notifications</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
+                       href="javascript:;">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fas fa-cog fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Paramètres</span>
+                    </a>
+                </li>
+            </ul>
 
+        </div>
+    </div>
+    <!-- Profile section at the bottom -->
+    <div class="sidenav-footer">
+
+        <hr class="horizontal dark">
+        <div class="user-profile">
+            <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"
+                 class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card mx-3">
+            <div class="user-info">
+                <span
+                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>
+                <small class="user-role">{{ Auth::user()->role }}</small>
+            </div>
+        </div>
+    </div>
 </aside>

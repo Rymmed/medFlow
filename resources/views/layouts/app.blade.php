@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="apple-touch-icon" sizes="76x76" href="{{asset('/assets/img/logo-1.png')}}">
-    <link rel="icon" type="image/png" href="{{asset('/assets/img/logo-1.png')}}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{asset('/assets/img/logos/logo-1.png')}}">
+    <link rel="icon" type="image/png" href="{{asset('/assets/img/logos/logo-1.png')}}">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -44,7 +44,7 @@
     {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
 @stack('scripts')
-<body class="g-sidenav-show  bg-gray-100">
+<body class="g-sidenav-show bg-white">
         @auth
             @yield('auth')
         @endauth
@@ -60,7 +60,7 @@
 
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{asset('assets/js/soft-ui-dashboard.min.js?v=1.0.3')}}"></script>
-    @stack('dashboard')
+{{--    @stack('dashboard')--}}
 
 </body>
 </html>

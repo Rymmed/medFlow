@@ -88,9 +88,9 @@
                                 <div class="list-group">
                                     @foreach($confirmedAppointments as $appointment)
                                             <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 ">
-                                                <div class="author align-items-center">
+                                                <div class="author align-items-center" onclick="redirectToProfile('{{ route('patient.profile', $appointment->patient->id) }}')" style="cursor: pointer;">
                                                     <div class="row">
-                                                        <div class="col-4">
+                                                        <div class="col-md-4">
                                                             @if($appointment->patient->profile_image)
                                                                 <img src="{{ asset('storage/' . $appointment->patient->profile_image) }}" alt="Profile image"
                                                                      class="avatar avatar-xl border-radius-section shadow-sm">
@@ -99,7 +99,7 @@
                                                                      class="avatar avatar-xl border-radius-section shadow-sm">
                                                             @endif
                                                         </div>
-                                                        <div class="col-8 name ps-3">
+                                                        <div class="col-md-8 name ps-3">
                                                             <span>{{ $appointment->patient->firstName }} {{ $appointment->patient->lastName }}</span>
                                                             <div class="stats">
                                                                 <small>{{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}<br>Motif de consultation: {{ $appointment->consultation_reason }}</small><br>
@@ -136,6 +136,9 @@
             </div>
         </div>
         <script>
+            function redirectToProfile(url) {
+                window.location.href = url;
+            }
             {{--$(document).ready(function() {--}}
             {{--    $('.update-status').click(function() {--}}
             {{--        var button = $(this);--}}
