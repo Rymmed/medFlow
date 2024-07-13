@@ -1,18 +1,20 @@
-<aside class="sidenav navbar navbar-vertical bg-white  navbar-expand-xs border-0 fixed-start" id="sidenav-main">
+<aside
+    class="sidenav navbar navbar-vertical bg-gray-100 border-radius-xl my-4 fixed-start ms-3 navbar-expand-xs border-0"
+    id="sidenav-main">
     <div class="sidenav-header py-2">
         <i class="fas fa-times p-3 cursor-pointer text-secondary position-absolute end-0 top-0 d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
-        <i class="fas fa-angle-double-left p-3 cursor-pointer text-secondary position-absolute end-0 top-9"
-           aria-hidden="true" id="toggleLeftButton"></i>
-        <i class="fas fa-angle-double-right p-3 cursor-pointer text-secondary position-absolute top-9 start-50 translate-middle-x"
-           aria-hidden="true" id="toggleRightButton" style="display: none;"></i>
+        <i class="fas fa-angle-double-left p-3 cursor-pointer text-secondary position-absolute end-0 bottom-0 mb-2"
+           id="toggleLeftButton"></i>
+        <i class="fas fa-angle-double-right p-3 cursor-pointer text-secondary position-absolute bottom-0 start-50 mb-2 translate-middle-x"
+           id="toggleRightButton" style="display: none;"></i>
         <img src="{{asset('assets/img/logos/medflow-trans.png')}}" class="navbar-logo-img mx-2 my-2" id="logo-img"
              alt="...">
         <img src="{{asset('assets/img/logos/logo-1.png')}}" class="navbar-logo-img mx-2 my-2"
              id="minimized-img"
              alt="..." style="display: none">
     </div>
-    <hr class="horizontal dark ">
+    <hr class="horizontal dark mt-4">
     <div class="sidenav-body w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -252,18 +254,18 @@
         </div>
     </div>
     <!-- Profile section at the bottom -->
-{{--    <div class="sidenav-footer">--}}
-{{--        <hr class="horizontal dark">--}}
-{{--        <div class="row user-profile align-items-center justify-content-center m-2">--}}
-{{--            <div class="col-auto">--}}
-{{--                <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"--}}
-{{--                     class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card">--}}
-{{--            </div>--}}
-{{--            <div class="col-auto user-info">--}}
-{{--                <span--}}
-{{--                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>--}}
-{{--                <small class="user-role">{{ Auth::user()->role }}</small>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <div class="sidenav-footer">--}}
+    {{--        <hr class="horizontal dark">--}}
+    {{--        <div class="row user-profile align-items-center justify-content-center m-2">--}}
+    {{--            <div class="col-auto">--}}
+    {{--                <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"--}}
+    {{--                     class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card">--}}
+    {{--            </div>--}}
+    {{--            <div class="col-auto user-info">--}}
+    {{--                <span--}}
+    {{--                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>--}}
+    {{--                <small class="user-role">{{ Auth::user()->role }}</small>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </aside>

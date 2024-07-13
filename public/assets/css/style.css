@@ -121,8 +121,9 @@
     scroll-behavior: smooth
 }
 .sidenav-footer {
-    width: 100%;
-    margin-top: auto;
+    /*width: 1rem;*/
+    height: 10vh;
+    /*margin-top: auto;*/
     padding: .25rem;
 }
 
@@ -138,19 +139,10 @@
 .user-speciality {
     font-size: .70rem;
 }
-.footer {
-    text-align: center;
-}
-
-/* Styles par défaut pour la sidebar */
-.sidenav {
-    transition: width 0.3s;
-}
-
 
 /* Styles pour la sidebar rétractée */
 .collapsed {
-    width: 80px; /* Ajustez cette valeur selon vos besoins */
+    width: 80px;
     overflow-x: hidden;
 }
 
@@ -174,9 +166,7 @@
     width: 40px;
     height: 40px;
 }
-.main-content {
-    margin-left: 17.125rem;
-}
-.main-content .expanded {
-    margin-left: 84px; /* Largeur de la sidebar rétractée */
+
+.sidenav.fixed-start + .main-content.expanded {
+    margin-left: 8em; /* Largeur de la sidebar rétractée */
 }

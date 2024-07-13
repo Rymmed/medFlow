@@ -34,7 +34,7 @@
     {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
 @stack('scripts')
-    <body class="g-sidenav-show bg-white h-100">
+    <body class="g-sidenav-show bg-white">
         @auth
             @yield('auth')
         @endauth

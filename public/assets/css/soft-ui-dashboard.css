@@ -51,8 +51,8 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-    height: 100%;
     overflow-x: hidden;
+    height: 100%;
 }
 
 hr {
@@ -19995,7 +19995,6 @@ hr.horizontal.gray-light {
     padding: 0;
     position: fixed;
     top: 0;
-    height: 100vh;
 }
 
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
@@ -20617,7 +20616,7 @@ hr.horizontal.gray-light {
     }
 
     .sidenav.fixed-start + .main-content {
-        /*margin-left: 17.125rem*/
+        margin-left: 17.125rem
     }
 
     .sidenav.fixed-end + .main-content {
@@ -20638,7 +20637,7 @@ hr.horizontal.gray-light {
 }
 
 .sidenav-header {
-    height: 4.875rem
+    height: 5rem
 }
 
 .sidenav-footer .card.card-background:after {
@@ -20680,9 +20679,9 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.bg-white {
-    box-shadow: 0 20px 27px 0 rgba(0, 0, 0, .05)
+    box-shadow: 0 20px 27px 0 rgba(92, 109, 111, 0.06)
 }
-
+na
 .navbar-vertical.bg-white .navbar-nav .nav-link.active {
     box-shadow: none
 }
