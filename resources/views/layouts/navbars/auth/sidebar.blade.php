@@ -1,21 +1,18 @@
-<aside class="sidenav navbar navbar-vertical bg-white  navbar-expand-xs border-0 fixed-start">
-    <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none"
+<aside class="sidenav navbar navbar-vertical bg-white  navbar-expand-xs border-0 fixed-start" id="sidenav-main">
+    <div class="sidenav-header py-2">
+        <i class="fas fa-times p-3 cursor-pointer text-secondary position-absolute end-0 top-0 d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
-        <div class="row mt-3">
-            <div class="col-10 mx-2">
-                <a class="align-items-center justify-content-center navbar-logo  text-center" href="">
-                    <img src="{{asset('assets/img/logos/medflow-trans.png')}}" class="navbar-logo-img"
-                         alt="...">
-                    <img src="{{asset('assets/img/logos/logo-1.png')}}" class="navbar-logo-img  h-100"
-                         id="minimized-img"
-                         alt="..." style="display: none">
-                </a>
-            </div>
-        </div>
-
+        <i class="fas fa-angle-double-left p-3 cursor-pointer text-secondary position-absolute end-0 top-9"
+           aria-hidden="true" id="toggleLeftButton"></i>
+        <i class="fas fa-angle-double-right p-3 cursor-pointer text-secondary position-absolute top-9 start-50 translate-middle-x"
+           aria-hidden="true" id="toggleRightButton" style="display: none;"></i>
+        <img src="{{asset('assets/img/logos/medflow-trans.png')}}" class="navbar-logo-img mx-2 my-2" id="logo-img"
+             alt="...">
+        <img src="{{asset('assets/img/logos/logo-1.png')}}" class="navbar-logo-img mx-2 my-2"
+             id="minimized-img"
+             alt="..." style="display: none">
     </div>
-    <hr class="horizontal dark mt-0">
+    <hr class="horizontal dark ">
     <div class="sidenav-body w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -213,6 +210,17 @@
 
                 </li>
             @endif
+            <li class="nav-item pb-2">
+                <a class="nav-link {{ (Request::is('myMessages') ? 'active' : '') }}"
+                   href="javascript:;">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;"
+                           class="fa fa-envelope ps-2 pe-2 text-center text-dark {{ (Request::is('myMessages') ? 'text-white' : 'text-dark') }}"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Messages</span>
+                </a>
+            </li>
         </ul>
         <div class="mb-0 bottom-0">
             <ul class="navbar-nav">
@@ -222,7 +230,7 @@
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i style="font-size: 1rem;"
-                               class="fa fa-bell fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
+                               class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
                         </div>
                         <span class="nav-link-text ms-1">Notifications</span>
                     </a>
@@ -238,22 +246,24 @@
                         <span class="nav-link-text ms-1">Paramètres</span>
                     </a>
                 </li>
+
             </ul>
 
         </div>
     </div>
     <!-- Profile section at the bottom -->
-    <div class="sidenav-footer">
-
-        <hr class="horizontal dark">
-        <div class="user-profile">
-            <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"
-                 class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card mx-3">
-            <div class="user-info">
-                <span
-                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>
-                <small class="user-role">{{ Auth::user()->role }}</small>
-            </div>
-        </div>
-    </div>
+{{--    <div class="sidenav-footer">--}}
+{{--        <hr class="horizontal dark">--}}
+{{--        <div class="row user-profile align-items-center justify-content-center m-2">--}}
+{{--            <div class="col-auto">--}}
+{{--                <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"--}}
+{{--                     class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card">--}}
+{{--            </div>--}}
+{{--            <div class="col-auto user-info">--}}
+{{--                <span--}}
+{{--                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>--}}
+{{--                <small class="user-role">{{ Auth::user()->role }}</small>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </aside>

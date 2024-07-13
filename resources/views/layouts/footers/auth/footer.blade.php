@@ -7,7 +7,7 @@
                         document.write(new Date().getFullYear())
                     </script>
                     © Made with <i class="fa fa-heart"></i> by
-                    <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Rym Mohamed</a>
+                    <span class="font-weight-bold text-dark">Rym Mohamed</span>
                     for a better health care.
                 </div>
             </div>

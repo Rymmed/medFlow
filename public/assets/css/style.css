@@ -113,29 +113,70 @@
     max-width: 100%
 }
 
-aside.sidenav {
-    display: flex;
-    /* Full height of the viewport */
-}
 
 .sidenav-body {
-    height: 65vh;
+    /*height: 65vh;*/
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    scroll-behavior: smooth
 }
 .sidenav-footer {
+    width: 100%;
     margin-top: auto;
-    padding: 0.5rem;
+    padding: .25rem;
 }
 
-.user-profile {
-    display: flex;
-    align-items: center;
-}
+/*.user-profile {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
 
 .user-info {
     display: flex;
     flex-direction: column;
 }
-
+.user-speciality {
+    font-size: .70rem;
+}
 .footer {
     text-align: center;
+}
+
+/* Styles par défaut pour la sidebar */
+.sidenav {
+    transition: width 0.3s;
+}
+
+
+/* Styles pour la sidebar rétractée */
+.collapsed {
+    width: 80px; /* Ajustez cette valeur selon vos besoins */
+    overflow-x: hidden;
+}
+
+/* Cache le texte des éléments de navigation dans la sidebar rétractée */
+.sidenav.collapsed .nav-link-text {
+    display: none;
+}
+
+/* Cache les sections de texte des utilisateurs dans la sidebar rétractée */
+.sidenav.collapsed .user-info span,
+.sidenav.collapsed .user-info small {
+    display: none;
+}
+
+.sidenav.collapsed .icon {
+    margin: 0 auto;
+}
+
+/* Ajuster la taille de l'image de profil dans la sidebar rétractée */
+.sidenav.collapsed .avatar {
+    width: 40px;
+    height: 40px;
+}
+.main-content {
+    margin-left: 17.125rem;
+}
+.main-content .expanded {
+    margin-left: 84px; /* Largeur de la sidebar rétractée */
 }
