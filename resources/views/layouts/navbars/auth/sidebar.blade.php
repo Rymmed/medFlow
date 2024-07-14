@@ -1,12 +1,12 @@
 <aside
-    class="sidenav navbar navbar-vertical bg-gray-100 border-radius-xl my-4 fixed-start ms-3 navbar-expand-xs border-0"
+    class="sidenav navbar navbar-vertical bg-gray-100 navbar-expand-xs border-0 border-radius-xl my-4 fixed-start ms-3 ps"
     id="sidenav-main">
     <div class="sidenav-header py-2">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary position-absolute end-0 top-0 d-xl-none"
+        <i class="fas fa-times p-2 cursor-pointer text-secondary position-absolute end-2 top-0 d-xl-none"
            aria-hidden="true" id="iconSidenav"></i>
-        <i class="fas fa-angle-double-left p-3 cursor-pointer text-secondary position-absolute end-0 bottom-0 mb-2"
+        <i class="fas fa-angle-double-left p-2 cursor-pointer text-secondary position-absolute end-2 top-4 ms-2"
            id="toggleLeftButton"></i>
-        <i class="fas fa-angle-double-right p-3 cursor-pointer text-secondary position-absolute bottom-0 start-50 mb-2 translate-middle-x"
+        <i class="fas fa-angle-double-right p-2 cursor-pointer text-secondary position-absolute end-2 top-4 ms-2"
            id="toggleRightButton" style="display: none;"></i>
         <img src="{{asset('assets/img/logos/medflow-trans.png')}}" class="navbar-logo-img mx-2 my-2" id="logo-img"
              alt="...">
@@ -14,8 +14,8 @@
              id="minimized-img"
              alt="..." style="display: none">
     </div>
-    <hr class="horizontal dark mt-4">
-    <div class="sidenav-body w-auto" id="sidenav-collapse-main">
+    <hr class="horizontal dark mt-0">
+    <div class="sidenav-body" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
@@ -223,49 +223,52 @@
                     <span class="nav-link-text ms-1">Messages</span>
                 </a>
             </li>
+
+            <li class="nav-item pb-2">
+                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
+                   href="javascript:;">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;"
+                           class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Notifications</span>
+                </a>
+            </li>
+            <li class="nav-item pb-2">
+                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
+                   href="javascript:;">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;"
+                           class="fas fa-cog fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Paramètres</span>
+                </a>
+            </li>
+
         </ul>
-        <div class="mb-0 bottom-0">
-            <ul class="navbar-nav">
-                <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
-                       href="javascript:;">
-                        <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;"
-                               class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Notifications</span>
-                    </a>
-                </li>
-                <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
-                       href="javascript:;">
-                        <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;"
-                               class="fas fa-cog fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Paramètres</span>
-                    </a>
-                </li>
 
-            </ul>
-
-        </div>
+        {{--        </div>--}}
     </div>
     <!-- Profile section at the bottom -->
-    {{--    <div class="sidenav-footer">--}}
-    {{--        <hr class="horizontal dark">--}}
-    {{--        <div class="row user-profile align-items-center justify-content-center m-2">--}}
-    {{--            <div class="col-auto">--}}
-    {{--                <img src="{{ asset('storage/' . auth()->user()->profile_image)  }}" alt="Profile Picture"--}}
-    {{--                     class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card">--}}
-    {{--            </div>--}}
-    {{--            <div class="col-auto user-info">--}}
-    {{--                <span--}}
-    {{--                    class="text-dark text-bold text-sm">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</span>--}}
-    {{--                <small class="user-role">{{ Auth::user()->role }}</small>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+    <div class="sidenav-footer w-auto">
+        <hr class="horizontal dark">
+        <ul class="navbar-nav">
+            <li class="nav-item pb-2">
+                <a class="nav-link"
+                   href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i style="font-size: 1rem;"
+                           class="fas fa-sign-out-alt fixed-plugin-button-nav ps-2 pe-2 text-center text-dark "></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Se déconnecter</span>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </li>
+        </ul>
+    </div>
 </aside>

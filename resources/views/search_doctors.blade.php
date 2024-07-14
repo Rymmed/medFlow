@@ -77,17 +77,4 @@
 
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const specialitySelect = document.getElementById('speciality');
-            const choices = new Choices(specialitySelect, {
-                removeItemButton: true,
-                placeholder: true,
-                placeholderValue: 'Sélectionnez des spécialités',
-                itemSelectText: 'Appuyer pour séléctionner',
-                allowHTML: true,
-            });
-        });
-    </script>
 @endsection

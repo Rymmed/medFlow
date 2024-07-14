@@ -47,15 +47,19 @@ class HomeController extends Controller
                 $user = auth()->user();
                 $doctors = $user->doctors;
                 $medications = Prescription::whereHas('consultationReport', function ($query) use ($user) {
-                    $query->where('patient_id', $user->id);
+                    $query->whereHas('appointment', function ($query) use ($user) {
+                        $query->where('patient_id', $user->id);
+                    });
                 })->with('prescriptionLines')->get();
                 $allergies = Allergy::where('patient_id', $user->id)->get();
                 $medicalHistories = MedicalHistory::where('patient_id', $user->id)->get();
                 $vaccinations = Vaccination::where('patient_id', $user->id)->get();
-                $upcomingAppointments = Appointment::where('patient_id', $user->id)->where('start_date', '>', now())->get();
-                $recentAppointments = Appointment::where('patient_id', $user->id)->where('start_date', '<=', now())->get();
-//                dd($recentAppointments);
-                $consultationReports = ConsultationReport::where('patient_id', $user->id)->get();
+                $appointments = Appointment::where('patient_id', $user->id)->whereNotIn('status', ['refused', 'cancelled'])->orderBy('start_date', 'desc')->get();
+                $upcomingAppointments = $appointments->where('start_date', '>', now());
+                $recentAppointments = $appointments->where('start_date', '<=', now());
+                $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($user) {
+                    $query->where('patient_id', $user->id);
+                })->get();
                 $examResults = ExamResult::where('patient_id', $user->id)->get();
 
                 return view('patient.home', compact(
@@ -64,6 +68,7 @@ class HomeController extends Controller
                     'allergies',
                     'medicalHistories',
                     'vaccinations',
+                    'appointments',
                     'upcomingAppointments',
                     'recentAppointments',
                     'consultationReports',

@@ -109,23 +109,21 @@
 }
 
 .navbar-vertical .navbar-logo-img, .navbar-vertical .navbar-logo > img {
-    max-height: 4rem;
-    max-width: 100%
+    max-height: 3rem;
+    max-width: 80%
 }
 
 
 .sidenav-body {
-    /*height: 65vh;*/
+    height: 60vh;
     max-height: calc(100vh - 60px);
     overflow-y: auto;
-    scroll-behavior: smooth
+    scroll-behavior: smooth;
+
 }
-.sidenav-footer {
-    /*width: 1rem;*/
-    height: 10vh;
-    /*margin-top: auto;*/
-    padding: .25rem;
-}
+/*.sidenav-footer {*/
+/*    width: 100%;*/
+/*}*/
 
 /*.user-profile {*/
 /*    display: flex;*/

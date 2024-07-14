@@ -118,7 +118,10 @@
                             </li>
                         </ul>
 
-                        <hr class="vertical dark w-1 h-100">
+
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center">
+                        <div class="border-start h-100"></div>
                     </div>
                     <div class="col-auto nav-item dropdown d-flex align-items-center">
 
@@ -131,13 +134,15 @@
                             <div class="d-flex flex-column align-items-start flex-grow-1">
                                 <span class="text-dark text-bold text-md">
                                     @if(auth()->user()->role === 'doctor')
-                                        Dr.
+                                        Dr.{{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</span>
+                                    <small class="user-speciality text-black-50">
+                                        {{ auth()->user()->speciality }}
+                                    </small>
                                     @endif
+                                <span class="text-dark text-bold text-md">
                                     {{ auth()->user()->firstName }} {{ auth()->user()->lastName }}
                                 </span>
-                                <small class="user-speciality text-black-50">
-                                    {{ auth()->user()->speciality }}
-                                </small>
+
                             </div>
 
                             <span class="ms-2"><i class="fas fa-solid fa-angle-down"></i></span>
@@ -158,7 +163,7 @@
                             <li>
                                 <a class="dropdown-item border-radius-md" href="{{ route('logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt fa-sm"></i> Sign Out
+                                    <i class="fas fa-sign-out-alt fa-sm"></i> Se déconnecter
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
@@ -171,3 +176,9 @@
 
     </div>
 </nav>
+<script>
+    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl)
+    })
+</script>

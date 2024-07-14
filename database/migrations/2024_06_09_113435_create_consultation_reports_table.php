@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('consultation_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
+            $table->unsignedBigInteger('appointment_id');
             $table->unsignedBigInteger('doctor_id');
             $table->datetime('consultation_date');
             $table->text('consultation_reason');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('follow_up_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
             $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -22,9 +22,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 
-    <!-- Font Awesome Icons -->
-    <link href="{{asset('assets/css/style.css')}}" rel="stylesheet"/>
     <!-- CSS Files -->
+    <link href="{{asset('assets/css/style.css')}}" rel="stylesheet"/>
     <link id="pagestyle" href="{{asset('assets/css/soft-ui-dashboard.css?v=1.0.3')}}" rel="stylesheet"/>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet'/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet"/>
@@ -43,9 +42,13 @@
         @endguest
         <!-- Scripts -->
         <script src="{{asset('assets/js/script.js')}}"></script>
+        <!-- Font Awesome Icons -->
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <!--- JQuery JS Files --->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!--- Choices.JS Files --->
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+        <!--- FullCalendar Files --->
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@5.11.3/main.min.js"></script>

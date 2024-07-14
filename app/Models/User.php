@@ -145,10 +145,7 @@ use Spatie\Permission\Models\Role;
         return ['isAvailable' => true, 'errors' => []];
     }
 
-     public function consultationReportsAsPatient(): HasMany
-     {
-         return $this->hasMany(ConsultationReport::class, 'patient_id');
-     }
+
 
      public function consultationReportsAsDoctor(): HasMany
      {

@@ -12,7 +12,7 @@ class ConsultationReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
+        'appointment_id',
         'doctor_id',
         'consultation_date',
         'consultation_reason',
@@ -24,14 +24,14 @@ class ConsultationReport extends Model
         'follow_up_date',
     ];
 
-    public function patient(): BelongsTo
+    public function appointment(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(Appointment::class);
     }
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'doctor_id');
+        return $this->belongsTo(User::class);
     }
 
     public function prescriptions(): HasMany
