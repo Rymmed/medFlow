@@ -51,7 +51,7 @@
               Copyright © <script>
                 document.write(new Date().getFullYear())
               </script> Soft by
-              <a style="color: #252f40;" href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Envast</a>
+              <a style="color: #252f40;" href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Rym Mohamed</a>
 
             </p>
           </div>

@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "agence104/livekit-server-sdk": "^1.2",
+        "codeat3/blade-google-material-design-icons": "^1.19",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
@@ -62,7 +64,9 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "composer/installers": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",
