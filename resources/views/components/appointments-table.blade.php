@@ -3,7 +3,7 @@
     <table class="table align-items-center mb-0">
         <thead>
         <tr>
-            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                 Date
             </th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -39,7 +39,7 @@
                     <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}</p>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    pas encore dev
+                    {!! $appointment->consultationReport ? '<a href="' . route('consultationReports.show', $appointment->consultationReport->id) . '">Voir le rapport</a>' : '<span>Pas de rapport</span>' !!}
                 </td>
                 <td class="text-center">
                     <p class="text-xs font-weight-bold mb-0">{{ $appointment->status }}</p>

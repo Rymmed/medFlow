@@ -14,19 +14,26 @@
                             <x-profile-image></x-profile-image>
                             <x-edit-image-btn></x-edit-image-btn>
                         </div>
-                        <h6 class="card-title mt-3">{{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</h6>
-                        <p class="font-weight-bold text-sm">{{ \Carbon\Carbon::parse(auth()->user()->dob)->age }} {{ __('ans') }}
-                            ,
-                            @if(auth()->user()->gender === 0)
-                                {{ __('Homme') }}
-                            @else
-                                {{ __('Femme') }}
-                            @endif
+                        <h6 class="font-weight-bolder card-title mt-3">{{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</h6>
+                        <p class="text-secondary text-sm">
+                            {{ auth()->user()->email }}
                         </p>
                         <h6 class="text-sm">
                             Rendez-Vous
                         </h6>
-
+                        <div class="row justify-content-center">
+                            <div class="col-5 mt-2">
+                                <h4>5</h4>
+                                <p class="text-sm text-secondary">passé</p>
+                            </div>
+                            <div class="col-1">
+                                <div class="border-start h-100 "></div>
+                            </div>
+                            <div class="col-5 mt-2">
+                                <h4>2</h4>
+                                <p class="text-sm text-secondary">passé</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Separator -->
@@ -46,8 +53,8 @@
                                     @endif</p>
                             </div>
                             <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
+                                <p class="text-sm text-secondary text-bold">{{ __('Age') }}</p>
+                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ \Carbon\Carbon::parse(auth()->user()->dob)->age }} {{ __('ans') }}</p>
                             </div>
                         </div>
                         <div class="row mx-0 w-100">

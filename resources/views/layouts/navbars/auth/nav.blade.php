@@ -134,14 +134,15 @@
                             <div class="d-flex flex-column align-items-start flex-grow-1">
                                 <span class="text-dark text-bold text-md">
                                     @if(auth()->user()->role === 'doctor')
-                                        Dr.{{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</span>
+                                        Dr. {{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</span>
                                     <small class="user-speciality text-black-50">
                                         {{ auth()->user()->speciality }}
                                     </small>
-                                    @endif
+                                @else
                                 <span class="text-dark text-bold text-md">
                                     {{ auth()->user()->firstName }} {{ auth()->user()->lastName }}
                                 </span>
+                                @endif
 
                             </div>
 
