@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('availabilities', function (Blueprint $table) {
+       Schema::create('doctor_infos', function (Blueprint $table) {
            $table->id();
            $table->unsignedBigInteger('doctor_id');
+           $table->string('speciality')->nullable();
+           $table->string('professional_card')->nullable();
            $table->json('days_of_week')->default("[]"); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
            $table->time('start_time')->default("08:00:00");
            $table->time('end_time')->default("18:00:00");;
-           $table->decimal('consultation_duration', 5, 2)->default('60');
+           $table->string('office_phone_number')->nullable();
            $table->timestamps();
 
            $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');

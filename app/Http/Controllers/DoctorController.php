@@ -159,7 +159,7 @@ class DoctorController extends Controller
             ]);
         } catch (\Exception $e) {
             // Handle the exception and return an error view or message
-            return redirect()->back()->withErrors(['error' => 'An error occurred while searching for doctors. Please try again later.']);
+            return back()->withErrors(['error' => 'An error occurred while searching for doctors. Please try again later.']);
         }
     }
 }

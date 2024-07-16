@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
-use App\Models\Availability;
+use App\Models\ConsultationInfo;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,9 +78,9 @@ class FullCalendarController extends Controller
                 $doctor->patients()->attach($patient->id);
             }
         }
-        $availability = Availability::where('doctor_id', $doctor_id);
+        $consultationInfo = ConsultationInfo::where('doctor_id', $doctor_id);
         $consultationDuration = $request->consultation_duration;
-        $defaultDuration = $availability->consultation_duration;;
+        $defaultDuration = $consultationInfo->duration;;
         $start = Carbon::parse($request->start_date);
         $appointment = Appointment::create([
             'doctor_id' => $doctor_id,

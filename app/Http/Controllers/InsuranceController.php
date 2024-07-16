@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Allergy;
+use App\Models\Insurance;
 use Illuminate\Http\Request;
 
-class AllergyController extends Controller
+class InsuranceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class AllergyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Allergy $allergy)
+    public function show(Insurance $insurance)
     {
         //
     }
@@ -42,7 +42,7 @@ class AllergyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Allergy $allergy)
+    public function edit(Insurance $insurance)
     {
         //
     }
@@ -50,7 +50,7 @@ class AllergyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Allergy $allergy)
+    public function update(Request $request, Insurance $insurance)
     {
         //
     }
@@ -58,7 +58,7 @@ class AllergyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Allergy $allergy)
+    public function destroy(Insurance $insurance)
     {
         //
     }

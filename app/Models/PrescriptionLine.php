@@ -12,10 +12,10 @@ class PrescriptionLine extends Model
 
     protected $fillable = [
         'prescription_id',
-        'medication_name',
-        'dosage',
+        'name',
+        'dose',
         'type',
-        'treatment_duration',
+        'duration',
     ];
 
     public function prescription(): BelongsTo

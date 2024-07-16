@@ -33,14 +33,14 @@ class VaccinationController extends Controller
     public function store(Request $request, $patientId): RedirectResponse
     {
         $request->validate([
-            'vaccine_name' => 'required|string|max:255',
-            'vaccination_date' => 'required|date',
+            'name' => 'required|string|max:255',
+            'date' => 'required|date',
         ]);
 
         Vaccination::create([
             'patient_id' => $patientId,
-            'vaccine_name' => $request->vaccine_name,
-            'vaccination_date' => $request->vaccination_date,
+            'name' => $request->name,
+            'date' => $request->date,
         ]);
 
         return redirect()->route('patients.show', $patientId)->with('success', 'Vaccination added successfully.');

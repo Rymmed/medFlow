@@ -6,18 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Vaccination extends Model
+class ConsultationInfo extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'medicalRecord_id',
-        'title',
-        'date',
+        'doctor_info_id',
+        'type',
+        'fees',
+        'duration',
     ];
 
-    public function medicalRecord(): BelongsTo
+    public function doctor_info(): BelongsTo
     {
-        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
+        return $this->belongsTo(DoctorInfo::class, 'doctor_info_id');
     }
 }

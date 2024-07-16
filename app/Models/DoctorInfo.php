@@ -5,22 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Availability extends Model
+class DoctorInfo extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'doctor_id',
+        'speciality',
+        'professional_card',
         'days_of_week',
         'start_time',
         'end_time',
-        'consultation_duration'
+        'office_phone_number',
     ];
 
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id');
+    }
+
+    public function consultation_info(): HasMany
+    {
+        return $this->hasMany(ConsultationInfo::class, 'doctor_id');
     }
 
     public function formattedDays()

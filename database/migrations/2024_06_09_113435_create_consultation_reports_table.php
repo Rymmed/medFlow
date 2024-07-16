@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('appointment_id');
             $table->unsignedBigInteger('doctor_id');
-            $table->datetime('consultation_date');
-            $table->text('consultation_reason');
+            $table->datetime('date');
             $table->text('symptoms')->nullable();
-            $table->text('vital_signs')->nullable();
             $table->text('diagnostic_hypotheses')->nullable();
             $table->text('final_diagnosis')->nullable();
             $table->text('treatment')->nullable();

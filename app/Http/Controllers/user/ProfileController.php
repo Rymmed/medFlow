@@ -5,6 +5,8 @@ namespace App\Http\Controllers\user;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\user\UpdateProfileRequest;
 use App\Models\Availability;
+use App\Models\ConsultationInfo;
+use App\Models\DoctorInfo;
 use App\Models\User;
 use Closure;
 use Illuminate\Auth\Events\PasswordReset;
@@ -29,8 +31,9 @@ class ProfileController extends Controller
         $user = Auth::user();
         $role = $user->role;
         if ($user->role === 'doctor') {
-            $availability = Availability::where('doctor_id', $user->id)->first() ;
-            return view('doctor.profile', compact('availability'));
+            $doctor_info = DoctorInfo::where('doctor_id', $user->id)->first() ;
+            $consultation_infos = ConsultationInfo::where('doctor_info_id', $doctor_info->id)->get();
+            return view('doctor.profile', compact('doctor_info', 'consultation_infos'));
         }
         else {
             return view($role . '.profile');

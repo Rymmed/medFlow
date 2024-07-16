@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -14,23 +15,20 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $roles = ['super-admin', 'admin', 'doctor', 'patient', 'assistant'];
         return [
             'lastName' => $this->faker->lastName,
             'firstName' => $this->faker->firstName,
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'), // You can replace 'password' with any default password you want
             'email_verified_at' => now(),
-            'role' => $this->faker->randomElement($roles),
-            'avatar' => null,
+            'role' => $this->faker->randomElement(UserRole::getValues()),
+            'profile_image' => null,
+            'address' => $this->faker->streetName,
             'city' => $this->faker->city,
-            'town' => $this->faker->streetName,
+            'country' => $this->faker->country,
             'dob' => $this->faker->date,
             'phone_number' => $this->faker->phoneNumber,
-            'insurance_number' => $this->faker->numerify('##########'),
-            'cin_number' => $this->faker->numerify('#########'),
-            'speciality' => $this->faker->word,
-            'registration_number' => $this->faker->numerify('##########'),
+            'gender' => 0,
             'remember_token' => Str::random(10),
             'created_at' => now(),
             'updated_at' => now(),

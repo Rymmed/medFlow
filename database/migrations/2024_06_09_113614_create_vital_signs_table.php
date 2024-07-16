@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('allergies', function (Blueprint $table) {
+        Schema::create('vital_signs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
-            $table->string('allergen');
-            $table->text('reaction');
-            $table->string('severity', 50);
+            $table->unsignedBigInteger('medicalRecord_id');
+            $table->string('type');
+            $table->float('value');
+            $table->string('unit');
             $table->timestamps();
 
-            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('medicalRecord_id')->references('id')->on('medical_records')->onDelete('cascade');
         });
     }
 

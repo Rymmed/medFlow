@@ -189,28 +189,28 @@
             </div>
         </div>
         <!-- Allergies -->
-        <div class="accordion" id="accordionAllergies">
-            <div class="accordion-item">
-                <div class="card mt-2">
-                    <h6 class="mb-0 accordion-header" id="headingAllergies">
-                        <a class="accordion-button" type="button" data-bs-toggle="collapse"
-                           data-bs-target="#collapseAllergies" aria-expanded="true"
-                           aria-controls="collapseAllergies" onclick="toggleIcon('allergies')">
-                            <span>{{ __('Allergies') }}</span>
-                            <x-toggle-icon-component id="allergies"/>
-                        </a>
-                    </h6>
-                    <div id="collapseAllergies" class="accordion-collapse collapse show"
-                         aria-labelledby="headingAllergies">
-                        <div class="card-body">
-                            @foreach($allergies as $allergy)
-                                <p>{{ $allergy->allergen }} - {{ $allergy->reaction }}</p>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{{--        <div class="accordion" id="accordionAllergies">--}}
+{{--            <div class="accordion-item">--}}
+{{--                <div class="card mt-2">--}}
+{{--                    <h6 class="mb-0 accordion-header" id="headingAllergies">--}}
+{{--                        <a class="accordion-button" type="button" data-bs-toggle="collapse"--}}
+{{--                           data-bs-target="#collapseAllergies" aria-expanded="true"--}}
+{{--                           aria-controls="collapseAllergies" onclick="toggleIcon('allergies')">--}}
+{{--                            <span>{{ __('Allergies') }}</span>--}}
+{{--                            <x-toggle-icon-component id="allergies"/>--}}
+{{--                        </a>--}}
+{{--                    </h6>--}}
+{{--                    <div id="collapseAllergies" class="accordion-collapse collapse show"--}}
+{{--                         aria-labelledby="headingAllergies">--}}
+{{--                        <div class="card-body">--}}
+{{--                            @foreach($allergies as $allergy)--}}
+{{--                                <p>{{ $allergy->allergen }} - {{ $allergy->reaction }}</p>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
         <!-- Antécédents Médicaux -->
         <div class="accordion" id="accordionMedicalHistory">

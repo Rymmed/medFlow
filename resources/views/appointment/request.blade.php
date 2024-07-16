@@ -13,8 +13,8 @@
         </div>
         <div class="col-6">
             <p class="text-dark text-bold text-sm">Disponibilité: </p>
-            <p class="text-sm">{{ $doctor->availability->formattedDays() }}</p>
-            <p class="text-sm">{{ $doctor->availability->formattedTime() }}</p>
+            <p class="text-sm">{{ $doctor->doctor_info->formattedDays() }}</p>
+            <p class="text-sm">{{ $doctor->doctor_info->formattedTime() }}</p>
         </div>
     </div>
 
@@ -67,9 +67,12 @@
                 <div class="col-4 mb-3">
                     <label for="consultation_type">Type de consultation :</label>
                     <select id="consultation_type" name="consultation_type" class="form-control" required>
-                        <option value="Online">En ligne</option>
-                        <option value="In person">En présentiel</option>
-                        <option value="Home service">Service à domicile</option>
+{{--                        <option value="Online">En ligne</option>--}}
+{{--                        <option value="In Person">En cabinet</option>--}}
+{{--                        <option value="Home Service">Service à domicile</option>--}}
+                        @foreach(App\Enums\ConsultationType::getValues() as $type)
+                            <option value="{{ $type }}" {{ $type === $consultation_info->type ? 'selected' : '' }}>{{ $type }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

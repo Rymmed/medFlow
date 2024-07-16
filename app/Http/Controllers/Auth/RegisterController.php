@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Availability;
+use App\Models\DoctorInfo;
+use App\Models\MedicalRecord;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -63,11 +65,10 @@ class RegisterController extends Controller
             'dob' => 'required|date',
             'phone_number' => 'required|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-//            'gender' => ['required', 'boolean'],
-//            'insurance_number' => ['required_if:role,patient', 'string', 'max:255'],
-//            'cin_number' => ['required_if:role,patient','string', 'max:255'],
-//            'speciality' => ['required_if:role,doctor', 'string', 'max:255'],
-//            'registration_number' => ['required_if:role,doctor', 'string', 'max:255'],
+            'gender' => 'required|boolean',
+            'address' => 'string|max:255',
+            'city' => 'string|max:255',
+            'country' => 'string|max:255',
         ]);
     }
 
@@ -79,20 +80,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-//        return User::create([
-//            'lastName' => ucwords($data['lastName']),
-//            'firstName' => ucwords($data['firstName']),
-//            'email' => $data['email'],
-//            'password' => Hash::make($data['password']),
-//            'role' => $data['role'],
-//            'dob' => $data['dob'],
-//            'gender' => $data['gender'],
-//            'phone_number' => $data['phone_number'],
-//            'insurance_number' => $data['insurance_number'],
-//            'cin_number' => $data['cin_number'],
-//            'speciality' => $data['speciality'],
-//            'registration_number' => $data['registration_number']
-//        ]);
         $user = User::create([
             'lastName' => ucwords($data['lastName']),
             'firstName' => ucwords($data['firstName']),
@@ -100,13 +87,11 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
             'dob' => $data['dob'],
-//            'gender' => $data['gender'],
+            'gender' => $data['gender'],
             'phone_number' => $data['phone_number'],
-            'insurance_number' => $data['insurance_number'],
-            'cin_number' => $data['cin_number'],
-//            'speciality' => $data['speciality'],
-            'registration_number' => $data['registration_number']
-
+            'address' => $data['address'],
+            'city' => $data['city'],
+            'country' => $data['country'],
         ]);
         if (request()->hasFile('profile_image')) {
             $image = request()->file('profile_image');
@@ -115,10 +100,16 @@ class RegisterController extends Controller
             $user->save();
         }
 
+        if ($user->role === 'patient') {
+            $medicalRecord = new MedicalRecord();
+            $medicalRecord->patient_id = $user->id;
+            $medicalRecord->save();
+        }
+
         if ($user->role === 'doctor'){
-            $availability = new Availability();
-            $availability->doctor_id = $user->id ;
-            $availability->save();
+            $doctor_info = new DoctorInfo();
+            $doctor_info->doctor_id = $user->id ;
+            $doctor_info->save();
         }
         return $user ;
 

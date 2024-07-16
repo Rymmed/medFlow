@@ -6,11 +6,13 @@ use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AssistantDoctorController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\user\ProfileController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
@@ -74,7 +76,7 @@ Route::middleware(['has.role:doctor'])->group(function () {
     Route::get('myAppointments', [AppointmentController::class, 'myAppointments'])->name('appointments.myAppointments');
     Route::put('myAppointments/updateStatus', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
 
-    Route::put('availability/{availability}', [AvailabilityController::class, 'update'])->name('availability.update');
+    Route::put('doctor_infos/{doctor_info}', [DoctorInfoController::class, 'update'])->name('doctor_infos.update');
 
     Route::get('/myCalendar', [FullCalendarController::class, 'index'])->name('myCalendar');
     Route::get('/myCalendar/appointments', [FullCalendarController::class, 'getAppointments'])->name('myCalendar.appointments');

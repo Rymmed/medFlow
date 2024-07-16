@@ -31,18 +31,14 @@ use Spatie\Permission\Models\Role;
         'firstName',
         'email',
         'password',
-        'profile_image',
-        'city',
-        'country',
         'role',
         'dob',
         'phone_number',
         'gender',
-        'insurance_number',
-        'cin_number',
-        'speciality',
-        'registration_number',
-        'status',
+        'profile_image',
+        'address',
+        'city',
+        'country',
         'doctor_id'
     ];
 
@@ -81,7 +77,7 @@ use Spatie\Permission\Models\Role;
      }
     public function assistants(): HasMany
     {
-        return $this->hasMany(User::class, 'doctor_id')->where('role', 'doctor');
+        return $this->hasMany(User::class, 'doctor_id');
     }
      public function doctorAppointments(): HasMany
      {
@@ -93,81 +89,65 @@ use Spatie\Permission\Models\Role;
          return $this->hasMany(Appointment::class, 'patient_id');
      }
 
-     public function availability(): HasOne
+     public function doctor_info(): HasOne
      {
-         return $this->hasOne(Availability::class, 'doctor_id');
+         return $this->hasOne(DoctorInfo::class, 'doctor_id');
      }
 
-    public function isAvailable($appointmentStartTime): array
-    {
-        $dayOfWeek = Carbon::parse($appointmentStartTime)->dayOfWeek;
-        $appointmentTime = Carbon::parse($appointmentStartTime)->format('H:i:s');
-        $errors = [];
-        $isAvailableDate = $this->availability()
-            ->whereRaw("JSON_CONTAINS(`days_of_week`, '\"$dayOfWeek\"')")
-            ->exists();
-        if (!$isAvailableDate) {
-            $errors[] = "Le médecin n'est pas disponible dans ce jour!";
-        }
-        $isAvailableStartTime = $this->availability()
-            ->where('start_time', '<=', $appointmentTime)
-            ->exists();
+     public function medicalRecord(): HasOne
+     {
+         return $this->hasOne(MedicalRecord::class, 'patient_id');
+     }
 
-        if(!$isAvailableStartTime){
-            $errors[] = "Le cabinet s'ouvre après l'heure choisie!";
-        }
-
-        $isAvailableEndTime = $this->availability()
-            ->where('end_time', '>=', $appointmentTime)
-            ->exists();
-        if(!$isAvailableEndTime) {
-            $errors[] = "Le cabinet se ferme avant cette heure!";
-        }
-        $isAvailable = $isAvailableDate && $isAvailableStartTime && $isAvailableEndTime;
-
-        if (!$isAvailable) {
-            return ['isAvailable' => false, 'errors' => $errors];
-        }
-
-        $availability = $this->availability()->where('doctor_id', $this->id)->first();
-        $end_time= $availability->end_time;
-        $appointmentExists= $this->doctorAppointments()
-            ->where('start_time', $appointmentTime)
-            ->where('finish_time', $end_time)
-            ->where('status', 'confirmed')
-            ->exists();
-
-        if ($appointmentExists) {
-            $errors[] = "Le médecin a un rendez-vous confirmé.";
-            return ['isAvailable' => false, 'errors' => $errors];
-        }
-
-        return ['isAvailable' => true, 'errors' => []];
-    }
-
-
-
-     public function consultationReportsAsDoctor(): HasMany
+     public function consultationReports(): HasMany
      {
          return $this->hasMany(ConsultationReport::class, 'doctor_id');
      }
-     public function allergies(): HasMany
-     {
-         return $this->hasMany(Allergy::class);
-     }
 
-     public function medicalHistories(): HasMany
+     public function isAvailable($appointmentStartTime): array
      {
-         return $this->hasMany(MedicalHistory::class);
-     }
+         $dayOfWeek = Carbon::parse($appointmentStartTime)->dayOfWeek;
+         $appointmentTime = Carbon::parse($appointmentStartTime)->format('H:i:s');
+         $errors = [];
+         $isAvailableDate = $this->doctor_info()
+             ->whereRaw("JSON_CONTAINS(`days_of_week`, '\"$dayOfWeek\"')")
+             ->exists();
+         if (!$isAvailableDate) {
+             $errors[] = "Le médecin n'est pas disponible dans ce jour!";
+         }
+         $isAvailableStartTime = $this->doctor_info()
+             ->where('start_time', '<=', $appointmentTime)
+             ->exists();
 
-     public function vaccinations(): HasMany
-     {
-         return $this->hasMany(Vaccination::class);
-     }
+         if(!$isAvailableStartTime){
+             $errors[] = "Le cabinet s'ouvre après l'heure choisie!";
+         }
 
-     public function examResults(): HasMany
-     {
-         return $this->hasMany(ConsultationReport::class);
+         $isAvailableEndTime = $this->doctor_info()
+             ->where('end_time', '>=', $appointmentTime)
+             ->exists();
+         if(!$isAvailableEndTime) {
+             $errors[] = "Le cabinet se ferme avant cette heure!";
+         }
+         $isAvailable = $isAvailableDate && $isAvailableStartTime && $isAvailableEndTime;
+
+         if (!$isAvailable) {
+             return ['isAvailable' => false, 'errors' => $errors];
+         }
+
+         $doctor_info = $this->doctor_info()->where('doctor_id', $this->id)->first();
+         $end_time= $doctor_info->end_time;
+         $appointmentExists= $this->doctorAppointments()
+             ->where('start_time', $appointmentTime)
+             ->where('finish_time', $end_time)
+             ->where('status', 'confirmed')
+             ->exists();
+
+         if ($appointmentExists) {
+             $errors[] = "Le médecin a un rendez-vous confirmé.";
+             return ['isAvailable' => false, 'errors' => $errors];
+         }
+
+         return ['isAvailable' => true, 'errors' => []];
      }
-}
+ }

@@ -14,10 +14,8 @@ class ConsultationReport extends Model
     protected $fillable = [
         'appointment_id',
         'doctor_id',
-        'consultation_date',
-        'consultation_reason',
+        'date',
         'symptoms',
-        'vital_signs',
         'diagnostic_hypotheses',
         'final_diagnosis',
         'treatment',

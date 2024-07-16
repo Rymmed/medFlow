@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
-            $table->string('exam_type');
-            $table->text('result');
-            $table->date('exam_date');
+            $table->unsignedBigInteger('medicalRecord_id');
+            $table->string('type');
+            $table->text('result')->nullable();
+            $table->string('doc')->nullable();
+            $table->date('date')->nullable();
             $table->timestamps();
 
-            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('medicalRecord_id')->references('id')->on('medical_records')->onDelete('cascade');
         });
     }
 

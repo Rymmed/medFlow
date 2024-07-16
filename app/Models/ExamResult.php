@@ -11,14 +11,15 @@ class ExamResult extends Model
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
-        'exam_type',
+        'medicalRecord_id',
+        'type',
         'result',
-        'exam_date',
+        'doc',
+        'date',
     ];
 
-    public function patient(): BelongsTo
+    public function medicalRecord(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
     }
 }
