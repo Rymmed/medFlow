@@ -113,7 +113,7 @@ class DoctorController extends Controller
         $results = User::where('role', 'doctor');
         return view('search_doctors', compact('results'));
     }
-    public function searchDoctors(Request $request): View
+    public function searchDoctors(Request $request)
     {
         $speciality = $request->input('speciality');
         $city = trim($request->input('city'));
@@ -123,30 +123,32 @@ class DoctorController extends Controller
 
         try {
             $doctorsQuery = User::where('role', 'doctor')
+                ->join('doctor_infos', 'users.id', '=', 'doctor_infos.doctor_id')
                 ->when($speciality, function ($query, $speciality) {
                     if (is_array($speciality)) {
-                        $query->whereIn('speciality', $speciality);
+                        $query->whereIn('doctor_infos.speciality', $speciality);
                     } else {
-                        $query->where('speciality', $speciality);
+                        $query->where('doctor_infos.speciality', $speciality);
                     }
                 })
-                ->when($city, fn($query) => $query->where('city', $city))
-                ->when($country, fn($query) => $query->where('country', $country))
-                ->when($firstName, fn($query) => $query->where('firstName', 'like', '%' . $firstName . '%'))
-                ->when($lastName, fn($query) => $query->where('lastName', 'like', '%' . $lastName . '%'));
+                ->when($city, fn($query) => $query->where('users.city', $city))
+                ->when($country, fn($query) => $query->where('users.country', $country))
+                ->when($firstName, fn($query) => $query->where('users.firstName', 'like', '%' . $firstName . '%'))
+                ->when($lastName, fn($query) => $query->where('users.lastName', 'like', '%' . $lastName . '%'));
 
             // Clone the query to get the total results without executing the query again
             $totalResultsQuery = clone $doctorsQuery;
 
             // Paginate the results
-            $results = $doctorsQuery->paginate(9)->appends([
+            $results = $doctorsQuery->select('users.*', 'doctor_infos.speciality')->paginate(9)->appends([
                 'speciality' => $speciality,
                 'city' => $city,
                 'country' => $country,
                 'firstName' => $firstName,
                 'lastName' => $lastName,
             ]);
-            $totalResults = $totalResultsQuery->get();
+
+            $totalResults = $totalResultsQuery->select('users.*', 'doctor_infos.speciality')->get();
 
             return view('search_doctors', [
                 'results' => $results,
@@ -162,4 +164,5 @@ class DoctorController extends Controller
             return back()->withErrors(['error' => 'An error occurred while searching for doctors. Please try again later.']);
         }
     }
+
 }

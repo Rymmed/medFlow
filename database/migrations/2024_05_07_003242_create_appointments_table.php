@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\AppointmentStatus;
+use App\Enums\ConsultationType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('finish_date')->nullable();
             $table->string('consultation_reason', 255)->nullable();
-            $table->string('consultation_type');
+            $table->enum('consultation_type', ConsultationType::getValues());
             $table->enum('status', AppointmentStatus::getValues())->default('pending');
             $table->timestamps();
 

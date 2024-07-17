@@ -4,14 +4,14 @@ namespace App\Enums;
 
 class MedicalHistType
 {
-    const URBAN = 'Urban';
-    const RURAL = 'Rural';
+    const FAMILIAL = 'Familial';
+    const PERSONAL = 'Personnel';
 
     public static function getValues(): array
     {
         return [
-            self::URBAN,
-            self::RURAL,
+            self::FAMILIAL,
+            self::PERSONAL,
         ];
     }
 }

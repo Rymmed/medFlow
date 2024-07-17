@@ -4,9 +4,9 @@ namespace App\Enums;
 
 class ConsultationType
 {
-    const ONLINE = 'Online';
-    const IN_PERSON = 'In person';
-    const HOME_SERVICE = 'Home service';
+    const ONLINE = 'En ligne';
+    const IN_PERSON = 'En cabinet';
+    const HOME_SERVICE = 'Service à domicile';
 
     public static function getValues(): array
     {

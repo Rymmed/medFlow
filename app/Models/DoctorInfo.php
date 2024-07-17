@@ -19,6 +19,10 @@ class DoctorInfo extends Model
         'start_time',
         'end_time',
         'office_phone_number',
+        'consultation_duration',
+        'online_fees',
+        'home_service_fees',
+        'in_person_fees',
     ];
 
     public function doctor(): BelongsTo
@@ -26,10 +30,10 @@ class DoctorInfo extends Model
         return $this->belongsTo(User::class, 'id');
     }
 
-    public function consultation_info(): HasMany
-    {
-        return $this->hasMany(ConsultationInfo::class, 'doctor_id');
-    }
+//    public function consultation_info(): HasMany
+//    {
+//        return $this->hasMany(ConsultationInfo::class, 'doctor_id');
+//    }
 
     public function formattedDays()
     {

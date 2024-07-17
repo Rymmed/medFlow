@@ -3,11 +3,11 @@
 @section('content')
     <div class="row">
         <div class="col-2 text-center">
-            <img class="avatar avatar-xxl border-radius-section shadow" src="{{asset('assets/img/bruce-mars.jpg')}}" alt="doctor_photo">
+            <x-profile-image :class="'avatar avatar-xxl border-radius-section shadow'"></x-profile-image>
         </div>
         <div class="col-3">
             <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
-            <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->speciality }}</p>
+            <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor_info->speciality }}</p>
             <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
             <p class="card-text text-sm"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
         </div>
@@ -70,8 +70,8 @@
 {{--                        <option value="Online">En ligne</option>--}}
 {{--                        <option value="In Person">En cabinet</option>--}}
 {{--                        <option value="Home Service">Service à domicile</option>--}}
-                        @foreach(App\Enums\ConsultationType::getValues() as $type)
-                            <option value="{{ $type }}" {{ $type === $consultation_info->type ? 'selected' : '' }}>{{ $type }}</option>
+                        @foreach($doctorInfo->consultation_types as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
                         @endforeach
                     </select>
                 </div>

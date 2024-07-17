@@ -11,7 +11,7 @@
                     <!-- Left Section -->
                     <div class="col-md-4 text-center mt-4">
                         <div class="position-relative">
-                            <x-profile-image></x-profile-image>
+                            <x-profile-image :class="'avatar avatar-xl border-radius-section shadow-sm'"></x-profile-image>
                             <x-edit-image-btn></x-edit-image-btn>
                         </div>
                         <h6 class="font-weight-bolder card-title mt-3">{{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</h6>
@@ -59,32 +59,22 @@
                         </div>
                         <div class="row mx-0 w-100">
                             <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
+                                <p class="text-sm text-secondary text-bold">{{ __('Taille') }}</p>
+                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ $medicalRecord->height }}</p>
                             </div>
                             <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
-                            </div>
-                        </div>
-                        <div class="row mx-0 w-100">
-                            <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
+                                <p class="text-sm text-secondary text-bold">{{ __('Poids') }}</p>
+                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ $medicalRecord->weight }}</p>
                             </div>
                         </div>
                         <div class="row mx-0 w-100">
                             <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
+                                <p class="text-sm text-secondary text-bold">{{ __('Adresse') }}</p>
+                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->address }}</p>
                             </div>
                             <div class="col-6">
-                                <p class="text-sm text-secondary text-bold">{{ __('Date de naissance') }}</p>
-                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->dob }}</p>
+                                <p class="text-sm text-secondary text-bold">{{ __('Ville') }}</p>
+                                <p class="border-bottom text-sm pb-2 text-dark text-bold">{{ auth()->user()->city }}</p>
                             </div>
                         </div>
                     </div>

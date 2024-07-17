@@ -4,8 +4,8 @@ namespace App\Enums;
 
 class MedicalHistSubtype
 {
-    const MEDICAL = 'Medical';
-    const SURGICAL = 'Surgical';
+    const MEDICAL = 'Médical';
+    const SURGICAL = 'Chirurgical';
 
     public static function getValues(): array
     {

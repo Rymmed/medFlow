@@ -15,6 +15,7 @@ class MedicalRecord extends Model
         'patient_id',
         'height',
         'weight',
+        'blood_group',
         'smoking',
         'alcohol',
         'area',

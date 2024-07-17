@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\BloodGroup;
+use App\Enums\ConsultationType;
+use App\Enums\PatientArea;
 use App\Http\Controllers\Controller;
 use App\Models\Availability;
 use App\Models\DoctorInfo;
@@ -13,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
@@ -55,22 +59,53 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-
-        return Validator::make($data, [
+        $rules = [
             'lastName' => 'required|string|max:255',
             'firstName' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|max:255',
-            'dob' => 'required|date',
-            'phone_number' => 'required|string|max:255',
+            'dob' => 'date',
+            'phone_number' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'gender' => 'required|boolean',
-            'address' => 'string|max:255',
-            'city' => 'string|max:255',
-            'country' => 'string|max:255',
-        ]);
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+        ];
+
+        if (isset($data['role']) && $data['role'] === 'doctor') {
+            $doctorRules = [
+                'speciality' => 'required|string|max:255',
+                'professional_card' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+                'days_of_week' => 'required|array',
+                'start_time' => 'required',
+                'end_time' => 'required|after:start_time',
+                'office_phone_number' => 'nullable|string|max:255',
+                'consultation_duration' => 'nullable|numeric|min:1',
+                'online_fees' => 'nullable|string|max:255',
+                'home_service_fees' => 'nullable|string|max:255',
+                'in_person_fees' => 'nullable|string|max:255',
+                'consultation_types' => 'required|array',
+                'consultation_types.*' => ['required', Rule::in(ConsultationType::getValues())],
+            ];
+            $rules = array_merge($rules, $doctorRules);
+        } elseif (isset($data['role']) && $data['role'] === 'patient') {
+            $patientRules = [
+                'height' => 'nullable|numeric',
+                'weight' => 'nullable|numeric',
+                'blood_group' =>['nullable','string',Rule::in(BloodGroup::getValues())],
+                'smoking' => 'nullable|boolean',
+                'alcohol' => 'nullable|boolean',
+                'area' => ['nullable', 'string', Rule::in(PatientArea::getValues())],
+                'sedentary_lifestyle' => 'nullable|boolean',
+            ];
+            $rules = array_merge($rules, $patientRules);
+        }
+
+        return Validator::make($data, $rules);
     }
+
 
     /**
      * Create a new user instance after a valid registration.
@@ -89,29 +124,55 @@ class RegisterController extends Controller
             'dob' => $data['dob'],
             'gender' => $data['gender'],
             'phone_number' => $data['phone_number'],
-            'address' => $data['address'],
-            'city' => $data['city'],
-            'country' => $data['country'],
+            'address' => $data['address'] ?? null,
+            'city' => $data['city'] ?? null,
+            'country' => $data['country'] ?? null,
         ]);
+
         if (request()->hasFile('profile_image')) {
             $image = request()->file('profile_image');
             $path = $image->store('profile_images', 'public');
-            $user->profile_image = $path;
+            $user->profile_image = $path ?? null;
             $user->save();
         }
 
         if ($user->role === 'patient') {
             $medicalRecord = new MedicalRecord();
             $medicalRecord->patient_id = $user->id;
+            $medicalRecord->height = $data['height'] ?? null;
+            $medicalRecord->weight = $data['weight'] ?? null;
+            $medicalRecord->blood_group = $data['blood_type'] ?? 'unknown';
+            $medicalRecord->smoking = $data['smoking'] ?? null;
+            $medicalRecord->alcohol = $data['alcohol'] ?? null;
+            $medicalRecord->area = $data['area'] ?? null;
+            $medicalRecord->sedentary_lifestyle = $data['sedentary_lifestyle'] ?? null;
             $medicalRecord->save();
         }
 
-        if ($user->role === 'doctor'){
+        if ($user->role === 'doctor') {
             $doctor_info = new DoctorInfo();
-            $doctor_info->doctor_id = $user->id ;
+            $doctor_info->doctor_id = $user->id;
+            $doctor_info->speciality = $data['speciality'] ?? null;
+            $doctor_info->days_of_week = json_encode($data['days_of_week']);
+            $doctor_info->start_time = $data['start_time'];
+            $doctor_info->end_time = $data['end_time'];
+            $doctor_info->office_phone_number = $data['office_phone_number'] ?? null;
+            $doctor_info->consultation_duration = $data['consultation_duration'] ?? null;
+            $doctor_info->consultation_types = json_encode($data['consultation_types']);
+            $doctor_info->online_fees = $data['online_fees'] ?? null;
+            $doctor_info->home_service_fees = $data['home_service_fees'] ?? null;
+            $doctor_info->in_person_fees = $data['in_person_fees'] ?? null;
+
+            if (request()->hasFile('professional_card')) {
+                $professionalCard = request()->file('professional_card');
+                $path = $professionalCard->store('professional_cards', 'public');
+                $doctor_info->professional_card = $path;
+            }
+
             $doctor_info->save();
         }
-        return $user ;
 
+        return $user;
     }
+
 }

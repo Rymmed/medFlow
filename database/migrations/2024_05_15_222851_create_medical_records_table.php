@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
-            $table->string('height')->nullable();
-            $table->string('weight')->nullable()->nullable();
-            $table->boolean('smoking')->default('0');
-            $table->boolean('alcohol')->default('0');
+            $table->double('height')->nullable();
+            $table->double('weight')->nullable();
+            $table->boolean('smoking')->default('0')->nullable();
+            $table->boolean('alcohol')->default('0')->nullable();
+            $table->string('blood_group')->nullable();
             $table->enum('area', PatientArea::getValues())->nullable();
             $table->boolean('sedentary_lifestyle')->default('1');//0: active | 1:inactive
             $table->timestamps();

@@ -4,8 +4,8 @@ namespace App\Enums;
 
 class PatientArea
 {
-    const URBAN = 'Urban';
-    const RURAL = 'Rural';
+    const URBAN = 'Urbaine';
+    const RURAL = 'Rurale';
 
     public static function getValues(): array
     {

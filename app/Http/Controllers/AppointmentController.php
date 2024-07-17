@@ -23,7 +23,8 @@ class AppointmentController extends Controller
     public function index($doctor_id)
     {
         $doctor = User::find($doctor_id);
-        return view('appointment.request', compact('doctor'));
+        $doctor_info = DoctorInfo::where('doctor_id', $doctor->id)->first();
+        return view('appointment.request', compact('doctor', 'doctor_info'));
     }
 
     /**
@@ -35,10 +36,8 @@ class AppointmentController extends Controller
     public function sendAppointmentRequest(Request $request, $doctor_id): RedirectResponse
     {
         $doctor = User::find($doctor_id);
-        $consultationInfo = ConsultationInfo::whereHas('doctor_info', function ($query) use ($doctor) {
-            $query->where('doctor_id', $doctor->id);
-        });
-        $consultationTypes = $consultationInfo->pluck('type')->toArray();
+        $doctorInfo = DoctorInfo::where('doctor_id', $doctor->id)->first();
+        $consultationTypes = json_decode($doctorInfo->consultation_types);
         $request->validate([
             'start_date' => 'required|datetime|after_or_equal:now',
             'consultation_reason' => 'required|string|max:255',
@@ -67,9 +66,9 @@ class AppointmentController extends Controller
         $confirmed = AppointmentStatus::CONFIRMED;
         $refused = AppointmentStatus::REFUSED;
         $appointments = $doctor->doctorAppointments()->with('patient')->get();
-        $pendingAppointments = $appointments->where('status', AppointmentStatus::PENDING);
-        $confirmedAppointments = $appointments->where('status', AppointmentStatus::CONFIRMED);
-        $refusedAppointments = $appointments->where('status', AppointmentStatus::REFUSED);
+        $pendingAppointments = $appointments->where('status', $pending);
+        $confirmedAppointments = $appointments->where('status', $confirmed);
+        $refusedAppointments = $appointments->where('status', $refused);
         return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments', 'refusedAppointments'));
     }
 

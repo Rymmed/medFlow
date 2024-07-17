@@ -8,7 +8,7 @@
                         <div class="row gx-4">
                             <div class="col-auto">
                                 <div class="position-relative">
-                                    <x-profile-image></x-profile-image>
+                                    <x-profile-image :class="'avatar avatar-xl border-radius-section shadow'"></x-profile-image>
                                     <x-edit-image-btn></x-edit-image-btn>
                                 </div>
                             </div>

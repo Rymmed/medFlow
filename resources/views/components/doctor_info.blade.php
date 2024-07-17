@@ -1,4 +1,4 @@
-@props(['doctor_info', 'consultation_infos'])
+@props(['doctor_info'])
 
 <div class="card" id="availability-form" style="display: none;">
     <div class="card-header pb-0 px-3">
@@ -32,10 +32,10 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="start_time" class="form-control-label">{{ __('Heure d\'ouverture') }}</label>
+                        <label for="speciality" class="form-control-label">{{ __('Specialité') }}</label>
                         <div class="@error('start_time') border border-danger rounded-3 @enderror">
                             <select class="form-select" name="speciality" id="speciality">
-                                <option value="{{ $doctor_info->speciality }}" disabled selected>{{ __('Sélectionner une spécialité') }}</option>
+                                <option value="{{ $doctor_info->speciality }}" selected></option>
                                 @foreach(config('specialities') as $speciality)
                                     <option value="{{ $speciality }}">{{ $speciality }}</option>
                                 @endforeach
@@ -99,53 +99,22 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <h6 class="mb-3">{{ __('Informations sur la consultation') }}</h6>
-            <div id="consultation-info-container">
-                @foreach($consultation_infos as $consultation_info)
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="type_{{ $consultation_info->id }}" class="form-control-label">{{ __('Type de consultation') }}</label>
-                                <div class="@error('type') border border-danger rounded-3 @enderror">
-                                    <select id="type_{{ $consultation_info->id }}" name="type_{{ $consultation_info->id }}" class="form-control" required>
-                                        @foreach(App\Enums\ConsultationType::getValues() as $type)
-                                            <option value="{{ $type }}" {{ $type === $consultation_info->type ? 'selected' : '' }}>{{ $type }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('type')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="fees_{{ $consultation_info->id }}" class="form-control-label">{{ __('Frais de consultation') }}</label>
-                                <div class="@error('fees') border border-danger rounded-3 @enderror">
-                                    <input class="form-control" type="text" id="fees_{{ $consultation_info->id }}" name="fees_{{ $consultation_info->id }}"
-                                           value="{{ $consultation_info->fees }}">
-                                    @error('fees')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="duration_{{ $consultation_info->id }}" class="form-control-label">{{ __('Durée (minutes)') }}</label>
-                                <div class="@error('duration') border border-danger rounded-3 @enderror">
-                                    <input class="form-control" type="number" id="duration_{{ $consultation_info->id }}" name="duration_{{ $consultation_info->id }}"
-                                           value="{{ $consultation_info->duration }}">
-                                    @error('duration')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="consultation_duration"
+                               class="form-control-label">{{ __('Durée de la consultation (minutes)') }}</label>
+                        <div
+                            class="@error('consultation_duration')border border-danger rounded-3 @enderror">
+                            <input class="js-example-basic-multiple form-control" type="number"
+                                   id="consultation_duration" name="consultation_duration"
+                                   value="{{ $doctor_info->consultation_duration }}">
+                            @error('consultation_duration')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
-                @endforeach
+                </div>
+
             </div>
 
             <div class="d-flex justify-content-end">

@@ -127,10 +127,7 @@
 
                         <a href="javascript:;" class="nav-link d-flex align-items-center mb-0 p-0 ms-2 text-sm"
                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="avatar avatar-sm border-opacity-100 border-radius-section shadow-card me-2"
-                                 src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('assets/img/default-profile.jpg') }}"
-                                 alt="Profile Photo">
-
+                            <x-profile-image :class="'avatar avatar-sm border-opacity-100 border-radius-section shadow-card me-2'"></x-profile-image>
                             <div class="d-flex flex-column align-items-start flex-grow-1">
                                 <span class="text-dark text-bold text-md">
                                     @if(auth()->user()->role === 'doctor')

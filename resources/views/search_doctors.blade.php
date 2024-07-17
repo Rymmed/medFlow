@@ -19,14 +19,14 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="firstName">Prénom :</label>
-                        <input type="text" id="firstName" name="firstName" class="form-control" value="{{ old('firstName', $firstName) }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName">Nom :</label>
-                        <input type="text" id="lastName" name="lastName" class="form-control" value="{{ old('lastName', $lastName) }}">
-                    </div>
+{{--                    <div class="mb-3">--}}
+{{--                        <label for="firstName">Prénom :</label>--}}
+{{--                        <input type="text" id="firstName" name="firstName" class="form-control" value="{{ old('firstName', $firstName) }}">--}}
+{{--                    </div>--}}
+{{--                    <div class="mb-3">--}}
+{{--                        <label for="lastName">Nom :</label>--}}
+{{--                        <input type="text" id="lastName" name="lastName" class="form-control" value="{{ old('lastName', $lastName) }}">--}}
+{{--                    </div>--}}
                     <div class="mb-3">
                         <label for="country">Pays :</label>
                         <input type="text" id="country" name="country" class="form-control" value="{{ old('country', $country) }}">
@@ -52,12 +52,12 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-3 text-center">
-                                                    <img class="avatar border-radius-section shadow" src="{{asset('assets/img/bruce-mars.jpg')}}" alt="doctor_photo">
+                                                <div class="col-4 text-center me-2">
+                                                    <x-profile-image :class="'avatar border-radius-section shadow'"></x-profile-image>
                                                 </div>
-                                                <div class="col-9">
-                                                    <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
-                                                    <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->speciality }}</p>
+                                                <div class="col-7">
+                                                    <h6 class="card-title text-sm">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
+                                                    <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->doctor_info->speciality }}</p>
                                                 </div>
                                             </div>
                                             <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->town }}</p>

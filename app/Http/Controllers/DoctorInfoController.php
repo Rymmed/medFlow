@@ -18,11 +18,16 @@ class DoctorInfoController extends Controller
     public function update(Request $request, $doctor_id)
     {
         $validator = $request->validate([
-            'doctor_id' => $doctor_id,
             'days_of_week' => 'required|array',
             'start_time' => 'required',
             'end_time' => 'required|after:start_time',
-            'office_phonne_number' => 'string',
+            'office_phone_number' => 'nullable|string',
+            'consultation_duration' => 'nullable|numeric|min:1',
+            'online_fees' => 'nullable|string',
+            'home_service_fees' => 'nullable|string',
+            'in_person_fees' => 'nullable|string',
+            'consultation_types' => 'required|array',
+            'consultation_types.*' => ['required', Rule::in(ConsultationType::getValues())],
         ]);
 
         $doctor_info = DoctorInfo::where('doctor_id', $doctor_id)->firstOrFail();
@@ -31,23 +36,15 @@ class DoctorInfoController extends Controller
         $doctor_info->start_time = $validator['start_time'];
         $doctor_info->end_time = $validator['end_time'];
         $doctor_info->office_phone_number = $validator['office_phone_number'];
-
-        $consultation_infos = ConsultationInfo::where('doctor_info_id', $doctor_info->id)->get();
-        foreach ($consultation_infos as $consultation_info){
-            $request->validate([
-                'type' => 'required|in:' . implode(',', ConsultationType::getValues()),
-                'fees' => 'required|string',
-                'duration' => 'required|numeric|min:1',
-            ]);
-            $consultation_info->type = $request->type;
-            $consultation_info->fees = $request->fees;
-            $consultation_info->duration = $request->duration;
-            $consultation_info->save();
-
-        }
+        $doctor_info->consultation_duration = $validator['consultation_duration'];
+        $doctor_info->online_fees = $validator['online_fees'];
+        $doctor_info->home_service_fees = $validator['home_service_fees'];
+        $doctor_info->in_person_fees = $validator['in_person_fees'];
+        $doctor_info->consultation_types = json_encode($validator['consultation_types']);
         $doctor_info->save();
+
         $appointments = Appointment::where('doctor_id', $doctor_id)->get();
-        foreach ($appointments as $appointment){
+        foreach ($appointments as $appointment) {
             $start = Carbon::parse($appointment->start_date);
             $appointment->finish_date = $start->copy()->addMinutes($doctor_info->consultation_duration);
             $appointment->save();

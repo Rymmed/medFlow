@@ -4,12 +4,12 @@ namespace App\Enums;
 
 class AppointmentStatus
 {
-    const PENDING = 'Pending';
-    const REFUSED = 'Refused';
-    const CONFIRMED = 'Confirmed';
-    const CANCELLED = 'Cancelled';
-    const STARTED = 'Started';
-    const COMPLETED = 'Completed';
+    const PENDING = 'En attente';
+    const REFUSED = 'Refusé';
+    const CONFIRMED = 'Confirmé';
+    const CANCELLED = 'Annulé';
+    const STARTED = 'Commencé';
+    const COMPLETED = 'Completé';
 
     public static function getValues(): array
     {

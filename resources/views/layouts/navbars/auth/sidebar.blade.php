@@ -1,5 +1,5 @@
 <aside
-    class="sidenav navbar navbar-vertical bg-gray-100 navbar-expand-xs border-0 border-radius-xl my-4 fixed-start ms-3 ps"
+    class="sidenav navbar navbar-vertical bg-gray-100 navbar-expand-xs border-0 border-radius-xl my-4 fixed-start ms-3"
     id="sidenav-main">
     <div class="sidenav-header py-2">
         <i class="fas fa-times p-2 cursor-pointer text-secondary position-absolute end-2 top-0 d-xl-none"
@@ -15,7 +15,7 @@
              alt="..." style="display: none">
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="sidenav-body" id="sidenav-collapse-main">
+    <div class="sidenav-body w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
@@ -271,4 +271,31 @@
             </li>
         </ul>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var logoImg = document.getElementById("logo-img");
+            var minimizedLogoImg = document.getElementById("minimized-img");
+            var toggleLeftButton = document.getElementById("toggleLeftButton");
+            var toggleRightButton = document.getElementById("toggleRightButton");
+            var sidenav = document.getElementById("sidenav-main");
+            var mainContent = document.getElementById("main-content");
+
+            toggleLeftButton.addEventListener("click", function () {
+                sidenav.classList.toggle("collapsed");
+                mainContent.classList.add("expanded");
+                logoImg.style.display = "none";
+                minimizedLogoImg.style.display = "block";
+                toggleRightButton.style.display = "block";
+                toggleLeftButton.style.display = "none";
+            });
+            toggleRightButton.addEventListener("click", function () {
+                sidenav.classList.remove("collapsed");
+                mainContent.classList.remove("expanded");
+                logoImg.style.display = "block";
+                minimizedLogoImg.style.display = "none";
+                toggleLeftButton.style.display = "block";
+                toggleRightButton.style.display = "none";
+            });
+        });
+    </script>
 </aside>

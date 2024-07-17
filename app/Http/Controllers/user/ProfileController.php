@@ -32,8 +32,7 @@ class ProfileController extends Controller
         $role = $user->role;
         if ($user->role === 'doctor') {
             $doctor_info = DoctorInfo::where('doctor_id', $user->id)->first() ;
-            $consultation_infos = ConsultationInfo::where('doctor_info_id', $doctor_info->id)->get();
-            return view('doctor.profile', compact('doctor_info', 'consultation_infos'));
+            return view('doctor.profile', compact('doctor_info'));
         }
         else {
             return view($role . '.profile');
