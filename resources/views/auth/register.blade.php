@@ -15,9 +15,9 @@
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="step-container d-flex justify-content-between">
-                                <div class="step-circle" onclick="showStep(1)">1</div>
-                                <div class="step-circle" onclick="showStep(2)">2</div>
-                                <div class="step-circle" onclick="showStep(3)">3</div>
+                                <div class="step-circle" onclick="displayStep(1)">1</div>
+                                <div class="step-circle" onclick="displayStep(2)">2</div>
+                                <div class="step-circle" onclick="displayStep(3)">3</div>
                             </div>
 
                             <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
@@ -152,7 +152,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-primary next-step">Suivant</button>
+                                        <button type="button" class="btn btn-info bg-gradient next-step">Suivant</button>
                                     </div>
 
                                     <!-- Step 2 -->
@@ -348,8 +348,8 @@
                                         </div>
 
 
-                                        <button type="button" class="btn btn-primary prev-step">Précédent</button>
-                                        <button type="button" class="btn btn-primary next-step">Suivant</button>
+                                        <button type="button" class="btn btn-info bg-gradient prev-step">Précédent</button>
+                                        <button type="button" class="btn btn-info bg-gradient next-step">Suivant</button>
                                     </div>
 
                                     <!-- Step 3 -->
@@ -494,8 +494,8 @@
                                             </div>
                                         </div>
 
-                                        <button type="button" class="btn btn-primary prev-step">Précédent</button>
-                                        <button type="submit" class="btn btn-primary">{{ __('S\'inscrire') }}</button>
+                                        <button type="button" class="btn btn-info bg-gradient prev-step">Précédent</button>
+                                        <button type="submit" class="btn btn-info bg-gradient">{{ __('S\'inscrire') }}</button>
                                     </div>
                                 </div>
                             </form>
@@ -543,6 +543,20 @@
                 progressBar.style.width = progressPercent + '%';
             }
 
+            function displayStep(stepNumber) {
+                if (stepNumber >= 1 && stepNumber <= 3) {
+                    steps[currentStep].style.display = 'none';
+                    steps[stepNumber].style.display = 'block';
+                    currentStep = stepNumber;
+                    updateProgressBar();
+                }
+            }
+
+            function updateProgressBar() {
+                const progressPercent = (currentStep / (steps.length - 1)) * 100;
+                progressBar.style.width = progressPercent + '%';
+            }
+
             nextButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (currentStep < steps.length - 1) {
@@ -575,7 +589,6 @@
                 }
             }
 
-
             toggleFields();
 
             roleSelect.addEventListener('change', toggleFields);
@@ -586,6 +599,7 @@
 
             showStep(currentStep);
         });
+
         // speciality selection
         document.addEventListener('DOMContentLoaded', function () {
             const specialitySelect = document.getElementById('speciality');
