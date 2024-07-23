@@ -1,8 +1,8 @@
 @props(['consultation_type'])
  @if($consultation_type === \App\Enums\ConsultationType::ONLINE)
-     <span class="badge badge-sm badge-success">En ligne</span>
+     <span class="badge-pro badge-sm badge-success">{{\App\Enums\ConsultationType::ONLINE}}</span>
  @elseif( $consultation_type === \App\Enums\ConsultationType::HOME_SERVICE)
-     <span class="badge badge-sm badge-info">Service à domicile</span>
+     <span class="badge-pro badge-sm badge-info">{{ \App\Enums\ConsultationType::HOME_SERVICE }}</span>
  @else
-     <span class="badge badge-sm badge-primary">En cabinet</span>
+     <span class="badge-pro badge-sm badge-primary">{{ \App\Enums\ConsultationType::IN_PERSON }}</span>
  @endif

@@ -6,7 +6,7 @@ class ConsultationType
 {
     const ONLINE = 'En ligne';
     const IN_PERSON = 'En cabinet';
-    const HOME_SERVICE = 'Service à domicile';
+    const HOME_SERVICE = 'À domicile';
 
     public static function getValues(): array
     {

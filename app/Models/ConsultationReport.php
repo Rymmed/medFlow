@@ -14,12 +14,10 @@ class ConsultationReport extends Model
     protected $fillable = [
         'appointment_id',
         'doctor_id',
-        'date',
+        'visit_type',
         'symptoms',
         'diagnostic_hypotheses',
         'final_diagnosis',
-        'treatment',
-        'follow_up_date',
     ];
 
     public function appointment(): BelongsTo

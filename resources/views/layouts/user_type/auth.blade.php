@@ -42,7 +42,7 @@
 
         @else
             @include('layouts.navbars.auth.sidebar')
-            <main class="main-content border-radius-xl position-relative bg-gray-100 h-100 my-4 me-4 overflow-hidden" id="main-content">
+            <main class="main-content border-radius-xl position-relative bg-gray-100 h-100 my-4 me-4" id="main-content">
                 @include('layouts.navbars.auth.nav')
                 <div class="container-fluid py-4">
                     @yield('content')

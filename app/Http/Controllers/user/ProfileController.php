@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\UpdateProfileRequest;
-use App\Models\Availability;
-use App\Models\ConsultationInfo;
 use App\Models\DoctorInfo;
 use App\Models\User;
 use Closure;
@@ -43,6 +40,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'cropped_image' => 'nullable|string',
         ]);
 
         $user = auth()->user();

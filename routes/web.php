@@ -5,6 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AssistantDoctorController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\ConsultationReportController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\FullCalendarController;
@@ -80,8 +81,9 @@ Route::middleware(['has.role:doctor'])->group(function () {
 
     Route::get('/myCalendar', [FullCalendarController::class, 'index'])->name('myCalendar');
     Route::get('/myCalendar/appointments', [FullCalendarController::class, 'getAppointments'])->name('myCalendar.appointments');
-    Route::post('/myCalendar/update-appointment/{id}', [FullCalendarController::class, 'updateAppointment'])->name('myCalendar.update-appointment');
-    Route::post('/myCalendar/cancel-appointment/{id}', [FullCalendarController::class, 'updateAppointment'])->name('myCalendar.cancel-appointment');
+    Route::put('/myCalendar/update-appointment/{id}', [FullCalendarController::class, 'updateAppointment'])->name('myCalendar.update-appointment');
+    Route::post('/myCalendar/drop-appointment/{id}', [FullCalendarController::class, 'dropAppointment'])->name('myCalendar.drop-appointment');
+    Route::post('/myCalendar/cancel-appointment/{id}', [FullCalendarController::class, 'cancelAppointment'])->name('myCalendar.cancel-appointment');
     Route::post('/myCalendar/add-appointment', [FullCalendarController::class, 'createAppointment'])->name('myCalendar.add-appointment');
 });
 
@@ -110,6 +112,14 @@ Route::middleware('auth')->group(function(){
     Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
     Route::put('updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('updateProfileImg');
+
+    Route::get('/consultationReports/{patient_id}', [ConsultationReportController::class, 'index'])->name('consultationReports.index');
+    Route::get('/consultationReports/create/{appointment_id}', [ConsultationReportController::class, 'create'])->name('consultationReport.create');
+    Route::post('/consultationReports/{appointment_id}', [ConsultationReportController::class, 'store'])->name('consultationReport.store');
+    Route::get('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'show'])->name('consultationReport.show');
+    Route::get('/consultationReport/{consultationReport}/edit', [ConsultationReportController::class, 'edit'])->name('consultationReport.edit');
+    Route::put('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'update'])->name('consultationReport.update');
+    Route::delete('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'destroy'])->name('consultationReport.destroy');
 });
 
 Auth::routes();

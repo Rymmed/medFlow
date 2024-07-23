@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+ use App\Enums\AppointmentStatus;
  use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
  use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -134,20 +135,22 @@ use Spatie\Permission\Models\Role;
          if (!$isAvailable) {
              return ['isAvailable' => false, 'errors' => $errors];
          }
-
-         $doctor_info = $this->doctor_info()->where('doctor_id', $this->id)->first();
-         $end_time= $doctor_info->end_time;
-         $appointmentExists= $this->doctorAppointments()
-             ->where('start_time', $appointmentTime)
-             ->where('finish_time', $end_time)
-             ->where('status', 'confirmed')
+         $appointmentExists = $this->doctorAppointments()
+             ->where('status', AppointmentStatus::CONFIRMED)
+             ->where(function ($query) use ($appointmentStartTime) {
+                 $query->where('start_date', '<=', $appointmentStartTime)
+                     ->where('finish_date', '>=', $appointmentStartTime);
+             })
              ->exists();
 
          if ($appointmentExists) {
-             $errors[] = "Le médecin a un rendez-vous confirmé.";
+             $errors[] = "Il y a une consultation à ce moment. Veuillez choisir une autre heure";
              return ['isAvailable' => false, 'errors' => $errors];
          }
 
+         if (!empty($errors)) {
+             return ['isAvailable' => false, 'errors' => $errors];
+         }
          return ['isAvailable' => true, 'errors' => []];
      }
  }

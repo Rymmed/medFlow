@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('weight')->nullable();
             $table->boolean('smoking')->default('0')->nullable();
             $table->boolean('alcohol')->default('0')->nullable();
-            $table->string('blood_group')->nullable();
+            $table->enum('blood_group', \App\Enums\BloodGroup::getValues())->default('unknown');
             $table->enum('area', PatientArea::getValues())->nullable();
             $table->boolean('sedentary_lifestyle')->default('1');//0: active | 1:inactive
             $table->timestamps();

@@ -13,6 +13,8 @@ class Prescription extends Model
     use HasFactory;
 
     protected $fillable = [
+        'treatment',
+        'description',
         'consultation_report_id',
     ];
 

@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-auto nav-item px-3 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-body p-0">
-                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                            <i class="fa fa-envelope fixed-plugin-button-nav cursor-pointer"></i>
                         </a>
                     </div>
                     <div class="col-auto nav-item dropdown pe-2 d-flex align-items-center">
@@ -127,13 +127,13 @@
 
                         <a href="javascript:;" class="nav-link d-flex align-items-center mb-0 p-0 ms-2 text-sm"
                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <x-profile-image :class="'avatar avatar-sm border-opacity-100 border-radius-section shadow-card me-2'"></x-profile-image>
+                            <x-profile-image :class="'avatar avatar-sm border-opacity-100 border-radius-section shadow-card me-2'" :image="auth()->user()->profile_image"></x-profile-image>
                             <div class="d-flex flex-column align-items-start flex-grow-1">
                                 <span class="text-dark text-bold text-md">
                                     @if(auth()->user()->role === 'doctor')
                                         Dr. {{ auth()->user()->firstName }} {{ auth()->user()->lastName }}</span>
                                     <small class="user-speciality text-black-50">
-                                        {{ auth()->user()->speciality }}
+                                        {{ auth()->user()->doctor_info->speciality }}
                                     </small>
                                 @else
                                 <span class="text-dark text-bold text-md">
@@ -174,9 +174,9 @@
 
     </div>
 </nav>
-<script>
-    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
-    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-        return new bootstrap.Dropdown(dropdownToggleEl)
-    })
-</script>
+{{--<script>--}}
+{{--    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))--}}
+{{--    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {--}}
+{{--        return new bootstrap.Dropdown(dropdownToggleEl)--}}
+{{--    })--}}
+{{--</script>--}}

@@ -1,4 +1,5 @@
-@props(['class'])
+@props(['class', 'image'])
+
 <img class="{{ $class }}"
-     src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('assets/img/default-profile.jpg') }}"
+     src="{{ $image ? asset('storage/' . $image) : asset('assets/img/default-profile.jpg') }}"
      alt="Profile Photo">

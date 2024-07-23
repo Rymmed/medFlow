@@ -20,6 +20,7 @@ class DoctorInfo extends Model
         'end_time',
         'office_phone_number',
         'consultation_duration',
+        'consultation_types',
         'online_fees',
         'home_service_fees',
         'in_person_fees',

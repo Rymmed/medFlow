@@ -52,38 +52,37 @@ class HomeController extends Controller
                 $patient = auth()->user();
                 $patient_id = $patient->id;
                 $doctors = $patient->doctors;
-                $medications = Prescription::whereHas('consultationReport', function ($query) use ($patient_id, $patient) {
-                    $query->whereHas('appointment', function ($query) use ($patient_id, $patient) {
-                        $query->where('patient_id', $patient_id);
-                    });
-                })->with('prescriptionLines')->get();
+
                 $medicalRecord = MedicalRecord::where('patient_id', $patient_id)->first();
                 $medicalRecord_id = $medicalRecord->id;
                 $vital_signs = VitalSign::where('medicalRecord_id', $medicalRecord_id)->get();
                 $medicalHistories = MedicalHistory::where('medicalRecord_id', $medicalRecord_id)->get();
                 $vaccinations = Vaccination::where('medicalRecord_id', $medicalRecord_id)->get();
                 $examResults = ExamResult::where('medicalRecord_id', $medicalRecord_id)->get();
-                $insurance = Insurance::where('medicalRecord_id', $medicalRecord_id)->first();
+                $insuranceDetails = Insurance::where('medicalRecord_id', $medicalRecord_id)->first();
                 $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', ['refused', 'cancelled'])->orderBy('start_date', 'desc')->get();
                 $upcomingAppointments = $appointments->where('start_date', '>', now());
                 $recentAppointments = $appointments->where('start_date', '<=', now());
                 $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($patient_id, $patient) {
                     $query->where('patient_id', $patient_id);
-                })->get();
+                })->paginate(5);
+                $prescriptions = Prescription::whereHas('consultationReport.appointment', function ($query) use ($patient_id) {
+                    $query->where('patient_id', $patient_id);
+                })->with('prescriptionLines')->get();
 
                 return view('patient.home', compact(
                     'doctors',
-                    'medications',
                     'medicalRecord',
                     'vital_signs',
                     'medicalHistories',
                     'vaccinations',
                     'examResults',
-                    'insurance',
+                    'insuranceDetails',
                     'appointments',
                     'upcomingAppointments',
                     'recentAppointments',
                     'consultationReports',
+                    'prescriptions'
                 ));
                 break;
             case UserRole::ASSISTANT:

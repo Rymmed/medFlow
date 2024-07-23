@@ -24,7 +24,8 @@ class AppointmentController extends Controller
     {
         $doctor = User::find($doctor_id);
         $doctor_info = DoctorInfo::where('doctor_id', $doctor->id)->first();
-        return view('appointment.request', compact('doctor', 'doctor_info'));
+        $consultation_types = json_decode($doctor_info->consultation_types, true);
+        return view('appointment.request', compact('doctor', 'doctor_info', 'consultation_types'));
     }
 
     /**
@@ -39,7 +40,7 @@ class AppointmentController extends Controller
         $doctorInfo = DoctorInfo::where('doctor_id', $doctor->id)->first();
         $consultationTypes = json_decode($doctorInfo->consultation_types);
         $request->validate([
-            'start_date' => 'required|datetime|after_or_equal:now',
+            'start_date' => 'required|date|after_or_equal:now',
             'consultation_reason' => 'required|string|max:255',
             'consultation_type' => ['required', Rule::in($consultationTypes)],
         ]);
@@ -79,10 +80,8 @@ class AppointmentController extends Controller
         $confirmed = AppointmentStatus::CONFIRMED;
         $refused = AppointmentStatus::REFUSED;
         $appointment = Appointment::findOrFail($request->appointment_id);
-        $consultationInfo = ConsultationInfo::whereHas('doctor_info', function ($query) use ($doctor) {
-                $query->where('doctor_id', $doctor->id);
-        })->where('type', $appointment->consultation_type)->first();
-        $consultationDuration = $consultationInfo->duration;
+        $doctorInfo = DoctorInfo::where('doctor_id', $doctor->id)->firstOrFail();
+        $consultationDuration = $doctorInfo->consultation_duration;
         $start = Carbon::parse($appointment->start_date);
         $appointment->status = $request->status;
         if ($request->status === $confirmed) {

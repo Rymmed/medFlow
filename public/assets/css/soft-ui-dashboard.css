@@ -51,7 +51,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-    width: auto;
+    width: 100%;
     overflow-x: hidden;
     /*height: 100%;*/
 }
@@ -20614,7 +20614,7 @@ hr.horizontal.gray-light {
     }
 
     .sidenav.fixed-start + .main-content {
-        margin-left: 17.125rem
+        margin-left: 14.5rem
     }
 
     .sidenav.fixed-end + .main-content {

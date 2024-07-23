@@ -271,7 +271,8 @@
             </li>
         </ul>
     </div>
-    <script>
+    @push('scripts')
+        <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
             var logoImg = document.getElementById("logo-img");
             var minimizedLogoImg = document.getElementById("minimized-img");
@@ -298,4 +299,5 @@
             });
         });
     </script>
+    @endpush
 </aside>
