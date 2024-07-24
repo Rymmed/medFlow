@@ -11,9 +11,9 @@ class VitalSignPolicy
     /**
      * Determine if the user can view any vital signs.
      */
-    public function viewAny(User $user, $patient_id)
+    public function viewAny(User $user, $patient): bool
     {
-        return $user->id === $patient_id || $user->patients()->where('patient_id', $patient_id)->exists();
+        return $user->id === $patient->id || $user->patients()->where('patient_id', $patient->id)->exists();
     }
 
     /**
@@ -21,16 +21,16 @@ class VitalSignPolicy
      */
     public function view(User $user, VitalSign $vitalSign)
     {
-        $patient = $vitalSign->medicalRecord->patient;
-        return $user->id === $patient->id || $user->patients()->where('patient_id', $patient->id)->exists();
+        $patient_id = $vitalSign->medicalRecord->patient_id;
+        return $user->id === $patient_id || $user->patients()->where('patient_id', $patient_id)->exists();
     }
 
     /**
      * Determine if the user can create a vital sign.
      */
-    public function create(User $user, $patient_id)
+    public function create(User $user, $patient)
     {
-        return $user->id === $patient_id || $user->patients()->where('patient_id', $patient_id)->exists();
+        return $user->id === $patient->id || $user->patients()->where('patient_id', $patient->id)->exists();
     }
 
     /**

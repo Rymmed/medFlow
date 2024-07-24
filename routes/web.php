@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function(){
     Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
     Route::put('updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('updateProfileImg');
+    Route::get('/patient-profile/{patient_id}', [PatientController::class, 'show'])->name('patient-profile.show');
 
     Route::get('/consultationReports/{patient_id}', [ConsultationReportController::class, 'index'])->name('consultationReports.index');
     Route::get('/consultationReports/create/{appointment_id}', [ConsultationReportController::class, 'create'])->name('consultationReport.create');

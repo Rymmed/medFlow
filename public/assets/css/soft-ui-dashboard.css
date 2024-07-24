@@ -18515,7 +18515,7 @@ textarea.form-control, textarea.form-control-lg, textarea.form-control-sm {
 }
 
 .card .card-body {
-    font-family: Josefin Sans;
+    font-family: "Josefin Sans" , sans-serif;
     padding: 1.5rem
 }
 
@@ -22050,7 +22050,7 @@ p {
 }
 
 .text-sans-serif {
-    font-family: Josefin Sans !important
+    font-family: "Josefin Sans", sans-serif !important
 }
 
 .text-monospace {

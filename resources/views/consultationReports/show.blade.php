@@ -13,7 +13,9 @@
         <p><strong>Diagnostic Hypotheses:</strong> {{ $consultationReport->diagnostic_hypotheses }}</p>
         <p><strong>Final Diagnosis:</strong> {{ $consultationReport->final_diagnosis }}</p>
         <a href="{{ route('consultationReports.index', ['patient_id' => $appointment->patient_id]) }}" class="btn btn-secondary">Back to Reports</a>
-        <a href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}" class="btn btn-secondary">Modifier</a>
-        <a href="{{ route('consultationReport.destroy', ['consultationReport' => $consultationReport->id]) }}" class="btn btn-secondary">Supprimer</a>
+        @if(auth()->user()->id === $consultationReport->doctor_id)
+            <a href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}" class="btn btn-secondary">Modifier</a>
+            <a href="{{ route('consultationReport.destroy', ['consultationReport' => $consultationReport->id]) }}" class="btn btn-secondary">Supprimer</a>
+        @endif
     </div>
 @endsection

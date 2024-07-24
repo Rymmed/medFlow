@@ -141,7 +141,7 @@ class RegisterController extends Controller
             $medicalRecord->patient_id = $user->id;
             $medicalRecord->height = $data['height'] ?? null;
             $medicalRecord->weight = $data['weight'] ?? null;
-            $medicalRecord->blood_group = $data['blood_type'] ?? 'unknown';
+            $medicalRecord->blood_group = $data['blood_type'] ?? null;
             $medicalRecord->smoking = $data['smoking'] ?? null;
             $medicalRecord->alcohol = $data['alcohol'] ?? null;
             $medicalRecord->area = $data['area'] ?? null;

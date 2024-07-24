@@ -79,12 +79,12 @@
     padding: 0.25rem;
 }
 
-.appointments-list {
+.fixed-height-list {
     max-height: 50vh;
     overflow-y: auto;
 }
 
-.appointments-list .list-group-item {
+.fixed-height-list .list-group-item {
     max-height: 50%;
 }
 

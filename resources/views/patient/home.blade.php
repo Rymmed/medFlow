@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <!-- Personal infos --->
-            <div class="col-md-3 card text-center">
+            <div class="col-md-3 text-center">
                 <x-patient-record.profile-card></x-patient-record.profile-card>
                 <x-patient-record.medical-info :medicalRecord="$medicalRecord"
                                                :insuranceDetails="$insuranceDetails"></x-patient-record.medical-info>

@@ -27,7 +27,7 @@ class ConsultationReport extends Model
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
     public function prescriptions(): HasMany

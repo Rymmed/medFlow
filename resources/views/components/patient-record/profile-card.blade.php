@@ -1,3 +1,4 @@
+<div class="card">
 <div class="position-relative mt-3">
     <x-profile-image :class="'avatar avatar-xl border-opacity-100 border-radius-section shadow-card me-2'" :image="auth()->user()->profile_image"></x-profile-image>
     {{--                    <x-edit-image-btn></x-edit-image-btn>--}}
@@ -18,4 +19,4 @@
         <a href="#" type="button" class="btn bg-gradient-blue text-white btn-md">Contacter</a>
     @endif
 </div>
-
+</div>

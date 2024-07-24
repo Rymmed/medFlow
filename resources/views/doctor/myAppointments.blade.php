@@ -94,7 +94,7 @@
                     @if($confirmedAppointments->isEmpty())
                         <p class="px-3 py-3">Aucun rendez-vous trouvé.</p>
                     @else
-                        <div class="card-body pt-4 p-3 appointments-list">
+                        <div class="card-body pt-4 p-3 fixed-height-list">
                             <div class="list-group">
                                 @foreach($confirmedAppointments as $appointment)
                                     <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 ">

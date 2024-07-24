@@ -49,7 +49,10 @@
                     </td>
                     <td class="text-center">
                         <p class="text-xs font-weight-bold mb-0">
-                            Dr. {{ $consultationReport->doctor->lastName }} {{ $consultationReport->doctor->firstName }}</p>
+                            {!! auth()->user()->id === $consultationReport->doctor_id
+                            ? 'Moi'
+                            : 'Dr. ' . $consultationReport->doctor->lastName . ' ' . $consultationReport->doctor->firstName
+                        !!}
                     </td>
                     <td class="text-center">
                         <p class="text-xs font-weight-bold mb-0">
@@ -65,7 +68,8 @@
                     <td class="text-center text-sm">
                         @if(Auth::user()->role === 'doctor')
                             <div class="dropdown">
-                                <a href="javascript:;" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                                <a href="javascript:;" data-bs-toggle="dropdown" aria-expanded="false"
+                                   style="cursor: pointer;">
                                     <span>
                                     <i class="fas fa-ellipsis-v"></i>
                                     </span>
@@ -74,9 +78,11 @@
                                     <li><a class="dropdown-item border-radius-md"
                                            href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}">Afficher</a>
                                     </li>
-                                    <li><a class="dropdown-item border-radius-md"
-                                           href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}">Éditer</a>
-                                    </li>
+                                    @if(auth()->user()->id === $consultationReport->doctor_id)
+                                        <li><a class="dropdown-item border-radius-md"
+                                               href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}">Éditer</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         @else
