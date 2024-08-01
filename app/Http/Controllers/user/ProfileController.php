@@ -65,7 +65,7 @@ class ProfileController extends Controller
             ));
         }
         else {
-            return view($role . '.profile');
+            return view('user.profile');
         }
     }
 
