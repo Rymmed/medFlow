@@ -9,6 +9,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LiveConsultationController;
 use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\PatientController;
@@ -144,6 +145,9 @@ Route::middleware('auth')->group(function(){
     Route::put('/medicalHistory/{medicalHistory_id}', [MedicalHistoryController::class, 'update'])->name('medicalHistory.update');
 
     Route::put('/medicalRecord/{medicalRecord_id}', [MedicalRecordController::class, 'update'])->name('medicalRecord.update');
+
+    Route::get('/consultations/create', [LiveConsultationController::class, 'create'])->name('consultations.create');
+    Route::get('/consultations/join/{roomName}', [LiveConsultationController::class, 'join'])->name('consultations.join');
 });
 
 Auth::routes();
