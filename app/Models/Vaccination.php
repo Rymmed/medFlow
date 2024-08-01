@@ -11,13 +11,13 @@ class Vaccination extends Model
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
-        'vaccine_name',
-        'vaccination_date',
+        'medicalRecord_id',
+        'title',
+        'date',
     ];
 
-    public function patient(): BelongsTo
+    public function medicalRecord(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
     }
 }

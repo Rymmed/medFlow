@@ -4,12 +4,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const choices = new Choices(specialitySelect, {
         removeItemButton: true,
         placeholder: true,
-        placeholderValue: 'Sélectionnez des spécialités',
-        itemSelectText: 'Appuyer pour séléctionner',
+        placeholderValue: 'Tapez pour séléctinner',
+        itemSelectText: '',
         allowHTML: true,
     });
 });
+function showMessage(message, isSuccess) {
+    const messageContainer = document.getElementById('message-container');
+    const messageText = messageContainer.querySelector('.alert-text');
 
+    messageText.textContent = message;
+    messageContainer.classList.remove('alert-primary', 'alert-success');
+    messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
+    messageContainer.style.display = 'block';
+}
+
+function toggleIcon(id) {
+    var chevronUpIcon = document.getElementById(id + "UpIcon");
+    var chevronDownIcon = document.getElementById(id + "DownIcon");
+
+    if (chevronUpIcon.style.display === "none") {
+        chevronUpIcon.style.display = "inline";
+        chevronDownIcon.style.display = "none";
+    } else {
+        chevronUpIcon.style.display = "none";
+        chevronDownIcon.style.display = "inline";
+    }
+}
 // Minimize Sidebar
 document.addEventListener("DOMContentLoaded", function () {
     var logoImg = document.getElementById("logo-img");
@@ -36,4 +57,5 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleRightButton.style.display = "none";
     });
 });
+
 

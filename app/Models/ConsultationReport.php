@@ -14,14 +14,10 @@ class ConsultationReport extends Model
     protected $fillable = [
         'appointment_id',
         'doctor_id',
-        'consultation_date',
-        'consultation_reason',
+        'visit_type',
         'symptoms',
-        'vital_signs',
         'diagnostic_hypotheses',
         'final_diagnosis',
-        'treatment',
-        'follow_up_date',
     ];
 
     public function appointment(): BelongsTo
@@ -31,7 +27,7 @@ class ConsultationReport extends Model
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
     public function prescriptions(): HasMany

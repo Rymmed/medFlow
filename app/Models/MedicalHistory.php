@@ -11,13 +11,15 @@ class MedicalHistory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
-        'history_type',
+        'medicalRecord_id',
+        'title',
+        'type',
+        'subtype',
         'description',
     ];
 
-    public function patient(): BelongsTo
+    public function medicalRecord(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
     }
 }

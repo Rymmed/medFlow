@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\UpdateProfileRequest;
-use App\Models\Availability;
+use App\Models\ConsultationReport;
+use App\Models\DoctorInfo;
 use App\Models\User;
 use Closure;
 use Illuminate\Auth\Events\PasswordReset;
@@ -29,11 +29,43 @@ class ProfileController extends Controller
         $user = Auth::user();
         $role = $user->role;
         if ($user->role === 'doctor') {
-            $availability = Availability::where('doctor_id', $user->id)->first() ;
-            return view('doctor.profile', compact('availability'));
+            $doctor_info = DoctorInfo::where('doctor_id', $user->id)->first() ;
+            return view('doctor.profile', compact('doctor_info'));
+        }
+        elseif($user->role === 'patient') {
+            $patient = $user;
+            $medicalRecord = $patient->medicalRecord;
+            $appointments = $patient->patientAppointments;
+            $familialMedicalHistories = $medicalRecord->medicalHistories
+                ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
+                ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
+
+            $familialSurgicalHistories = $medicalRecord->medicalHistories
+                ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
+                ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
+            $personalMedicalHistories = $medicalRecord->medicalHistories
+                ->where('type', \App\Enums\MedicalHistType::PERSONAL)
+                ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
+
+            $personalSurgicalHistories = $medicalRecord->medicalHistories
+                ->where('type', \App\Enums\MedicalHistType::PERSONAL)
+                ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
+            $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($appointments) {
+                $query->whereIn('id', $appointments->pluck('id'));
+            })->paginate(10);
+            return view('patient.profile', compact(
+                'patient',
+                'medicalRecord',
+                'appointments',
+                'consultationReports',
+                'familialMedicalHistories',
+                'familialSurgicalHistories',
+                'personalMedicalHistories',
+                'personalSurgicalHistories'
+            ));
         }
         else {
-            return view($role . '.profile');
+            return view('user.profile');
         }
     }
 
@@ -41,6 +73,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'cropped_image' => 'nullable|string',
         ]);
 
         $user = auth()->user();

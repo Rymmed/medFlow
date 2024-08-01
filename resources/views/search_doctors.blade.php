@@ -19,14 +19,14 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="firstName">Prénom :</label>
-                        <input type="text" id="firstName" name="firstName" class="form-control" value="{{ old('firstName', $firstName) }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName">Nom :</label>
-                        <input type="text" id="lastName" name="lastName" class="form-control" value="{{ old('lastName', $lastName) }}">
-                    </div>
+{{--                    <div class="mb-3">--}}
+{{--                        <label for="firstName">Prénom :</label>--}}
+{{--                        <input type="text" id="firstName" name="firstName" class="form-control" value="{{ old('firstName', $firstName) }}">--}}
+{{--                    </div>--}}
+{{--                    <div class="mb-3">--}}
+{{--                        <label for="lastName">Nom :</label>--}}
+{{--                        <input type="text" id="lastName" name="lastName" class="form-control" value="{{ old('lastName', $lastName) }}">--}}
+{{--                    </div>--}}
                     <div class="mb-3">
                         <label for="country">Pays :</label>
                         <input type="text" id="country" name="country" class="form-control" value="{{ old('country', $country) }}">
@@ -49,21 +49,22 @@
                         <div class="row justify-content-center position-absolute">
                             @foreach($results as $doctor)
                                 <div class="col-md-4 col-sm-5 mb-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-3 text-center">
-                                                    <img class="avatar border-radius-section shadow" src="{{asset('assets/img/bruce-mars.jpg')}}" alt="doctor_photo">
+                                    <div class="card p-4">
+{{--                                        <div class="card-body">--}}
+                                                <div class="text-center">
+                                                    <x-profile-image :class="'avatar avatar-xl border-radius-section shadow'" :image="$doctor->profile_image"></x-profile-image>
                                                 </div>
-                                                <div class="col-9">
-                                                    <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
-                                                    <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->speciality }}</p>
+                                                <div class="mt-sm-2">
+                                                    <h6 class="card-title text-sm ms-4">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
+                                                    <p class="card-text text-xs"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->doctor_info->speciality }}</p>
                                                 </div>
-                                            </div>
-                                            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->town }}</p>
+                                            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
                                             <p class="card-text text-sm"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
-                                            <a href="{{ route('appointment.request', ['doctor_id' => $doctor->id]) }}" class="btn btn-primary">Prendre rendez-vous</a>
+                                        <div>
+
+                                            <a href="{{ route('appointment.request', ['doctor_id' => $doctor->id]) }}" class="btn bg-gradient-primary text-white text-truncate">Prendre rendez-vous</a>
                                         </div>
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                             @endforeach

@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('consultation_reports', function (Blueprint $table) {
+        Schema::create('consultationReport', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('appointment_id');
             $table->unsignedBigInteger('doctor_id');
-            $table->datetime('consultation_date');
-            $table->text('consultation_reason');
+            $table->string('visit_type');
             $table->text('symptoms')->nullable();
-            $table->text('vital_signs')->nullable();
             $table->text('diagnostic_hypotheses')->nullable();
             $table->text('final_diagnosis')->nullable();
-            $table->text('treatment')->nullable();
-            $table->date('follow_up_date')->nullable();
             $table->timestamps();
 
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('consultation_reports');
+        Schema::dropIfExists('consultationReport');
     }
 };

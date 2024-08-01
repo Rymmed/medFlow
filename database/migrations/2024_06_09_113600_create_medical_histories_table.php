@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\MedicalHistSubtype;
+use App\Enums\MedicalHistType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('medical_histories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
-            $table->string('history_type');
-            $table->text('description');
+            $table->unsignedBigInteger('medicalRecord_id');
+            $table->string('title');
+            $table->enum('type', MedicalHistType::getValues());
+            $table->enum('subtype', MedicalHistSubtype::getValues());
+            $table->text('description')->nullable();
             $table->timestamps();
 
-            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('medicalRecord_id')->references('id')->on('medical_records')->onDelete('cascade');
         });
     }
 

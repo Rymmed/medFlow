@@ -11,7 +11,7 @@
                 <div class="row gx-4">
                     <div class="col-auto">
                         <div class="position-relative">
-                            <x-profile-image></x-profile-image>
+                            <x-profile-image :class="'avatar avatar-xxl border-opacity-100 border-radius-section shadow-card me-2'" :image="auth()->user()->profile_image"></x-profile-image>
                             <x-edit-image-btn></x-edit-image-btn>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
         <div class="container-fluid py-4">
             <x-general-info></x-general-info>
             <x-security></x-security>
-            <x-availability :availability="$availability"></x-availability>
+            <x-doctor-info.doctor_info :doctor_info="$doctor_info" ></x-doctor-info.doctor_info>
         </div>
 
     </div>

@@ -28,7 +28,19 @@ class PrescriptionLineController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $prescription_id = $request->prescription_id;
+        $this->authorize('create', [PrescriptionLine::class, $prescription_id]);
+        $request->validate([
+            'name' => 'required|string',
+            'dose' => 'required|string',
+            'duration' => 'required|string',
+        ]);
+
+        $line = new PrescriptionLine($request->only('name', 'dose', 'duration'));
+        $line->prescription_id = $prescription_id;
+        $line->save();
+
+        return response()->json(['success' => true, 'line' => $line]);
     }
 
     /**

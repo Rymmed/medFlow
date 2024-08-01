@@ -5,12 +5,19 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="btn-group mb-3" role="group" aria-label="Calendar Actions">
-                    <button type="button" id="create-event-btn" class="btn btn-success">{{__('Ajouter')}}</button>
+                    <button type="button" id="create-event-btn" class="btn btn-info bg-gradient">{{__('Ajouter')}}</button>
                 </div>
+            </div>
+            <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
+                 style="display: none;">
+                <span class="alert-text text-white"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <i class="fa fa-close" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
         <div class="row">
-            <div class="card col-10">
+            <div class="card col-8">
                 <div id="calendar"></div>
             </div>
         </div>
@@ -32,13 +39,15 @@
                         @csrf
                         <div class="form-group mb-3">
                             <label for="patient_id" class="form-label">Patient</label>
-                            <select class="form-control" id="patient_id" name="patient_id" aria-label="patient_id"
-                                    required>
+                            <select class="form-control" id="patient_id" name="patient_id" required>
                                 @foreach($patients as $patient)
                                     <option
-                                        value="{{ $patient->id }}">{{ $patient->firstName }} {{ $patient->lastName }}</option>
+                                        value="{{$patient->id}}">{{ $patient->firstName }} {{ $patient->lastName }}</option>
                                 @endforeach
                             </select>
+                            @error('patient_id')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                             <button type="button" id="new-patient-btn" class="btn btn-success"><i
                                     class="fas fa-plus"></i> {{__('Patient')}}</button>
                         </div>
@@ -46,28 +55,44 @@
                             <label for="new-patient-firstName" class="form-label">Prénom du patient</label>
                             <input type="text" class="form-control" id="new-patient-firstName"
                                    name="new_patient_firstName">
+                            @error('new_patient_firstName')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3 d-none" id="new-patient-fields-lastName">
                             <label for="new-patient-lastName" class="form-label">Nom du patient</label>
                             <input type="text" class="form-control" id="new-patient-lastName"
                                    name="new_patient_lastName">
+                            @error('new_patient_lastName')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="start_date" class="form-label">Date et heure de début</label>
-                            <input type="datetime-local" class="form-control" id="start_date" required>
+                            <input type="datetime-local" class="form-control" id="start_date" name="start_date"
+                                   required>
+                            @error('start_date')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="consultation_duration" class="form-label">Durée de la consultation</label>
                             <input class="form-control" type="number" id="consultation_duration"
                                    name="consultation_duration">
+                            @error('consultation_duration')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="consultation_type" class="form-label">Type de consultation</label>
-                            <select type="datetime-local" class="form-control" id="consultation_type" required>
-                                <option value="Online">{{ __('En ligne') }}</option>
-                                <option value="In person">{{ __('En présentiel') }}</option>
-                                <option value="Home service">{{ __('Service à domicile') }}</option>
+                            <select class="form-control" id="consultation_type" name="consultation_type" required>
+                                @foreach(\App\Enums\ConsultationType::getValues() as $type)
+                                    <option value="{{$type}}">{{ $type }}</option>
+                                @endforeach
                             </select>
+                            @error('consultation_type')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <button type="submit" class="btn bg-gradient-primary">Ajouter</button>
                     </form>
@@ -90,13 +115,13 @@
                 <div class="modal-body">
                     Voulez-vous modifier ce rendez-vous ?
                     <form id="update-event-form" method="POST"
-                          action="{{ route('myCalendar.update-appointment', '') }}">
+                          action="{{ route('myCalendar.update-appointment', 'id') }}">
                         @csrf
-                        @method('PATCH')
+                        @method('PUT')
                         <div class="mb-3">
                             <label for="update-patient_id" class="form-label">Patient</label>
-                            <input type="text" class="form-control" id="update-patient_id"
-                                   name="update-patient_id" value required>
+                            <input type="text" class="form-control" id="update-patient_id" name="update-patient_id"
+                                   disabled>
                         </div>
                         <div class="mb-3">
                             <label for="update-start_date" class="form-label">Date et heure de début</label>
@@ -104,84 +129,87 @@
                                    name="update-start_date" required>
                         </div>
                         <div class="mb-3">
-                            <label for="update-consultation_duration" class="form-label">Durée de consultation</label>
-                            <input type="number" class="form-control" id="update-consultation_duration"
-                                   name="update-consultation_duration">
+                            <label for="update-finish_date" class="form-label">Date et heure de fin</label>
+                            <input type="datetime-local" class="form-control" id="update-finish_date"
+                                   name="update-finish_date" required>
                         </div>
+                        {{--                        <div class="mb-3">--}}
+                        {{--                            <label for="update-consultation_duration" class="form-label">Durée de consultation</label>--}}
+                        {{--                            <input type="number" class="form-control" id="update-consultation_duration" name="update-consultation_duration">--}}
+                        {{--                        </div>--}}
                         <div class="mb-3">
                             <label for="update-consultation_type" class="form-label">Type de consultation</label>
-                            <select type="datetime-local" class="form-control" id="update-consultation_type"
-                                    name="update-consultation_type" required>
-                                <option value="Online">{{ __('En ligne') }}</option>
-                                <option value="In person">{{ __('En présentiel') }}</option>
-                                <option value="Home service">{{ __('Service à domicile') }}</option>
+                            <select class="form-control" id="update-consultation_type" name="update-consultation_type"
+                                    required>
+                                @foreach(\App\Enums\ConsultationType::getValues() as $type)
+                                    <option value="{{$type}}">{{ $type }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <button type="submit" class="btn bg-gradient-primary">Sauvegarder</button>
                     </form>
+                    <!-- Cancel Button -->
                     Voulez-vous annuler ce rendez-vous ?
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <a href="{{ route('myCalendar.cancel-appointment', 'id') }}" id="cancel-btn"
+                       class="btn bg-gradient-secondary">Annuler</a>
+
+                    <!-- Success/Error Message -->
+                    <div id="cancel-message" style="display: none;"></div>
                 </div>
             </div>
         </div>
     </div>
-    @push('scripts')
-        <script type="text/javascript">
+        <script>
             document.addEventListener('DOMContentLoaded', function () {
-                var events = [];
+                function showMessage(message, isSuccess) {
+                    const messageContainer = document.getElementById('message-container');
+                    const messageText = messageContainer.querySelector('.alert-text');
+
+                    messageText.textContent = message;
+                    messageContainer.classList.remove('alert-primary', 'alert-success');
+                    messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
+                    messageContainer.style.display = 'block';
+                }
+
                 var calendarEl = document.getElementById('calendar');
                 let currentEvent;
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'fr',
                     editable: true,
                     selectable: true,
-                    droppable: true,
                     initialView: 'dayGridMonth',
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
                         right: 'timeGridDay,timeGridWeek,dayGridMonth'
                     },
-
                     events: '/myCalendar/appointments',
-
                     eventContent: function (info) {
+                        const options = {hour: 'numeric', minute: '2-digit'};
+                        const formattedStartTime = info.event.start.toLocaleTimeString([], options);
+                        const formattedEndTime = info.event.end.toLocaleTimeString([], options);
                         return {
-                            html: info.event.start.toLocaleTimeString() + '<br/>' + info.event.extendedProps.consultation_type
+                            html: `<div>${formattedStartTime} - ${formattedEndTime}<br/>${info.event.title}<br/>${info.event.extendedProps.consultation_type}</div>`
                         };
                     },
                     eventClick: function (info) {
                         currentEvent = info.event;
                         const eventId = currentEvent.id;
                         const updateForm = document.getElementById('update-event-form');
-                        const route = updateForm.getAttribute('action');
+                        const route = updateForm.getAttribute('action').replace('id', eventId); // Update the route with the event ID
 
-                        updateForm.setAttribute('action', `${route}/${eventId}`);
+                        updateForm.setAttribute('action', route);
+
+                        let start_date = new Date(currentEvent.start.getTime() - currentEvent.start.getTimezoneOffset() * 60000);
+                        let finish_date = new Date(currentEvent.end.getTime() - currentEvent.end.getTimezoneOffset() * 60000);
+                        document.getElementById('update-patient_id').value = currentEvent.title; // Assuming you have the patient name in extendedProps
+                        document.getElementById('update-start_date').value = start_date.toISOString().slice(0, 16);
+                        document.getElementById('update-finish_date').value = finish_date.toISOString().slice(0, 16); // Format datetime-local input
+                        // document.getElementById('update-consultation_duration').value = currentEvent.extendedProps.consultation_duration;
+                        document.getElementById('update-consultation_type').value = currentEvent.extendedProps.consultation_type;
 
                         $('#updateModal').modal('show');
                     },
-                    // Deleting the event
-                    // eventClick: function (info){
-                    //     if(confirm("Voulez-vous vraiment annuler ce rendez-vous ?")) {
-                    //         var eventId = info.event.id;
-                    //         $.ajax({
-                    //             method: 'post',
-                    //             url: '/myCalendar/appointment/' + eventId,
-                    //             headers: {
-                    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    //             },
-                    //             success: function(response) {
-                    //                 console.log('Rendez-vous annulé avec succès.');
-                    //                 calendar.refetchEvents(); // Refresh events after deletion
-                    //             },
-                    //             error: function(error) {
-                    //                 console.error('Erreur d\'annulation du rendez-vous:', error);
-                    //             }
-                    //         });
-                    //     }
-                    // },
-
-                    // Drag And Drop
                     eventDrop: function (info) {
                         var eventId = info.event.id;
                         var newStartDate = info.event.start;
@@ -189,143 +217,116 @@
 
                         $.ajax({
                             method: 'post',
-                            url: `/myCalendar/update-appointment/${eventId}`,
+                            url: `/myCalendar/drop-appointment/${eventId}`,
                             data: {
                                 '_token': "{{ csrf_token() }}",
                                 start_date: newStartDate.toISOString(),
-                                finish_date: newEndDate.toISOString(),
+                                finish_date: newEndDate ? newEndDate.toISOString() : null,
                             },
-                            success: function () {
-                                console.log('Rendez-vous déplacé avec succès.');
+                            success: function (response) {
+                                showMessage(response.message, true);
                                 calendar.refetchEvents();
                             },
-                            error: function (error) {
-                                console.error('Erreur de déplacement du rendez-vous', error)
+                            error: function (response) {
+                                const errorMessage = response.responseJSON.message || 'Erreur de déplacement du rendez-vous';
+                                showMessage(errorMessage, false);
                             }
                         });
                     },
                 });
                 calendar.render();
+
                 document.getElementById('create-event-btn').addEventListener('click', function () {
                     $('#createModal').modal('show');
-                })
-                document.getElementById('create-event-form').addEventListener('submit', function () {
+                });
+
+                document.getElementById('create-event-form').addEventListener('submit', function (e) {
                     e.preventDefault();
-                    let data = $(this).serialize();
+                    let form = $(this);
+                    let formData = form.serialize();
 
                     $.ajax({
                         url: '{{ route('myCalendar.add-appointment') }}',
                         method: 'POST',
-                        data: data,
+                        data: formData,
                         success: function (response) {
-                            if (response.success) {
-                                calendar.refetchEvents();
-                                alert('Rendez-vous créé avec succès');
-                                $('#createModal').modal('hide');
-                            } else {
-                                alert('Échec de la création du rendez-vous');
-                            }
+                            $('#createModal').modal('hide');
+                            showMessage(response.message, true);
+                            calendar.refetchEvents();
                         },
-                        error: function (error) {
-                            console.error('Erreur lors de la création du rendez-vous:', error);
-                            alert('Erreur lors de la création du rendez-vous');
+                        error: function (response) {
+                            const errorMessage = response.responseJSON.message || 'Échec de création du rendez-vous';
+                            $('#createModal').modal('hide');
+                            showMessage(errorMessage, false);
                         }
                     });
-                })
+                });
 
                 document.getElementById('update-event-form').addEventListener('submit', function (e) {
                     e.preventDefault();
-                    currentEvent.setProp('title', document.getElementById('patient_id').value);
-                    currentEvent.setStart(document.getElementById('start_date').value);
-                    currentEvent.setEnd(document.getElementById('finish_date').value);
-                    currentEvent.setProp('consultation_type', document.getElementById('consultation_type').value);
-                    updateEvent(currentEvent);
-                    $('#updateModal').modal('hide');
-                });
-                document.addEventListener('DOMContentLoaded', function () {
-                    const patientSelect = document.getElementById('patient_id');
-                    const choices = new Choices(patientSelect, {
-                        removeItemButton: true,
-                        placeholder: true,
-                        placeholderValue: 'Choisir un patient',
-                        itemSelectText: 'Appuyer pour séléctionner',
-                        allowHTML: true,
-                    });
-                });
-                document.getElementById('new-patient-btn').addEventListener('click', function () {
-                    document.getElementById('new-patient-fields-lastName').classList.remove('d-none');
-                    document.getElementById('new-patient-fields-firstName').classList.remove('d-none');
-                    document.getElementById('new-patient-lastName').setAttribute('required', 'required');
-                    document.getElementById('new-patient-firstName').setAttribute('required', 'required');
-                });
 
-
-                function updateEvent(event) {
-                    let data = {
-                        id: event.id,
-                        title: event.title,
-                        start: event.start.toISOString(),
-                        end: event.end ? event.end.toISOString() : null
-                    };
+                    let form = $(this);
+                    let formData = form.serialize();
 
                     $.ajax({
-                        url: '{{ route('myCalendar.update-appointment', '') }}',
+                        url: form.attr('action'),
                         method: 'POST',
-                        data: data,
+                        data: formData,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function (response) {
-                            if (response.success) {
-                                alert('Rendez-vous mis à jour avec succès');
-                            } else {
-                                alert('Échec de la mise à jour du rendez-vous');
-                            }
+                            $('#updateModal').modal('hide');
+                            showMessage(response.message, true);
+                            calendar.refetchEvents();
                         },
-                        error: function (error) {
-                            console.error('Erreur lors de la mise à jour du rendez-vous:', error);
-                            alert('Erreur lors de la mise à jour du rendez-vous');
+                        error: function (response) {
+                            const errorMessage = response.responseJSON.message || 'Échec de mis à jour du rendez-vous';
+                            $('#updateModal').modal('hide');
+                            showMessage(errorMessage, false);
                         }
                     });
-                }
+                });
 
-                function createEvent(start, end) {
-                    let title = prompt('Entrez le titre de l\'événement:');
-                    if (title) {
-                        let data = {
-                            title: title,
-                            start: start,
-                            end: end,
-                            consultation_type: 'En ligne'
-                        };
+                const patientSelect = document.getElementById('patient_id');
+                new Choices(patientSelect, {
+                    removeItemButton: true,
+                    placeholderValue: 'Choisir un patient',
+                    itemSelectText: 'Appuyer pour séléctionner',
+                    allowHTML: true,
+                });
 
-                        $.ajax({
-                            url: '{{ route('myCalendar.add-appointment', '') }}',
-                            method: 'POST',
-                            data: data,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function (response) {
-                                if (response.success) {
-                                    calendar.addEvent(response.event);
-                                    alert('Rendez-vous créé avec succès');
-                                } else {
-                                    alert('Échec de la création du rendez-vous');
-                                }
-                            },
-                            error: function (error) {
-                                console.error('Erreur lors de la création du rendez-vous:', error);
-                                alert('Erreur lors de la création du rendez-vous');
-                            }
-                        });
-                    }
-                }
+                document.getElementById('new-patient-btn').addEventListener('click', function () {
+                    document.getElementById('new-patient-fields-lastName').classList.toggle('d-none');
+                    document.getElementById('new-patient-fields-firstName').classList.toggle('d-none');
+                    document.getElementById('new-patient-lastName').toggleAttribute('required');
+                    document.getElementById('new-patient-firstName').toggleAttribute('required');
+                });
+                const cancelBtn = document.getElementById('cancel-btn');
 
-            })
+                cancelBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const cancelRoute = cancelBtn.getAttribute('href').replace('id', currentEvent.id);
 
+                    $.ajax({
+                        url: cancelRoute,
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            $('#updateModal').modal('hide');
+                            showMessage(response.message, true);
+                            calendar.refetchEvents();
+                        },
+                        error: function (response) {
+                            const errorMessage = response.responseJSON.message || 'Échec d\'annulation du rendez-vous';
+                            $('#updateModal').modal('hide');
+                            showMessage(errorMessage, false);
+                        }
+                    });
+                });
+            });
         </script>
-    @endpush
+
 @endsection
-
-

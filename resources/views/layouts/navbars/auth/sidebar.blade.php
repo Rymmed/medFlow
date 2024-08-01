@@ -1,5 +1,5 @@
 <aside
-    class="sidenav navbar navbar-vertical bg-gray-100 navbar-expand-xs border-0 border-radius-xl my-4 fixed-start ms-3 ps"
+    class="sidenav navbar navbar-vertical bg-gray-100 navbar-expand-xs border-0 border-radius-xl my-4 fixed-start ms-3"
     id="sidenav-main">
     <div class="sidenav-header py-2">
         <i class="fas fa-times p-2 cursor-pointer text-secondary position-absolute end-2 top-0 d-xl-none"
@@ -15,10 +15,10 @@
              alt="..." style="display: none">
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="sidenav-body" id="sidenav-collapse-main">
+    <div class="sidenav-body w-auto" id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link {{ (Request::is('home') ? 'active' : '') }}" href="{{ route('home') }}">
+                <a class="nav-link {{ (Request::is('dashboard') ? 'active' : '') }}" href="{{ route('dashboard') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1"
@@ -190,6 +190,18 @@
                     </a>
                 </li>
                 <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('patients') ? 'active' : '') }}"
+                       href="{{ route('myPatients') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fas fa-calendar-alt ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Patients</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
                     <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}"
                        href="{{ route('myCalendar') }}">
                         <div
@@ -212,29 +224,29 @@
 
                 </li>
             @endif
-            <li class="nav-item pb-2">
-                <a class="nav-link {{ (Request::is('myMessages') ? 'active' : '') }}"
-                   href="javascript:;">
-                    <div
-                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i style="font-size: 1rem;"
-                           class="fa fa-envelope ps-2 pe-2 text-center text-dark {{ (Request::is('myMessages') ? 'text-white' : 'text-dark') }}"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Messages</span>
-                </a>
-            </li>
+{{--            <li class="nav-item pb-2">--}}
+{{--                <a class="nav-link {{ (Request::is('myMessages') ? 'active' : '') }}"--}}
+{{--                   href="javascript:;">--}}
+{{--                    <div--}}
+{{--                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">--}}
+{{--                        <i style="font-size: 1rem;"--}}
+{{--                           class="fa fa-envelope ps-2 pe-2 text-center text-dark {{ (Request::is('myMessages') ? 'text-white' : 'text-dark') }}"></i>--}}
+{{--                    </div>--}}
+{{--                    <span class="nav-link-text ms-1">Messages</span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
 
-            <li class="nav-item pb-2">
-                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
-                   href="javascript:;">
-                    <div
-                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i style="font-size: 1rem;"
-                           class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Notifications</span>
-                </a>
-            </li>
+{{--            <li class="nav-item pb-2">--}}
+{{--                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"--}}
+{{--                   href="javascript:;">--}}
+{{--                    <div--}}
+{{--                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">--}}
+{{--                        <i style="font-size: 1rem;"--}}
+{{--                           class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>--}}
+{{--                    </div>--}}
+{{--                    <span class="nav-link-text ms-1">Notifications</span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
             <li class="nav-item pb-2">
                 <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"
                    href="javascript:;">
@@ -271,4 +283,33 @@
             </li>
         </ul>
     </div>
+    @push('scripts')
+        <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            var logoImg = document.getElementById("logo-img");
+            var minimizedLogoImg = document.getElementById("minimized-img");
+            var toggleLeftButton = document.getElementById("toggleLeftButton");
+            var toggleRightButton = document.getElementById("toggleRightButton");
+            var sidenav = document.getElementById("sidenav-main");
+            var mainContent = document.getElementById("main-content");
+
+            toggleLeftButton.addEventListener("click", function () {
+                sidenav.classList.toggle("collapsed");
+                mainContent.classList.add("expanded");
+                logoImg.style.display = "none";
+                minimizedLogoImg.style.display = "block";
+                toggleRightButton.style.display = "block";
+                toggleLeftButton.style.display = "none";
+            });
+            toggleRightButton.addEventListener("click", function () {
+                sidenav.classList.remove("collapsed");
+                mainContent.classList.remove("expanded");
+                logoImg.style.display = "block";
+                minimizedLogoImg.style.display = "none";
+                toggleLeftButton.style.display = "block";
+                toggleRightButton.style.display = "none";
+            });
+        });
+    </script>
+    @endpush
 </aside>

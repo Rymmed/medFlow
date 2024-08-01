@@ -1,69 +1,108 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-        <div class="container-fluid">
-            <div class="row mt-7">
-                <div class="col-lg-4 col-md-4">
-                    <div class="card card-body blur shadow-blur mx-4 mt-n6">
-                        <div class="row gx-4">
-                            <div class="col-auto">
-                                <div class="position-relative">
-                                    <x-profile-image></x-profile-image>
-                                    <x-edit-image-btn></x-edit-image-btn>
-                                </div>
-                            </div>
-                            <div class="col-auto my-auto">
-                                <div class="h-100">
-                                    <h5 class="mb-1">
-                                        {{ auth()->user()->firstName }} {{ auth()->user()->lastName }}
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
-                            <div class="nav-wrapper position-relative">
-                                <ul class="nav nav-pills nav-fill flex-column p-1 bg-transparent" role="tablist">
-                                    <li class="nav-item">
-                                        <a id="profile-tab" class="nav-link mb-0 px-0 py-1 active h-auto" data-bs-toggle="tab"
-                                           href="javascript:;"
-                                           role="tab" aria-controls="overview" aria-selected="true">
-                                            <i class="fa fa-solid fa-address-card"></i>
-                                            <span class="ms-0">{{ __('Informations Personnelles') }}</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a id="medicalRecord-tab" class="nav-link mb-0 px-0 py-1 " data-bs-toggle="tab"
-                                           href="javascript:;" role="tab" aria-controls="teams" aria-selected="false">
-                                            <i class="fa fa-solid fa-lock"></i>
-                                            <span class="ms-1">{{ __('Dossier Médical') }}</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 text-center">
+                <x-patient-record.profile-card :user="$patient"
+                                               :appointment="auth()->user()->role === 'doctor' ? $appointment : null"></x-patient-record.profile-card>
+                <ul class="list-group card my-3">
+                    <li class="list-group-item border-0" onclick="showSection('generalInfo')">Informations Générales
+                    </li>
+                    <li class="list-group-item border-0" onclick="showSection('medicalHistory')">Antécédents
+                        Médicales
+                    </li>
+                    <li class="list-group-item border-0" onclick="showSection('consultationReports')">Rapports de
+                        Consultations
+                    </li>
+                    <li class="list-group-item border-0" onclick="showSection('vaccinations')">Vaccinations</li>
+                    <li class="list-group-item border-0" onclick="showSection('vitalSigns')">Signes Vitaux</li>
+                    <li class="list-group-item border-0" onclick="showSection('appointmentHistory')">Historique de
+                        Rendez-vous
+                    </li>
+                    @if(auth()->user()->role === 'patient')
+                        <li class="list-group-item border-0" onclick="showSection('security')">Sécurité</li>
+                    @endif
+
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="container-fluid">
+                    <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
+                         style="display: none;">
+                        <span class="alert-text text-white"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <!-- Content Area -->
+                    <div id="generalInfo" class="section card active">
+                        <x-patient-record.general-info :patient="$patient"
+                                                       :medicalRecord="$medicalRecord"></x-patient-record.general-info>
+                    </div>
+
+                    <div id="medicalHistory" class="section card">
+                        <x-patient-record.medical-histories :medicalRecord="$medicalRecord"
+                                                            :familialMedical="$familialMedicalHistories"
+                                                            :familialSurgical="$familialSurgicalHistories"
+                                                            :personalMedical="$personalMedicalHistories"
+                                                            :personalSurgical="$personalSurgicalHistories">
+                        </x-patient-record.medical-histories>
+                    </div>
+
+                    <div id="consultationReports" class="section card">
+                        <x-patient-record.full-consultations-reports
+                            :consultationReports="$consultationReports"
+                            :patient="$patient"></x-patient-record.full-consultations-reports>
+                    </div>
+                    <div id="vaccinations" class="section">
+                        <h2>Vaccinations</h2>
+
+                    </div>
+                    <div id="vitalSigns" class="section">
+                        <h2>Signes Vitaux</h2>
+
+                    </div>
+                    <div id="appointmentHistory" class="section card">
+                        @if(auth()->user()->role === 'patient')
+                            <x-patient-record.appointments-table :appointments="$appointments"> </x-patient-record.appointments-table>
+                        @else
+                            <x-doctor-patient-appointments-table
+                                :appointments="$appointments"></x-doctor-patient-appointments-table>
+                        @endif
+                    </div>
+                    <div id="security" class="section">
+                        <x-security></x-security>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container-fluid py-4">
-            <x-general-info :user="auth()->user()" :role="auth()->user()->role"></x-general-info>
-            <x-security></x-security>
-            <x-medical-record></x-medical-record>
-
-        </div>
-
+    </div>
     <script>
-        document.getElementById('profile-tab').addEventListener('click', function () {
-            document.getElementById('medicalRecord-form').style.display = 'none';
-            document.getElementById('security-form').style.display = 'block';
-            document.getElementById('profile-form').style.display = 'block';
-        });
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+            document.querySelectorAll('.list-group-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.list-group-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
 
-        document.getElementById('medicalRecord-tab').addEventListener('click', function () {
-            document.getElementById('profile-form').style.display = 'none';
-            document.getElementById('security-form').style.display = 'none';
-            document.getElementById('medicalRecord-form').style.display = 'block';
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            showSection('generalInfo');
 
+            function showMessage(message, isSuccess) {
+                const messageContainer = document.getElementById('message-container');
+                const messageText = messageContainer.querySelector('.alert-text');
+
+                messageText.textContent = message;
+                messageContainer.classList.remove('alert-primary', 'alert-success');
+                messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
+                messageContainer.style.display = 'block';
+            }
+        });
     </script>
 @endsection

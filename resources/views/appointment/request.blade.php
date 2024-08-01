@@ -3,18 +3,18 @@
 @section('content')
     <div class="row">
         <div class="col-2 text-center">
-            <img class="avatar avatar-xxl border-radius-section shadow" src="{{asset('assets/img/bruce-mars.jpg')}}" alt="doctor_photo">
+            <x-profile-image :class="'avatar avatar-xxl border-radius-section shadow'" :image=" $doctor->profile_image"></x-profile-image>
         </div>
         <div class="col-3">
             <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
-            <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->speciality }}</p>
-            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
+            <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor_info->speciality }}</p>
+            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>({{ $doctor->city }}) ? $doctor->city : 'non précis' - {{ $doctor->country }}</p>
             <p class="card-text text-sm"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
         </div>
         <div class="col-6">
             <p class="text-dark text-bold text-sm">Disponibilité: </p>
-            <p class="text-sm">{{ $doctor->availability->formattedDays() }}</p>
-            <p class="text-sm">{{ $doctor->availability->formattedTime() }}</p>
+            <p class="text-sm">{{ $doctor->doctor_info->formattedDays() }}</p>
+            <p class="text-sm">{{ $doctor->doctor_info->formattedTime() }}</p>
         </div>
     </div>
 
@@ -46,10 +46,10 @@
 
             <div class="row d-flex">
                 <div class="col-4 mb-3">
-                    <label for="start_time">Date et heure :</label>
+                    <label for="start_date">Date et heure :</label>
                     <div class="@error('date')border border-danger rounded-3 @enderror">
-                        <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
-                        @error('start_time')
+                        <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
+                        @error('start_date')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -66,10 +66,10 @@
 {{--                </div>--}}
                 <div class="col-4 mb-3">
                     <label for="consultation_type">Type de consultation :</label>
-                    <select id="consultation_type" name="consultation_type" class="form-control" required>
-                        <option value="Online">En ligne</option>
-                        <option value="In person">En présentiel</option>
-                        <option value="Home service">Service à domicile</option>
+                    <select id="consultation_type" name="consultation_type" class="form-select" required>
+                        @foreach($consultation_types as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

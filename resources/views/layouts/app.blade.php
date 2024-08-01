@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,10 +29,14 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.css" rel="stylesheet"/>
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 
+    <!-- Scripts -->
+    <script src="{{asset('assets/js/script.js')}}"></script>
     {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
-@stack('scripts')
+{{--@stack('scripts')--}}
     <body class="g-sidenav-show bg-white">
         @auth
             @yield('auth')
@@ -40,10 +44,9 @@
         @guest
             @yield('guest')
         @endguest
-        <!-- Scripts -->
-        <script src="{{asset('assets/js/script.js')}}"></script>
+
         <!-- Font Awesome Icons -->
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/3568f1c09c.js" crossorigin="anonymous"></script>
         <!--- JQuery JS Files --->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!--- Choices.JS Files --->
@@ -63,7 +66,8 @@
         <script src="{{asset('assets/js/plugins/perfect-scrollbar.min.js')}}"></script>
         <script src="{{asset('assets/js/plugins/smooth-scrollbar.min.js')}}"></script>
         <script src="{{asset('assets/js/plugins/chartjs.min.js')}}"></script>
-
+        <!-- Cropper.js JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
         <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
         <script src="{{asset('assets/js/soft-ui-dashboard.min.js?v=1.0.3')}}"></script>
         {{--    @stack('dashboard')--}}
