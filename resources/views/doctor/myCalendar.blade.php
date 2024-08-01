@@ -159,9 +159,7 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script type="text/javascript">
+        <script>
             document.addEventListener('DOMContentLoaded', function () {
                 function showMessage(message, isSuccess) {
                     const messageContainer = document.getElementById('message-container');
@@ -330,7 +328,5 @@
                 });
             });
         </script>
-
-    @endpush
 
 @endsection

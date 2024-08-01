@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MedicalRecord;
 use App\Models\Vaccination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,10 @@ use Illuminate\View\View;
 
 class VaccinationController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
+    }
     /**
      * Display a listing of the resource.
      */

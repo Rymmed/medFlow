@@ -19,9 +19,9 @@ return new class extends Migration
             $table->double('weight')->nullable();
             $table->boolean('smoking')->default('0')->nullable();
             $table->boolean('alcohol')->default('0')->nullable();
-            $table->enum('blood_group', \App\Enums\BloodGroup::getValues())->default('unknown');
+            $table->enum('blood_group', \App\Enums\BloodGroup::getValues())->nullable();
             $table->enum('area', PatientArea::getValues())->nullable();
-            $table->boolean('sedentary_lifestyle')->default('1');//0: active | 1:inactive
+            $table->boolean('sedentary_lifestyle')->default('1');//0: active | 1: pas d'activité sportive
             $table->timestamps();
 
             $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');

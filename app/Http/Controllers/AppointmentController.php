@@ -19,8 +19,12 @@ use Illuminate\View\View;
 
 class AppointmentController extends Controller
 {
+    public function index()
+    {
 
-    public function index($doctor_id)
+    }
+
+    public function requestForm($doctor_id)
     {
         $doctor = User::find($doctor_id);
         $doctor_info = DoctorInfo::where('doctor_id', $doctor->id)->first();
@@ -70,7 +74,8 @@ class AppointmentController extends Controller
         $pendingAppointments = $appointments->where('status', $pending);
         $confirmedAppointments = $appointments->where('status', $confirmed);
         $refusedAppointments = $appointments->where('status', $refused);
-        return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments', 'refusedAppointments'));
+        $patients = $doctor->patients;
+        return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments', 'refusedAppointments', 'patients'));
     }
 
     public function updateStatus(Request $request)

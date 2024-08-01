@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-2 text-center">
-            <x-profile-image :class="'avatar avatar-xxl border-radius-section shadow'"></x-profile-image>
+            <x-profile-image :class="'avatar avatar-xxl border-radius-section shadow'" :image=" $doctor->profile_image"></x-profile-image>
         </div>
         <div class="col-3">
             <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>

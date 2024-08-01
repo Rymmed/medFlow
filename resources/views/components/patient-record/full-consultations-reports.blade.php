@@ -31,7 +31,14 @@
                     Type de consultation
                 </th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                    Action
+                    Ordonnance
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    @if(auth()->user()->role === 'patient')
+                        Rapport
+                    @else
+                        Action
+                    @endif
                 </th>
             </tr>
             </thead>
@@ -50,14 +57,28 @@
                     <td class="text-center">
                         <p class="text-xs font-weight-bold mb-0">
                             {!! auth()->user()->id === $consultationReport->doctor_id
-                            ? 'Moi'
-                            : 'Dr. ' . $consultationReport->doctor->lastName . ' ' . $consultationReport->doctor->firstName
-                        !!}
+                                ? 'Moi'
+                                : 'Dr. ' . $consultationReport->doctor->lastName . ' ' . $consultationReport->doctor->firstName
+                            !!}
+                        </p>
                     </td>
                     <td class="text-center">
                         <p class="text-xs font-weight-bold mb-0">
                             <x-consultation-type-badge
                                 :consultation_type="$consultationReport->appointment->consultation_type"></x-consultation-type-badge>
+                        </p>
+                    </td>
+                    <td class="text-center">
+                        <p class="text-xs font-weight-bold mb-0">
+                            @if ($consultationReport->prescriptions->isEmpty())
+                                @if(auth()->user()->id === $consultationReport->doctor_id)
+                                    <a href="{{route('prescriptions.create', $consultationReport->id)}}">Créer</a>
+                                @else
+                                    Pas de prescriptions
+                                @endif
+                            @else
+                                <a href="{{route('prescriptions.index', ['report_id' => $consultationReport->id])}}">Voir</a>
+                            @endif
                         </p>
                     </td>
                     {{--                    <td class="align-middle text-center text-sm">--}}
@@ -67,29 +88,18 @@
                     {{--                    </td>--}}
                     <td class="text-center text-sm">
                         @if(Auth::user()->role === 'doctor')
-                            <div class="dropdown">
-                                <a href="javascript:;" data-bs-toggle="dropdown" aria-expanded="false"
-                                   style="cursor: pointer;">
-                                    <span>
-                                    <i class="fas fa-ellipsis-v"></i>
-                                    </span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-start">
-                                    <li><a class="dropdown-item border-radius-md"
-                                           href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}">Afficher</a>
-                                    </li>
-                                    @if(auth()->user()->id === $consultationReport->doctor_id)
-                                        <li><a class="dropdown-item border-radius-md"
-                                               href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}">Éditer</a>
-                                        </li>
-                                    @endif
-                                </ul>
+                            <div class="action-buttons justify-content-center">
+                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i class="fas fa-eye"></i></a>
+                                @if(auth()->user()->id === $consultationReport->doctor_id)
+                                    <a href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}"><i class="fa fa-edit text-secondary"></i></a>
+                                @endif
                             </div>
                         @else
-                            <p class="text-xs font-weight-bold mb-0"><a
-                                    href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}">Voir
-                                    le rapport</a></p>
+                            <p class="text-xs font-weight-bold mb-0">
+                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i class="fas fa-eye"></i></a>
+                            </p>
                         @endif
+
                     </td>
                 </tr>
             @endforeach

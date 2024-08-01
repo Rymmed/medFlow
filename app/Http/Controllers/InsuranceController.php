@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Insurance;
+use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 
 class InsuranceController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
+    }
     /**
      * Display a listing of the resource.
      */

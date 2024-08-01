@@ -3,24 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewUserWelcome;
+use App\Models\Appointment;
+use App\Models\ConsultationReport;
+use App\Models\MedicalRecord;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class PatientController extends Controller
 {
+    /**
+     * @throws AuthorizationException
+     */
+    public function showPatientDetails($appointment_id, $patientId)
+    {
+        $doctor_id = Auth::id();
+        $patient = User::findOrFail($patientId);
+        $appointment = Appointment::findOrFail($appointment_id);
+        $medicalRecord = $patient->medicalRecord;
+        $appointments = $patient->patientAppointments->where('doctor_id', $doctor_id);
+        $this->authorize('view', $medicalRecord);
+        $familialMedicalHistories = $medicalRecord->medicalHistories
+            ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
+            ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
+
+        $familialSurgicalHistories = $medicalRecord->medicalHistories
+            ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
+            ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
+        $personalMedicalHistories = $medicalRecord->medicalHistories
+            ->where('type', \App\Enums\MedicalHistType::PERSONAL)
+            ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
+
+        $personalSurgicalHistories = $medicalRecord->medicalHistories
+            ->where('type', \App\Enums\MedicalHistType::PERSONAL)
+            ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
+        $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($appointments) {
+            $query->whereIn('id', $appointments->pluck('id'));
+        })->paginate(10);
+        $this->authorize('viewAny', [ConsultationReport::class, $patient]);
+        return view('patient.profile', compact(
+            'patient',
+            'appointment',
+            'medicalRecord',
+            'appointments',
+            'consultationReports',
+            'familialMedicalHistories',
+            'familialSurgicalHistories',
+            'personalMedicalHistories',
+            'personalSurgicalHistories'
+        ));
+    }
+
     public function index()
     {
         $patients = User::where('role', 'patient')->get();
         return view('super-admin.patients.index', compact('patients'));
     }
 
+    public function myPatients()
+    {
+        $doctor = Auth::user();
+        $patients = $doctor->patients;
+        return view('doctor.myPatients', compact('patients'));
+    }
+
     public function create()
     {
         return view('super-admin.patients.create');
     }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -63,7 +118,7 @@ class PatientController extends Controller
         $validator = Validator::make($request->all(), [
             'lastName' => 'required|string',
             'firstName' => 'required|string',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -87,12 +142,14 @@ class PatientController extends Controller
         $patient->update(['status' => true]);
         return redirect()->route('patients.index')->with('success', 'Le compte du patient a été activé avec succès.');
     }
+
     public function deactivate($id)
     {
         $patient = User::findOrFail($id);
         $patient->update(['status' => false]);
         return redirect()->route('patients.index')->with('success', 'Le compte du patient a été désactivé avec succès.');
     }
+
     public function destroy($id)
     {
         $patient = User::findOrFail($id);

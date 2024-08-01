@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Enums\UserRole;
-use App\Models\Allergy;
 use App\Models\Appointment;
 use App\Models\ConsultationReport;
 use App\Models\ExamResult;
@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\In;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -40,13 +40,15 @@ class HomeController extends Controller
         $user_role = Auth::user()->role;
         switch ($user_role) {
             case UserRole::SUPER_ADMIN:
-                return view('super-admin.home');
+                return view('super-admin.dashboard');
                 break;
             case UserRole::ADMIN:
-                return view('admin.home');
+                return view('admin.dashboard');
                 break;
             case UserRole::DOCTOR:
-                return view('doctor.home');
+                $doctor = auth()->user();
+                $appointments = Appointment::where('doctor_id', $doctor->id)->with('patient')->get();
+                return view('doctor.dashboard', compact('appointments'));
                 break;
             case UserRole::PATIENT:
                 $patient = auth()->user();
@@ -54,39 +56,32 @@ class HomeController extends Controller
                 $doctors = $patient->doctors;
 
                 $medicalRecord = MedicalRecord::where('patient_id', $patient_id)->first();
-                $medicalRecord_id = $medicalRecord->id;
-                $vital_signs = VitalSign::where('medicalRecord_id', $medicalRecord_id)->get();
-                $medicalHistories = MedicalHistory::where('medicalRecord_id', $medicalRecord_id)->get();
-                $vaccinations = Vaccination::where('medicalRecord_id', $medicalRecord_id)->get();
-                $examResults = ExamResult::where('medicalRecord_id', $medicalRecord_id)->get();
-                $insuranceDetails = Insurance::where('medicalRecord_id', $medicalRecord_id)->first();
-                $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', ['refused', 'cancelled'])->orderBy('start_date', 'desc')->get();
+//                $this->authorize('view', $medicalRecord);
+                $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])->orderBy('start_date', 'desc')->get();
                 $upcomingAppointments = $appointments->where('start_date', '>', now());
                 $recentAppointments = $appointments->where('start_date', '<=', now());
-                $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($patient_id, $patient) {
-                    $query->where('patient_id', $patient_id);
-                })->paginate(5);
-                $prescriptions = Prescription::whereHas('consultationReport.appointment', function ($query) use ($patient_id) {
-                    $query->where('patient_id', $patient_id);
-                })->with('prescriptionLines')->get();
 
-                return view('patient.home', compact(
+                $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($recentAppointments) {
+                    $query->whereIn('id', $recentAppointments->pluck('id'));
+                })->paginate(5);
+//                $this->authorize('view', $consultationReport);
+                $prescriptions = Prescription::whereIn('consultation_report_id', $consultationReports->pluck('id'))
+                    ->with('prescriptionLines')
+                    ->get();
+//                $this->authorize('view', $prescriptions);
+
+                return view('patient.dashboard', compact(
                     'doctors',
+                    'consultationReports',
                     'medicalRecord',
-                    'vital_signs',
-                    'medicalHistories',
-                    'vaccinations',
-                    'examResults',
-                    'insuranceDetails',
                     'appointments',
                     'upcomingAppointments',
                     'recentAppointments',
-                    'consultationReports',
                     'prescriptions'
                 ));
                 break;
             case UserRole::ASSISTANT:
-                return view('assistant.home');
+                return view('assistant.dashboard');
                 break;
             default:
                 Auth::logout();

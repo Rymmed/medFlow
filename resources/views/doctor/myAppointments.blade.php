@@ -29,29 +29,38 @@
                     @if($pendingAppointments->isEmpty())
                         <p class="px-3 py-3">Aucune demande de rendez-vous trouvée.</p>
                     @else
-                        <div class="card-body pt-4 p-3 appointments-list">
-                            <ul class="list-group">
+                        <div class="card-body pt-4 p-3 fixed-height-list">
+                            <div class="list-group">
                                 @foreach($pendingAppointments as $appointment)
-                                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                                        <div class="author align-items-center">
-                                            <img src="./assets/img/kit/pro/team-2.jpg" alt="..." class="avatar shadow">
-                                            <div class="name ps-3">
-                                                <span>Mathew Glock</span>
-                                                <div class="stats">
-                                                    <small>Posted on 28 February</small>
+                                    <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                        <div class="author align-items-center"
+                                             @if($patients->contains('id', $appointment->patient_id))
+                                                 onclick="redirectToProfile('{{ route('patient.record', ['id' => $appointment->patient_id]) }}')"
+                                             @else
+                                                 data-bs-toggle="modal"
+                                             data-bs-target="#publicProfileModal-{{ $appointment->id }}"
+
+                                             @endif
+                                             style="cursor: pointer;">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <x-profile-image
+                                                        :class="'avatar avatar-xl border-radius-section shadow-sm'"
+                                                        :image="$appointment->patient->profile_image"></x-profile-image>
+                                                </div>
+                                                <div class="col-md-8 name ps-3">
+                                                    <span>{{ $appointment->patient->firstName }} {{ $appointment->patient->lastName }}</span>
+                                                    <div class="stats">
+                                                        <small>{{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/Y') }}
+                                                            - {{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}
+                                                            <br>Motif de
+                                                            consultation: {{ $appointment->consultation_reason }}
+                                                        </small><br>
+                                                        <x-consultation-type-badge
+                                                            :consultation_type="$appointment->consultation_type"></x-consultation-type-badge>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex flex-column col-8" id="appointment-{{ $appointment->id }}">
-                                            <h6 class="mb-3 text-sm">{{ $appointment->patient->firstName }} {{ $appointment->patient->lastName }}</h6>
-                                            <span class="mb-2 text-xs">Date: <span
-                                                    class="text-dark font-weight-bold ms-sm-2">{{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/Y') }}</span></span>
-                                            <span class="mb-2 text-xs">Heure: <span
-                                                    class="text-dark ms-sm-2 font-weight-bold">{{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}</span></span>
-                                            <span class="mb-2 text-xs">Motif de Consultation: <span
-                                                    class="text-dark ms-sm-2 font-weight-bold">{{ $appointment->consultation_reason }}</span></span>
-                                            <span class="text-xs">Type de Consultation: <span
-                                                    class="text-dark ms-sm-2 font-weight-bold">{{ $appointment->consultation_type }}</span></span>
                                         </div>
                                         <div class="ms-auto text-end col-4">
                                             <form action="{{ route('appointments.updateStatus') }}" method="POST"
@@ -73,15 +82,101 @@
                                                 @method('PUT')
                                                 <input type="hidden" name="appointment_id"
                                                        value="{{ $appointment->id }}">
-                                                <input type="hidden" name="status" value="refused">
+                                                <input type="hidden" name="status"
+                                                       value="{{\App\Enums\AppointmentStatus::REFUSED}}">
                                                 <button type="submit" class="btn btn-link text-dark px-3 mb-0">
                                                     <i class="fas fa-times text-dark me-2"></i>{{ __('Refuser') }}
                                                 </button>
                                             </form>
                                         </div>
-                                    </li>
+                                    </div>
+                                    <div class="modal fade" id="publicProfileModal-{{ $appointment->id }}" tabindex="-1"
+                                         role="dialog"
+                                         aria-labelledby="modal-notification" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h6 class="modal-title">Informations sur le patient</h6>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                    <span class="text-dark" aria-hidden="true"><i
+                                                            class="fa fa-close"></i></span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body mx-2">
+                                                    <div class="text-center">
+                                                        <x-profile-image
+                                                            class="avatar avatar-xl border-radius-section shadow-sm"
+                                                            :image="$appointment->patient->profile_image"></x-profile-image>
+                                                        <h6 class="mt-3">{{ $appointment->patient->firstName }} {{ $appointment->patient->lastName }}</h6>
+                                                        <p class="text-secondary">
+                                                            {{ \Carbon\Carbon::parse($appointment->patient->dob)->age }}
+                                                            ans,
+                                                            {{ $appointment->patient->gender === 0 ? 'Homme' : 'Femme' }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="row mt-4 text-center">
+                                                        <div class="col-6">
+                                                            <p class="text-sm text-secondary">{{ __('Adresse') }}</p>
+                                                            <p class="text-dark">{{ $appointment->patient->address }}</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="text-sm text-secondary">{{ __('Ville') }}</p>
+                                                            <p class="text-dark">{{ $appointment->patient->city }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2 text-center">
+                                                        <div class="col-6">
+                                                            <p class="text-sm text-secondary">{{ __('Email') }}</p>
+                                                            <p class="text-dark">{{ $appointment->patient->email }}</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="text-sm text-secondary">{{ __('Numéro de téléphone') }}</p>
+                                                            <p class="text-dark">{{ $appointment->patient->phone_number }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2 text-center">
+                                                        <div class="col-6">
+                                                            <p class="text-sm text-secondary">{{ __('Pays') }}</p>
+                                                            <p class="text-dark">{{ $appointment->patient->country }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="{{ route('appointments.updateStatus') }}"
+                                                          method="POST" class="d-inline me-2">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="appointment_id"
+                                                               value="{{ $appointment->id }}">
+                                                        <input type="hidden" name="status"
+                                                               value="{{ \App\Enums\AppointmentStatus::CONFIRMED }}">
+                                                        <button type="submit" class="btn btn-success">
+                                                            <i class="fa fa-check"></i> {{ __('Confirmer') }}
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ route('appointments.updateStatus') }}"
+                                                          method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="appointment_id"
+                                                               value="{{ $appointment->id }}">
+                                                        <input type="hidden" name="status"
+                                                               value="{{ \App\Enums\AppointmentStatus::REFUSED }}">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="fas fa-times"></i> {{ __('Refuser') }}
+                                                        </button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Fermer
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 @endforeach
-                            </ul>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -99,19 +194,18 @@
                                 @foreach($confirmedAppointments as $appointment)
                                     <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 ">
                                         <div class="author align-items-center"
-                                             @if($appointment->consultationReport)
-                                                 onclick="redirectToProfile('{{ route('consultationReport.show', ['consultationReport' => $appointment->consultationReport->id]) }}')"
-                                             @else
-                                                 onclick="alert('No Consultation Report Available')"
-                                             @endif
+                                             onclick="redirectToProfile('{{ route('patient.record', ['patient_id' => $appointment->patient_id, 'appointment_id' => $appointment->id]) }}')"
                                              style="cursor: pointer;">
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if($appointment->patient->profile_image)
-                                                        <img
-                                                            src="{{ asset('storage/' . $appointment->patient->profile_image) }}"
-                                                            alt="Profile image"
-                                                            class="avatar avatar-xl border-radius-section shadow-sm">
+                                                        <x-profile-image
+                                                            :class="'avatar avatar-xl border-radius-section shadow-sm'"
+                                                            :image="$appointment->patient->profile_image"></x-profile-image>
+                                                        {{--                                                        <img--}}
+                                                        {{--                                                            src="{{ asset('storage/' . $appointment->patient->profile_image) }}"--}}
+                                                        {{--                                                            alt="Profile image"--}}
+                                                        {{--                                                            class="avatar avatar-xl border-radius-section shadow-sm">--}}
                                                     @else
                                                         <img src="{{ asset('assets/img/default-profile.jpg') }}"
                                                              alt="Default Profile image"
@@ -132,13 +226,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{--                                                <div class="d-flex flex-column col-8" id="appointment-{{ $appointment->id }}">--}}
-                                        {{--                                                    <h6 class="mb-3 text-sm">{{ $appointment->patient->firstName }} {{ $appointment->patient->lastName }}</h6>--}}
-                                        {{--                                                    <span class="mb-2 text-xs">Date: <span class="text-dark font-weight-bold ms-sm-2">{{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/Y') }}</span></span>--}}
-                                        {{--                                                    <span class="mb-2 text-xs">Heure: <span class="text-dark ms-sm-2 font-weight-bold">{{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}</span></span>--}}
-                                        {{--                                                    <span class="mb-2 text-xs">Motif de Consultation: <span class="text-dark ms-sm-2 font-weight-bold">{{ $appointment->consultation_reason }}</span></span>--}}
-                                        {{--                                                    <span class="text-xs">Type de Consultation: <span class="text-dark ms-sm-2 font-weight-bold">{{ $appointment->consultation_type }}</span></span>--}}
-                                        {{--                                                </div>--}}
                                         <div class="ms-auto text-end">
                                             <form action="{{ route('appointments.updateStatus') }}" method="POST"
                                                   class="d-inline">

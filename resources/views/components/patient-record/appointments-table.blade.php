@@ -33,7 +33,6 @@
                     <div class="d-flex px-2 py-1">
                         <div class="me-2">
                             <x-profile-image :class="'avatar avatar-sm shadow-sm'" :image="$appointment->doctor->profile_image"></x-profile-image>
-
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-xs">Dr. {{ $appointment->doctor->lastName }} {{ $appointment->doctor->firstName }}</h6>

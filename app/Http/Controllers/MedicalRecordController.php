@@ -50,9 +50,18 @@ class MedicalRecordController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MedicalRecord $medicalRecord)
+    public function update(Request $request, $medicalRecord_id)
     {
-        //
+        $medicalRecord = MedicalRecord::findOrFail($medicalRecord_id);
+        $this->authorize('update', $medicalRecord);
+        $request->validate([
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+        ]);
+
+        $medicalRecord->update($request->all());
+
+        return response()->json(['success' => true]);
     }
 
     /**

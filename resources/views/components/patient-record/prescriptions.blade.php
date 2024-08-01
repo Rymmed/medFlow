@@ -1,5 +1,5 @@
 @props(['prescriptions'])
-<div class="accordion-item mt-2">
+<div class="accordion-item">
         <div class="card">
             <h6 class="mb-0 accordion-header" id="headingPrescriptions">
                 <a class="accordion-button" type="button" data-bs-toggle="collapse"

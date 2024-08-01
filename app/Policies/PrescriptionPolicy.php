@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\ConsultationReport;
 use App\Models\Prescription;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -20,8 +21,9 @@ class PrescriptionPolicy
         return $user->id === $report->doctor_id || $user->id === $report->appointment->patient_id;
     }
 
-    public function create(User $user, ConsultationReport $report)
+    public function create(User $user, $report_id)
     {
+        $report = ConsultationReport::findOrFail($report_id);
         return $user->id === $report->doctor_id;
     }
 

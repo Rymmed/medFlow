@@ -51,8 +51,8 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-    width: 100%;
-    overflow-x: hidden;
+    /*width: 100%;*/
+    /*overflow-x: hidden;*/
     /*height: 100%;*/
 }
 
@@ -5429,9 +5429,9 @@ textarea.form-control, textarea.form-control-lg, textarea.form-control-sm {
 }
 
 .list-group-item.active {
-    background-color: #cb0c9f;
-    border-color: #cb0c9f;
-    color: #fff;
+    /*background-color: #6aeaf7;*/
+    /*border-color: #cb0c9f;*/
+    color: #6aeaf7;
     z-index: 2
 }
 
@@ -6004,7 +6004,7 @@ textarea.form-control, textarea.form-control-lg, textarea.form-control-sm {
 @media (min-width: 576px) {
     .modal-dialog {
         margin: 1.75rem auto;
-        max-width: 500px
+        max-width: 700px
     }
 
     .modal-dialog-scrollable {

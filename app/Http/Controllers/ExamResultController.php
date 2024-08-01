@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConsultationReport;
 use App\Models\ExamResult;
 use App\Models\MedicalRecord;
 use App\Models\User;
@@ -9,6 +10,10 @@ use Illuminate\Http\Request;
 
 class ExamResultController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
+    }
     /**
      * Display a listing of the resource.
      */

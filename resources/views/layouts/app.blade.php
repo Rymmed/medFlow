@@ -36,7 +36,7 @@
     <script src="{{asset('assets/js/script.js')}}"></script>
     {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 </head>
-@stack('scripts')
+{{--@stack('scripts')--}}
     <body class="g-sidenav-show bg-white">
         @auth
             @yield('auth')

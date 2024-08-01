@@ -1,11 +1,12 @@
 @props(['consultationReports'])
+
 <div class="card">
     <div class="card-header pb-0">
         <div class="d-flex flex-row justify-content-between">
             <div>
                 <h5 class="mb-0">Rapports de consultation</h5>
             </div>
-            <a href="{{ route('consultationReports.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
+            <a href="{{ route('consultationReport.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
                 Afficher Plus <i class="fas fa-angles-right me-1 text-xs"></i>
             </a>
         </div>

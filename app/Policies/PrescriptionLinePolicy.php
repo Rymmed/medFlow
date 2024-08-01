@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Prescription;
 use App\Models\PrescriptionLine;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,8 +22,9 @@ class PrescriptionLinePolicy
         return $user->id === $prescription->consultationReport->doctor_id || $user->id === $prescription->consultationReport->appointment->patient_id;
     }
 
-    public function create(User $user, Prescription $prescription)
+    public function create(User $user, $prescription_id)
     {
+        $prescription = Prescription::findOrFail($prescription_id);
         return $user->id === $prescription->consultationReport->doctor_id;
     }
 

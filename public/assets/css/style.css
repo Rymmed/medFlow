@@ -1,7 +1,8 @@
 :root {
+    --black-blue: #093c57;
     --blue: #04abbe;
     --light-blue: #6aeaf7;
-    --transparent-light-blue: rgba(4, 171, 187, 0.41);
+    --transparent-light-blue: rgba(4, 171, 190, 0.41);
 
 }
 
@@ -80,7 +81,7 @@
 }
 
 .fixed-height-list {
-    max-height: 50vh;
+    max-height: 65vh;
     overflow-y: auto;
 }
 
@@ -145,7 +146,7 @@
 }
 
 .sidenav.fixed-start + .main-content.expanded {
-    margin-left: 8.5rem; /* Largeur de la sidebar rétractée */
+    margin-left: 8.5rem;
 }
 
 
@@ -299,4 +300,23 @@
     100% {
         transform: translate(150%, 150%) rotate(60deg);
     }
+}
+
+.section {
+    display: none;
+}
+
+.list-group-item {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.list-group-item:hover{
+    background-color: rgba(229, 230, 230, 0.59);
+
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
 }
