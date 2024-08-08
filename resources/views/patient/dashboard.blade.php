@@ -5,7 +5,7 @@
         <div class="row">
             <!-- Personal infos --->
             <div class="col-md-3 text-center">
-                <x-patient-record.profile-card :user="auth()->user()"></x-patient-record.profile-card>
+{{--                <x-patient-record.profile-card :user="auth()->user()"></x-patient-record.profile-card>--}}
                 <x-patient-record.medical-info :medicalRecord="$medicalRecord"
                                                :insuranceDetails="$medicalRecord->insuranceDetails"></x-patient-record.medical-info>
                 <x-patient-record.vaccinations

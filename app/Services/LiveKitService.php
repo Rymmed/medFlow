@@ -4,36 +4,50 @@ namespace App\Services;
 
 use Agence104\LiveKit\AccessToken;
 use Agence104\LiveKit\AccessTokenOptions;
+use Agence104\LiveKit\RoomCreateOptions;
 use Agence104\LiveKit\RoomServiceClient;
+use Agence104\LiveKit\VideoGrant;
 use Exception;
-use Livekit\Room;
 
 class LiveKitService
 {
-    protected $client;
+    protected mixed $apiKey;
+    protected mixed $apiSecret;
+    protected mixed $livekitUrl;
 
-    /**
-     * @throws Exception
-     */
     public function __construct()
     {
-        $this->client = new RoomServiceClient(env('LIVEKIT_URL'), env('LIVEKIT_API_KEY'), env('LIVEKIT_API_SECRET'));
-    }
-
-    public function createRoom($roomName): Room
-    {
-        return $this->client->createRoom($roomName);
+        $this->apiKey = env('LIVEKIT_API_KEY');
+        $this->apiSecret = env('LIVEKIT_API_SECRET');
+        $this->livekitUrl = env('LIVEKIT_URL');
     }
 
     /**
      * @throws Exception
      */
-    public function generateToken($roomName, $userId, $isDoctor = false): string
+    public function createRoom(string $roomName)
     {
-        $token = new AccessToken(env('LIVEKIT_API_KEY'), env('LIVEKIT_API_SECRET'), $roomName, $userId);
-        if ($isDoctor) {
-            $token->setOptions((new AccessTokenOptions())->setRoomAdmin());
-        }
-        return $token->toJwt();
+        $client = new RoomServiceClient($this->livekitUrl, $this->apiKey, $this->apiSecret);
+        $client->createRoom((new RoomCreateOptions())->setName($roomName));
+
+        return $roomName;
+    }
+    /**
+     * @throws Exception
+     */
+    public function generateToken($roomName, $participantName)
+    {
+        $tokenOptions = (new AccessTokenOptions())->setIdentity($participantName);
+        $videoGrant = (new VideoGrant())->setRoomJoin()->setRoomName($roomName);
+
+        return (new AccessToken($this->apiKey, $this->apiSecret))
+            ->init($tokenOptions)
+            ->setGrant($videoGrant)
+            ->toJwt();
+    }
+
+    public function getLivekitUrl()
+    {
+        return $this->livekitUrl;
     }
 }

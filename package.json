@@ -18,6 +18,10 @@
         "@fullcalendar/interaction": "^6.1.13",
         "@fullcalendar/list": "^6.1.13",
         "@fullcalendar/timegrid": "^6.1.13",
-        "bootstrap": "^5.3.3"
+        "bootstrap": "^5.3.3",
+        "fullcalendar": "^6.1.15",
+        "laravel-echo": "^1.16.1",
+        "livekit-client": "^2.4.2",
+        "pusher-js": "^8.4.0-rc2"
     }
 }

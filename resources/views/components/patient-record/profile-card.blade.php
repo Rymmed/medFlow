@@ -28,5 +28,11 @@
                class="btn bg-gradient-blue text-white btn-md"><i class="far fa-plus me-1"></i>Rapport de
                 consultation</a>
         @endif
+        @if(auth()->user()->role === 'doctor' && $appointment->consultation_type=== \App\Enums\ConsultationType::ONLINE)
+                <form action="{{ route('consultations.start', ['appointmentId' => $appointment->id]) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn bg-gradient-blue text-white btn-md"><i class="fa fa-video me-1"></i>Démarrer</button>
+                </form>
+        @endif
     </div>
 </div>

@@ -61,7 +61,8 @@
 
                     </div>
                     <div id="vitalSigns" class="section">
-                        <h2>Signes Vitaux</h2>
+                        <x-patient-record.vital-signs
+                            :vital_signs="$medicalRecord->vital_signs"></x-patient-record.vital-signs>
 
                     </div>
                     <div id="appointmentHistory" class="section card">

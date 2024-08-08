@@ -29,21 +29,22 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.css" rel="stylesheet"/>
-    <!-- Cropper.js CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
-
-    <!-- Scripts -->
-    <script src="{{asset('assets/js/script.js')}}"></script>
-    {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
+    @vite(['resources/js/app.js'])
 </head>
 {{--@stack('scripts')--}}
     <body class="g-sidenav-show bg-white">
         @auth
             @yield('auth')
+            <!-- Notification container -->
+            <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000;"></div>
         @endauth
         @guest
             @yield('guest')
         @endguest
+        <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+        <!-- Scripts -->
+        <script src="{{asset('assets/js/script.js')}}">
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
         <!-- Font Awesome Icons -->
         <script src="https://kit.fontawesome.com/3568f1c09c.js" crossorigin="anonymous"></script>
@@ -52,13 +53,14 @@
         <!--- Choices.JS Files --->
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
         <!--- FullCalendar Files --->
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+{{--        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>--}}
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js'></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@5.11.3/main.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@5.11.3/main.min.js"></script>
-        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@5.11.3/main.min.js'></script>
+{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@5.11.3/main.min.js"></script>--}}
+{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.min.js"></script>--}}
+{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.min.js"></script>--}}
+{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@5.11.3/main.min.js"></script>--}}
+{{--        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@5.11.3/main.min.js'></script>--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <!--   Core JS Files   -->
         <script src="{{asset('assets/js/core/popper.min.js')}}"></script>
@@ -66,8 +68,6 @@
         <script src="{{asset('assets/js/plugins/perfect-scrollbar.min.js')}}"></script>
         <script src="{{asset('assets/js/plugins/smooth-scrollbar.min.js')}}"></script>
         <script src="{{asset('assets/js/plugins/chartjs.min.js')}}"></script>
-        <!-- Cropper.js JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
         <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
         <script src="{{asset('assets/js/soft-ui-dashboard.min.js?v=1.0.3')}}"></script>
         {{--    @stack('dashboard')--}}

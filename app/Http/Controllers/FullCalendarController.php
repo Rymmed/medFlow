@@ -29,11 +29,14 @@ class FullCalendarController extends Controller
             ->get();
 
         foreach ($appointments as $appointment) {
+            $start = Carbon::parse($appointment->start_date);
+            $doctorInfo = DoctorInfo::where('doctor_id', $appointment->doctor->id)->first();
+            $defaultDuration = $doctorInfo->consultation_duration;
             $events[] = [
                 'id' => $appointment->id,
                 'title' => $appointment->patient->firstName . ' ' . $appointment->patient->lastName,
                 'start' => $appointment->start_date,
-                'end' => $appointment->finish_date,
+                'end' => $appointment->finish_date ? : $start->copy()->addMinutes($defaultDuration),
                 'consultation_duration' => $appointment->doctor()->first()->doctor_info()->first()->consultation_duration,
                 'consultation_type' => $appointment->consultation_type,
                 'consultation_reason' => $appointment->consultation_reason,

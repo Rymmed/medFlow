@@ -4,20 +4,22 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AssistantDoctorController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationReportController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LiveConsultationController;
 use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionLineController;
 use App\Http\Controllers\user\ProfileController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
@@ -113,7 +115,8 @@ Route::middleware(['has.role:assistant'])->group(function () {
 
 });
 
-Route::middleware('auth')->group(function(){
+
+Route::middleware(['web', 'auth'])->group(function () {
     Route::get('myProfile', [ProfileController::class, 'index'])->name('myProfile');
     Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
@@ -146,10 +149,15 @@ Route::middleware('auth')->group(function(){
 
     Route::put('/medicalRecord/{medicalRecord_id}', [MedicalRecordController::class, 'update'])->name('medicalRecord.update');
 
-    Route::get('/consultations/create', [LiveConsultationController::class, 'create'])->name('consultations.create');
-    Route::get('/consultations/join/{roomName}', [LiveConsultationController::class, 'join'])->name('consultations.join');
-});
+    Route::get('/consultation/room/{appointment_id}', [ConsultationController::class, 'showConsultationRoom'])
+        ->name('consultation.room');
 
+    Route::post('/consultations/{appointmentId}/start', [ConsultationController::class, 'startOnlineConsultation'])
+        ->name('consultations.start');
+
+    Route::get('/consultations/{appointmentId}/join', [ConsultationController::class, 'joinOnlineConsultation'])
+        ->name('consultations.join');
+});
 Auth::routes();
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

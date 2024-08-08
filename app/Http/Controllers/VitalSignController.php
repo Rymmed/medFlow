@@ -16,7 +16,7 @@ class VitalSignController extends Controller
     }
     public function index($patient_id)
     {
-//        $this->authorize('viewAny', [VitalSign::class, $patient_id]);
+        $this->authorize('viewAny', [VitalSign::class, $patient_id]);
 
         $patient = User::findOrFail($patient_id);
         $vitalSigns = VitalSign::whereHas('medical_record', function ($query) use ($patient) {
@@ -28,14 +28,14 @@ class VitalSignController extends Controller
 
     public function create($patient_id)
     {
-//        $this->authorize('create', [VitalSign::class, $patient_id]);
+        $this->authorize('create', [VitalSign::class, $patient_id]);
 
         return view('vital_signs.create', compact('patient_id'));
     }
 
     public function store(Request $request, $patient_id)
     {
-//        $this->authorize('create', [VitalSign::class, $patient_id]);
+        $this->authorize('create', [VitalSign::class, $patient_id]);
 
         $request->validate([
             'type' => 'required|string|max:255',
@@ -56,21 +56,21 @@ class VitalSignController extends Controller
 
     public function show(VitalSign $vitalSign)
     {
-//        $this->authorize('view', $vitalSign);
+        $this->authorize('view', $vitalSign);
 
         return view('vital_signs.show', compact('vitalSign'));
     }
 
     public function edit(VitalSign $vitalSign)
     {
-//        $this->authorize('update', $vitalSign);
+        $this->authorize('update', $vitalSign);
 
         return view('vital_signs.edit', compact('vitalSign'));
     }
 
     public function update(Request $request, VitalSign $vitalSign)
     {
-//        $this->authorize('update', $vitalSign);
+        $this->authorize('update', $vitalSign);
 
         $request->validate([
             'type' => 'required|string|max:255',
@@ -89,7 +89,7 @@ class VitalSignController extends Controller
 
     public function destroy(VitalSign $vitalSign)
     {
-//        $this->authorize('delete', $vitalSign);
+        $this->authorize('delete', $vitalSign);
 
         $vitalSign->delete();
 
