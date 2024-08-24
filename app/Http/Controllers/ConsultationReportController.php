@@ -147,4 +147,23 @@ class ConsultationReportController extends Controller
 
         return redirect()->route('consultationReport.index', $consultationReport->appointment->patient_id)->with('success', 'Rapport de consultation supprimé avec succès.');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $patient_id = auth()->user()->id;
+
+        $consultationReports = ConsultationReport::whereHas('appointment', function ($queryBuilder) use ($patient_id) {
+            $queryBuilder->where('patient_id', $patient_id);
+        })
+            ->where(function($q) use ($query) {
+                $q->where('visit_type', 'LIKE', "%{$query}%");
+            })
+            ->with('prescriptions.prescriptionLines')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($consultationReports);
+    }
+
 }

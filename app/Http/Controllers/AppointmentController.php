@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
+use App\Mail\AppointmentMail;
 use App\Models\Appointment;
 use App\Models\ConsultationInfo;
 use App\Models\DoctorInfo;
@@ -14,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -91,6 +93,7 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         if ($request->status === $confirmed) {
             $appointment->finish_date = $start->copy()->addMinutes($consultationDuration);
+            Mail::to($appointment->patient->email)->send(new AppointmentMail($appointment));
             if (!$doctor->patients()->where('patient_id', $appointment->patient_id)->exists()) {
                 $doctor->patients()->attach($appointment->patient_id);
             }

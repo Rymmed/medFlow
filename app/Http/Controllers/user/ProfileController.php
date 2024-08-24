@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ConsultationReport;
 use App\Models\DoctorInfo;
 use App\Models\User;
+use App\Services\PatientProfileService;
 use Closure;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -20,9 +21,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-    public function __construct()
+    protected PatientProfileService $patientProfileService;
+
+    public function __construct(PatientProfileService $patientProfileService)
     {
-        $this->middleware('auth');
+        $this->patientProfileService = $patientProfileService;
     }
     public function index()
     {
@@ -33,36 +36,8 @@ class ProfileController extends Controller
             return view('doctor.profile', compact('doctor_info'));
         }
         elseif($user->role === 'patient') {
-            $patient = $user;
-            $medicalRecord = $patient->medicalRecord;
-            $appointments = $patient->patientAppointments;
-            $familialMedicalHistories = $medicalRecord->medicalHistories
-                ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
-                ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
-
-            $familialSurgicalHistories = $medicalRecord->medicalHistories
-                ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
-                ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
-            $personalMedicalHistories = $medicalRecord->medicalHistories
-                ->where('type', \App\Enums\MedicalHistType::PERSONAL)
-                ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
-
-            $personalSurgicalHistories = $medicalRecord->medicalHistories
-                ->where('type', \App\Enums\MedicalHistType::PERSONAL)
-                ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
-            $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($appointments) {
-                $query->whereIn('id', $appointments->pluck('id'));
-            })->paginate(10);
-            return view('patient.profile', compact(
-                'patient',
-                'medicalRecord',
-                'appointments',
-                'consultationReports',
-                'familialMedicalHistories',
-                'familialSurgicalHistories',
-                'personalMedicalHistories',
-                'personalSurgicalHistories'
-            ));
+            $profileData = $this->patientProfileService->getProfileData($user->id);
+            return view('patient.profile', $profileData);
         }
         else {
             return view('user.profile');
@@ -97,14 +72,12 @@ class ProfileController extends Controller
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',
-            'email' => 'required', 'email', Rule::unique('users')->ignore($user->id),
-            'password' => 'nullable|min:8|confirmed',
+            'email' => 'required|email', Rule::unique('users')->ignore($user->id),
             'phone_number' => 'required',
             'dob' => 'required|date',
-            'insurance_number' => 'nullable',
-            'cin_number' => 'nullable',
-            'speciality' => 'nullable',
-            'registration_number' => 'nullable',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'country' => 'nullable|string',
         ]);
 
         $user->update([
@@ -113,12 +86,12 @@ class ProfileController extends Controller
             'email' => $request->email,
             'phone_number' => $request->phone_number,
             'dob' => $request->dob,
-            'insurance_number' => $request->insurance_number,
-            'cin_number' => $request->cin_number,
-            'speciality' => $request->speciality,
-            'registration_number' => $request->registration_number
+            'address' => $request->address,
+            'city' => $request->city,
+            'country' => $request->country
         ]);
         return redirect('myProfile')->with('success', 'Profil mis à jour avec succès');
+
     }
 
     public function updatePassword(Request $request): RedirectResponse

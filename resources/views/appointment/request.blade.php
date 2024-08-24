@@ -8,13 +8,13 @@
         <div class="col-3">
             <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
             <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor_info->speciality }}</p>
-            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>({{ $doctor->city }}) ? $doctor->city : 'non précis' - {{ $doctor->country }}</p>
+            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
             <p class="card-text text-sm"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
         </div>
         <div class="col-6">
             <p class="text-dark text-bold text-sm">Disponibilité: </p>
-            <p class="text-sm">{{ $doctor->doctor_info->formattedDays() }}</p>
-            <p class="text-sm">{{ $doctor->doctor_info->formattedTime() }}</p>
+            <p class="text-sm"><i class="fa-solid fa-calendar-day"></i> {{ $doctor->doctor_info->formattedDays() }}</p>
+            <p class="text-sm"><i class="fa-solid fa-business-time"></i> {{ $doctor->doctor_info->formattedTime() }}</p>
         </div>
     </div>
 

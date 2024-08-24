@@ -21,7 +21,7 @@
     <link href="{{asset('assets/css/nucleo-svg.css')}}" rel="stylesheet"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-
+{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous"/>--}}
     <!-- CSS Files -->
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet"/>
     <link id="pagestyle" href="{{asset('assets/css/soft-ui-dashboard.css?v=1.0.3')}}" rel="stylesheet"/>
@@ -29,7 +29,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.css" rel="stylesheet"/>
-    @vite(['resources/js/app.js'])
+{{--    @vite(['resources/js/app.js'])--}}
 </head>
 {{--@stack('scripts')--}}
     <body class="g-sidenav-show bg-white">
@@ -41,9 +41,9 @@
         @guest
             @yield('guest')
         @endguest
-        <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
         <!-- Scripts -->
-        <script src="{{asset('assets/js/script.js')}}">
+        <script src="{{asset('assets/js/script.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
         <!-- Font Awesome Icons -->

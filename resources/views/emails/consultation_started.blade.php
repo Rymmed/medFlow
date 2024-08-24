@@ -9,6 +9,6 @@
 
     Merci de nous faire confiance pour votre santé!
 
-    Cordialement,<br>
+    Cordialement,
     {{ config('app.name') }}
 @endcomponent

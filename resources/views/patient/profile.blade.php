@@ -13,14 +13,17 @@
                     <li class="list-group-item border-0" onclick="showSection('medicalHistory')">Antécédents
                         Médicales
                     </li>
-                    <li class="list-group-item border-0" onclick="showSection('consultationReports')">Rapports de
-                        Consultations
-                    </li>
                     <li class="list-group-item border-0" onclick="showSection('vaccinations')">Vaccinations</li>
                     <li class="list-group-item border-0" onclick="showSection('vitalSigns')">Signes Vitaux</li>
-                    <li class="list-group-item border-0" onclick="showSection('appointmentHistory')">Historique de
-                        Rendez-vous
-                    </li>
+                    <li class="list-group-item border-0" onclick="showSection('examResults')">Résultats d'examens</li>
+                    @if(auth()->user()->role === 'doctor')
+                        <li class="list-group-item border-0" onclick="showSection('consultationReports')">Rapports de
+                            Consultations
+                        </li>
+                        <li class="list-group-item border-0" onclick="showSection('appointmentHistory')">Historique de
+                            Rendez-vous
+                        </li>
+                    @endif
                     @if(auth()->user()->role === 'patient')
                         <li class="list-group-item border-0" onclick="showSection('security')">Sécurité</li>
                     @endif
@@ -57,17 +60,23 @@
                             :patient="$patient"></x-patient-record.full-consultations-reports>
                     </div>
                     <div id="vaccinations" class="section">
-                        <h2>Vaccinations</h2>
+                        <x-patient-record.profile-vaccinations :vaccinations="$medicalRecord->vaccinations" :medicalRecord="$medicalRecord"></x-patient-record.profile-vaccinations>
 
                     </div>
-                    <div id="vitalSigns" class="section">
-                        <x-patient-record.vital-signs
-                            :vital_signs="$medicalRecord->vital_signs"></x-patient-record.vital-signs>
+                    <div id="vitalSigns" class="section card">
+                        <x-patient-record.profile-vital-signs
+                            :medicalRecord="$medicalRecord"></x-patient-record.profile-vital-signs>
+
+                    </div>
+                    <div id="examResults" class="section card">
+                        <x-patient-record.exams-results
+                            :examResults="$medicalRecord->examResults"></x-patient-record.exams-results>
 
                     </div>
                     <div id="appointmentHistory" class="section card">
                         @if(auth()->user()->role === 'patient')
-                            <x-patient-record.appointments-table :appointments="$appointments"> </x-patient-record.appointments-table>
+                            <x-patient-record.appointments-table
+                                :appointments="$appointments"></x-patient-record.appointments-table>
                         @else
                             <x-doctor-patient-appointments-table
                                 :appointments="$appointments"></x-doctor-patient-appointments-table>
@@ -81,20 +90,14 @@
         </div>
     </div>
     <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-            document.querySelectorAll('.list-group-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`.list-group-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
-            showSection('generalInfo');
+            // Retrieve the last section from local storage, or default to 'generalInfo'
+            const lastSection = localStorage.getItem('lastSection') || 'generalInfo';
 
+            // Show the last section or default section
+            showSection(lastSection);
+
+            // Function to display messages
             function showMessage(message, isSuccess) {
                 const messageContainer = document.getElementById('message-container');
                 const messageText = messageContainer.querySelector('.alert-text');
@@ -105,5 +108,23 @@
                 messageContainer.style.display = 'block';
             }
         });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+            // Update the active class in the sidebar
+            document.querySelectorAll('.list-group-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.list-group-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+            // Save the selected section in local storage
+            localStorage.setItem('lastSection', sectionId);
+        }
+
     </script>
 @endsection

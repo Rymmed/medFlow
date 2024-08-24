@@ -36,7 +36,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="new_password_confirmation"
-                               class="form-control-label">{{ __('Confirmation du nouveau mot de passe') }}</label>
+                               class="form-control-label">{{ __('Confirmation du mot de passe') }}</label>
                         <input
                             class="form-control @error('new_password_confirmation') border border-danger rounded-3 @enderror"
                             type="password" placeholder="{{ __('Confirmez votre mot de passe') }}"

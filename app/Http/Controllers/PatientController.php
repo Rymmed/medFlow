@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\ConsultationReport;
 use App\Models\MedicalRecord;
 use App\Models\User;
+use App\Services\PatientProfileService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,46 +17,26 @@ use Illuminate\Support\Facades\Validator;
 
 class PatientController extends Controller
 {
+    protected PatientProfileService $patientProfileService;
+
+    public function __construct(PatientProfileService $patientProfileService)
+    {
+        $this->patientProfileService = $patientProfileService;
+    }
     /**
      * @throws AuthorizationException
      */
     public function showPatientDetails($appointment_id, $patientId)
     {
         $doctor_id = Auth::id();
-        $patient = User::findOrFail($patientId);
         $appointment = Appointment::findOrFail($appointment_id);
-        $medicalRecord = $patient->medicalRecord;
-        $appointments = $patient->patientAppointments->where('doctor_id', $doctor_id);
-        $this->authorize('view', $medicalRecord);
-        $familialMedicalHistories = $medicalRecord->medicalHistories
-            ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
-            ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
 
-        $familialSurgicalHistories = $medicalRecord->medicalHistories
-            ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
-            ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
-        $personalMedicalHistories = $medicalRecord->medicalHistories
-            ->where('type', \App\Enums\MedicalHistType::PERSONAL)
-            ->where('subtype', \App\Enums\MedicalHistSubtype::MEDICAL);
+        $this->authorize('view', User::findOrFail($patientId)->medicalRecord);
+        $this->authorize('viewAny', [ConsultationReport::class, User::findOrFail($patientId)]);
 
-        $personalSurgicalHistories = $medicalRecord->medicalHistories
-            ->where('type', \App\Enums\MedicalHistType::PERSONAL)
-            ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
-        $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($appointments) {
-            $query->whereIn('id', $appointments->pluck('id'));
-        })->paginate(10);
-        $this->authorize('viewAny', [ConsultationReport::class, $patient]);
-        return view('patient.profile', compact(
-            'patient',
-            'appointment',
-            'medicalRecord',
-            'appointments',
-            'consultationReports',
-            'familialMedicalHistories',
-            'familialSurgicalHistories',
-            'personalMedicalHistories',
-            'personalSurgicalHistories'
-        ));
+        $profileData = $this->patientProfileService->getProfileData($patientId, $doctor_id);
+
+        return view('patient.profile', array_merge($profileData, compact('appointment')));
     }
 
     public function index()

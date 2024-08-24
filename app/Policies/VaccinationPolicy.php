@@ -28,9 +28,10 @@ class VaccinationPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, $patient): bool
+    public function create(User $user, $medicalRecord): bool
     {
-        return $user->id === $patient->id || $user->patients()->where('patient_id', $patient->id)->exists();
+        $patient_id = $medicalRecord->patient_id;
+        return $user->id === $patient_id || $user->patients()->where('patient_id', $patient_id)->exists();
     }
 
     /**

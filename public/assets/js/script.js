@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         allowHTML: true,
     });
 });
+
 function showMessage(message, isSuccess) {
     const messageContainer = document.getElementById('message-container');
     const messageText = messageContainer.querySelector('.alert-text');
@@ -19,18 +20,6 @@ function showMessage(message, isSuccess) {
     messageContainer.style.display = 'block';
 }
 
-function toggleIcon(id) {
-    var chevronUpIcon = document.getElementById(id + "UpIcon");
-    var chevronDownIcon = document.getElementById(id + "DownIcon");
-
-    if (chevronUpIcon.style.display === "none") {
-        chevronUpIcon.style.display = "inline";
-        chevronDownIcon.style.display = "none";
-    } else {
-        chevronUpIcon.style.display = "none";
-        chevronDownIcon.style.display = "inline";
-    }
-}
 // Minimize Sidebar
 document.addEventListener("DOMContentLoaded", function () {
     var logoImg = document.getElementById("logo-img");

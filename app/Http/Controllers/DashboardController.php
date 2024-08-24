@@ -57,13 +57,14 @@ class DashboardController extends Controller
 
                 $medicalRecord = MedicalRecord::where('patient_id', $patient_id)->first();
 //                $this->authorize('view', $medicalRecord);
-                $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])->orderBy('start_date', 'desc')->get();
+                $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])->orderBy('start_date', 'desc')->paginate(10);
                 $upcomingAppointments = $appointments->where('start_date', '>', now());
                 $recentAppointments = $appointments->where('start_date', '<=', now());
 
                 $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($recentAppointments) {
                     $query->whereIn('id', $recentAppointments->pluck('id'));
-                })->paginate(5);
+                })->orderBy('created_at', 'desc')->paginate(5);
+
 //                $this->authorize('view', $consultationReport);
                 $prescriptions = Prescription::whereIn('consultation_report_id', $consultationReports->pluck('id'))
                     ->with('prescriptionLines')

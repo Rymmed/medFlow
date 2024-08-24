@@ -112,6 +112,7 @@
                 <form id="add-history-form"
                       action="{{ route('medicalHistory.store', ['medicalRecord_id' => $medicalRecord->id]) }}"
                       method="POST">
+                    @csrf
                     <div class="row">
                         <div class="form-group mb-3 col-md-6">
                             <label for="type">Type</label>
@@ -144,7 +145,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="add-history-button"
+                        <button type="submit" id="add-history-button"
                                 class="btn bg-gradient-primary">{{ __('Ajouter') }}</button>
                     </div>
                 </form>
@@ -165,7 +166,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit-history-form" method="POST">
+                <form id="edit-history-form"  method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -198,7 +199,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="update-history-button"
+                        <button type="submit" id="update-history-button"
                                 class="btn bg-gradient-primary">{{ __('Mettre à jour') }}</button>
                     </div>
                 </form>
@@ -210,23 +211,14 @@
     // Handle add history form submission
     document.getElementById('add-history-button').addEventListener('click', function () {
         let form = document.getElementById('add-history-form');
-        let formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showMessage('Ajout d\'antécédent avec succès', true);
-                    $('#addHistoryModal').modal('hide');
-                }
-            })
-            .catch(error => showMessage('Echec dans l\'Ajout d\'antécédent', false));
+        try {
+            form.submit();
+            showMessage('Ajout d\'antécédent avec succès', true);
+            $('#addHistoryModal').modal('hide');
+        } catch (error) {
+            console.error('Erreur:', error);
+            showMessage('Erreur lors de l\'ajout d\'antécédent', false);
+        }
     });
 
     document.querySelectorAll('.edit-history-button').forEach(a => {
@@ -253,22 +245,14 @@
     document.getElementById('update-history-button').addEventListener('click', function () {
         let historyId = this.getAttribute('data-id');
         let form = document.getElementById('edit-history-form');
-        let formData = new FormData(form);
-
-        fetch(`/medicalHistory/${historyId}`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showMessage('Mise à jour réussie', true);
-                    $('#editHistoryModal').modal('hide');
-                }
-            })
-            .catch(error => showMessage('Echec de la mise à jour', false));
+        form.action = `/medicalHistory/${historyId}`;
+        try {
+            form.submit();
+            showMessage('Mise à jour réussie', true);
+            $('#editHistoryModal').modal('hide');
+        } catch (error) {
+            console.error('Erreur:', error);
+            showMessage('Erreur lors de la mise à jour', false);
+        }
     });
 </script>

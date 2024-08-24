@@ -4,30 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalHistory;
 use App\Models\MedicalRecord;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class MedicalHistoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
+     * @throws AuthorizationException
      */
-    public function store(Request $request, $medicalRecord_id)
+    public function store(Request $request, $medicalRecord_id): RedirectResponse
     {
         $medicalRecord = MedicalRecord::findOrFail($medicalRecord_id);
         $patient = $medicalRecord->patient;
@@ -47,29 +34,15 @@ class MedicalHistoryController extends Controller
             'description' => $request->description
         ]);
 
-        return response()->json(['success' => true]);
+        return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(MedicalHistory $medicalHistory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MedicalHistory $medicalHistory)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
+     * @throws AuthorizationException
      */
-    public function update(Request $request, $medicalHistory_id)
+    public function update(Request $request, $medicalHistory_id): RedirectResponse
     {
         $medicalHistory = MedicalHistory::findOrFail($medicalHistory_id);
 
@@ -87,14 +60,19 @@ class MedicalHistoryController extends Controller
             'description' => $request->description
         ]);
 
-        return response()->json(['success' => true]);
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
+     * @throws AuthorizationException
      */
-    public function destroy(MedicalHistory $medicalHistory)
+    public function destroy($medicalHistory_id): RedirectResponse
     {
-        //
+        $medicalHistory = MedicalHistory::findOrFail($medicalHistory_id);
+        $this->authorize('delete', $medicalHistory);
+        $medicalHistory->delete();
+
+        return redirect()->back();
     }
 }

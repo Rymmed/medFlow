@@ -48,7 +48,7 @@ class MedicalRecord extends Model
         return $this->hasMany(VitalSign::class, 'medicalRecord_id');
     }
 
-    public function insuranceDetails(): HasOne
+    public function insurance(): HasOne
     {
         return $this->hasOne(Insurance::class, 'medicalRecord_id');
     }

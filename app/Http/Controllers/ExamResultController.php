@@ -10,10 +10,6 @@ use Illuminate\Http\Request;
 
 class ExamResultController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
-    }
     /**
      * Display a listing of the resource.
      */

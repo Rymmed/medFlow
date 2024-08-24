@@ -154,11 +154,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item border-radius-md" href="#">
-                                    <i class="fas fa-message fa-sm"></i> Messages
-                                </a>
-                            </li>
-                            <li>
                                 <a class="dropdown-item border-radius-md" href="{{ route('logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt fa-sm"></i> Se déconnecter

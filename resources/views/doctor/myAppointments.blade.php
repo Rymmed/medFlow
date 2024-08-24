@@ -35,7 +35,7 @@
                                     <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
                                         <div class="author align-items-center"
                                              @if($patients->contains('id', $appointment->patient_id))
-                                                 onclick="redirectToProfile('{{ route('patient.record', ['id' => $appointment->patient_id]) }}')"
+                                                 onclick="redirectToProfile('{{ route('patient.record', ['patient_id' => $appointment->patient_id, 'appointment_id' => $appointment->id]) }}')"
                                              @else
                                                  data-bs-toggle="modal"
                                              data-bs-target="#publicProfileModal-{{ $appointment->id }}"

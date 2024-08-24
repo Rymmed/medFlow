@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
 use App\Events\ConsultationStarted;
+use App\Mail\AppointmentMail;
 use App\Mail\ConsultationStartedMail;
 use App\Models\Appointment;
 use App\Notifications\ConsultationNotification;
@@ -40,10 +41,10 @@ class ConsultationController extends Controller
         $patientIdentity = 'patient_' . $appointment->patient_id;
 
         // Générer le token pour le docteur
-        $doctorToken = $this->generateLiveKitToken($apiKey, $apiSecret, $roomName, $doctorIdentity, true);
+        $doctorToken = $this->generateLiveKitToken($apiKey, $apiSecret, $roomName, $doctorIdentity);
 
         // Générer le token pour le patient
-        $patientToken = $this->generateLiveKitToken($apiKey, $apiSecret, $roomName, $patientIdentity, false);
+        $patientToken = $this->generateLiveKitToken($apiKey, $apiSecret, $roomName, $patientIdentity);
 
         // Mettre à jour le statut du rendez-vous et stocker les tokens
         $appointment->doctor_token = $doctorToken;
@@ -67,7 +68,7 @@ class ConsultationController extends Controller
         $appointment = Appointment::findOrFail($appointmentId);
 
         // Pass the doctor token to the view
-        return view('consultation.room', ['doctorToken' => $appointment->doctor_token, 'patientToken' => $appointment->patient_token]);
+        return view('consultation.room', compact('appointment'), ['doctorToken' => $appointment->doctor_token, 'patientToken' => $appointment->patient_token]);
     }
     /**
      * Générer un token JWT pour LiveKit.
@@ -76,13 +77,11 @@ class ConsultationController extends Controller
      * @param string $apiSecret
      * @param string $roomName
      * @param string $identity
-     * @param bool $canPublish
      * @return string
      * @throws Exception
      */
-    private function generateLiveKitToken(string $apiKey, string $apiSecret, string $roomName, string $identity, bool $canPublish): string
-    {
-        // Define the token options
+    private function generateLiveKitToken(string $apiKey, string $apiSecret, string $roomName, string $identity): string
+    {// Define the token options
         $tokenOptions = (new AccessTokenOptions())
             ->setIdentity($identity);
 
@@ -90,7 +89,7 @@ class ConsultationController extends Controller
         $videoGrant = (new VideoGrant())
             ->setRoomJoin(true)
             ->setRoomName($roomName)
-            ->setCanPublish($canPublish)
+            ->setCanPublish(true)
             ->setCanSubscribe(true);
 
         // Initialize and fetch the JWT Token
@@ -117,5 +116,14 @@ class ConsultationController extends Controller
 //            'message' => 'You can join the consultation.',
 //        ]);
         return redirect()->route('consultation.room', ['appointment_id' => $appointment->id]);
+    }
+
+    public function completeAppointment(Request $request, $appointmentId): JsonResponse
+    {
+        $appointment = Appointment::findOrFail($appointmentId);
+        $appointment->status = AppointmentStatus::COMPLETED;
+        $appointment->save();
+
+        return response()->json(['message' => 'Appointment status updated to completed']);
     }
 }

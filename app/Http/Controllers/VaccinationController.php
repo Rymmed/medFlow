@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalRecord;
 use App\Models\Vaccination;
+use Illuminate\Support\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -11,75 +14,58 @@ use Illuminate\View\View;
 
 class VaccinationController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index($patientId): View
-    {
-        $vaccinations = Vaccination::where('patient_id', $patientId)->get();
-        return view('vaccinations.index', compact('vaccinations'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create($patientId): View
-    {
-        return view('vaccinations.create', compact('patientId'));
-    }
 
     /**
      * Store a newly created resource in storage.
+     * @throws AuthorizationException
      */
-    public function store(Request $request, $patientId): RedirectResponse
+    public function store(Request $request, $medicalRecord_id): RedirectResponse
     {
+        $medicalRecord = MedicalRecord::findOrFail($medicalRecord_id);
+        $this->authorize('create', [Vaccination::class, $medicalRecord]);
         $request->validate([
-            'name' => 'required|string|max:255',
-            'date' => 'required|date',
+            'title' => 'required|string|max:255',
+            'date' => 'nullable|date',
         ]);
 
         Vaccination::create([
-            'patient_id' => $patientId,
-            'name' => $request->name,
+            'medicalRecord_id' => $medicalRecord_id,
+            'title' => $request->title,
             'date' => $request->date,
         ]);
 
-        return redirect()->route('patients.show', $patientId)->with('success', 'Vaccination added successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Vaccination $vaccination)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Vaccination $vaccination)
-    {
-        //
+        return redirect()->back();
     }
 
     /**
      * Update the specified resource in storage.
+     * @throws AuthorizationException
      */
-    public function update(Request $request, Vaccination $vaccination)
+    public function update(Request $request, $vaccination_id): JsonResponse
     {
-        //
+        $vaccination = Vaccination::findOrFail($vaccination_id);
+        $this->authorize('update', $vaccination);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'nullable|date',
+        ]);
+
+        $vaccination->title = $request->title;
+        $vaccination->date = $request->date;
+        $vaccination->save();
+        return response()->json(['success' => true, 'vaccination' => $vaccination]);
     }
 
     /**
      * Remove the specified resource from storage.
+     * @throws AuthorizationException
      */
-    public function destroy(Vaccination $vaccination)
+    public function destroy($vaccination_id): RedirectResponse
     {
-        //
+        $vaccination = Vaccination::findOrFail($vaccination_id);
+        $this->authorize('delete', $vaccination);
+        $vaccination->delete();
+
+        return redirect()->back();
     }
 }

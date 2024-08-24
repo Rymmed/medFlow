@@ -98,41 +98,7 @@
                         </div>
                     </div>
                 </div>
-                @if(auth()->user()->role === 'patient')
-                    <!-- Numéro de CIN -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="cin_number"
-                                   class="form-control-label">{{ __('Numéro de CIN') }}</label>
-                            <div class="@error('user.cin_number')border border-danger rounded-3 @enderror">
-                                <input class="form-control" type="text"
-                                       placeholder="{{ __('Entrez votre numéro d\'identité nationnale') }}"
-                                       id="cin_number" name="cin_number"
-                                       value="{{ auth()->user()->cin_number }}">
-                                @error('cin_number')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Numéro d'assurance -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="insurance_number"
-                                   class="form-control-label">{{ __('Numéro d\'assurance') }}</label>
-                            <div
-                                class="@error('user.insurance_number')border border-danger rounded-3 @enderror">
-                                <input class="form-control" type="text"
-                                       placeholder="{{ __('Entrez votre numéro d\'assurance') }}"
-                                       id="insurance_number" name="insurance_number"
-                                       value="{{ auth()->user()->insurance_number }}">
-                                @error('insurance_number')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                @endif
+
             </div>
 
             <div class="d-flex justify-content-end">

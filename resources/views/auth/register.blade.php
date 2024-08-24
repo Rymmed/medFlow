@@ -199,7 +199,7 @@
                                                     <label for="blood_group">{{ __('Groupe sanguin') }}</label>
                                                     <div class="mb-3">
                                                         <select class="form-select" name="blood_group" id="blood_group">
-                                                            <option value="unknown" selected>Non Connu</option>
+                                                            <option value="" selected>Non Connu</option>
                                                             @foreach(\App\Enums\BloodGroup::getValues() as $bloodGroup)
                                                                 <option
                                                                     value="{{ $bloodGroup }}">{{ $bloodGroup }}</option>
@@ -272,8 +272,7 @@
                                                 <div class="col-md-4">
                                                     <label for="speciality">{{ __('Spécialité') }}</label>
                                                     <div class="mb-3">
-                                                        <select class="form-select" name="speciality" id="speciality"
-                                                                required>
+                                                        <select class="form-select" name="speciality" id="speciality">
                                                             <option value="" disabled
                                                                     selected>{{ __('Sélectionner une spécialité') }}</option>
                                                             @foreach(config('specialities') as $speciality)
@@ -399,7 +398,7 @@
                                                     <label for="start_time">{{ __('Heure de début') }}</label>
                                                     <div class="mb-3">
                                                         <input type="time" class="form-control" name="start_time"
-                                                               id="start_time" required>
+                                                               id="start_time">
                                                         @error('start_time')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -409,7 +408,7 @@
                                                     <label for="end_time">{{ __('Heure de fin') }}</label>
                                                     <div class="mb-3">
                                                         <input type="time" class="form-control" name="end_time"
-                                                               id="end_time" required>
+                                                               id="end_time">
                                                         @error('end_time')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -434,7 +433,7 @@
                                                     <div class="mb-3">
                                                         <select class="form-select" id="days_of_week"
                                                                 name="days_of_week[]"
-                                                                required multiple>
+                                                                multiple>
                                                             <option value="" disabled
                                                             >{{ __('Sélectionner vos jours') }}</option>
                                                             @foreach(['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] as $index => $day)
@@ -449,7 +448,7 @@
                                                         for="consultation_types">{{ __('Types de consultation') }}</label>
                                                     <div class="mb-3">
                                                         <select class="form-select" name="consultation_types[]"
-                                                                id="consultation_types" multiple required>
+                                                                id="consultation_types" multiple>
                                                             <option value="" disabled
                                                             >{{ __('Quels types offrez-vous ?') }}</option>
                                                             @foreach(\App\Enums\ConsultationType::getValues() as $type)

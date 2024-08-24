@@ -10,13 +10,14 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\MedicalHistoryController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionLineController;
 use App\Http\Controllers\user\ProfileController;
-use App\Http\Controllers\VideoController;
+use App\Http\Controllers\VaccinationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -116,7 +117,7 @@ Route::middleware(['has.role:assistant'])->group(function () {
 });
 
 
-Route::middleware(['web', 'auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('myProfile', [ProfileController::class, 'index'])->name('myProfile');
     Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
@@ -142,21 +143,32 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/consultationReport/{consultationReport}/edit', [ConsultationReportController::class, 'edit'])->name('consultationReport.edit');
     Route::put('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'update'])->name('consultationReport.update');
     Route::delete('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'destroy'])->name('consultationReport.destroy');
-
+    Route::get('/consultationReports/search', [ConsultationReportController::class, 'search'])->name('consultationReport.search');
 
     Route::post('/medicalHistories/{medicalRecord_id}', [MedicalHistoryController::class, 'store'])->name('medicalHistory.store');
     Route::put('/medicalHistory/{medicalHistory_id}', [MedicalHistoryController::class, 'update'])->name('medicalHistory.update');
+    Route::delete('/medicalRecord/medicalHistories/{medicalHistory_id}', [MedicalHistoryController::class, 'destroy'])->name('medicalHistory.destroy');
+
+    Route::post('/insurance/{medicalRecord_id}', [InsuranceController::class, 'store'])->name('insurance.store');
+    Route::put('/insurance/{insurance_id}', [InsuranceController::class, 'update'])->name('insurance.update');
+    Route::delete('/medicalRecord/insurance/{insurance_id}', [InsuranceController::class, 'destroy'])->name('insurance.destroy');
+
+    Route::post('/medicalRecord/{medicalRecord_id}/vaccination', [VaccinationController::class, 'store'])->name('vaccination.store');
+    Route::put('/medicalRecord/vaccinations/{vaccination_id}', [VaccinationController::class, 'update'])->name('vaccination.update');
+    Route::delete('/medicalRecord/vaccinations/{vaccination_id}', [VaccinationController::class, 'destroy'])->name('vaccination.destroy');
+
 
     Route::put('/medicalRecord/{medicalRecord_id}', [MedicalRecordController::class, 'update'])->name('medicalRecord.update');
+    Route::put('/medicalRecord/{medicalRecord_id}/vitalSigns', [MedicalRecordController::class, 'updateVitalSigns'])->name('vitalSigns.update');
 
     Route::get('/consultation/room/{appointment_id}', [ConsultationController::class, 'showConsultationRoom'])
         ->name('consultation.room');
-
     Route::post('/consultations/{appointmentId}/start', [ConsultationController::class, 'startOnlineConsultation'])
         ->name('consultations.start');
-
     Route::get('/consultations/{appointmentId}/join', [ConsultationController::class, 'joinOnlineConsultation'])
         ->name('consultations.join');
+    Route::post('/appointment/completed/{appointmentId}', [ConsultationController::class, 'completeAppointment']);
+
 });
 Auth::routes();
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
