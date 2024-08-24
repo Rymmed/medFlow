@@ -3,6 +3,7 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -12,19 +13,21 @@ class ConsultationStarted implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $appointment;
+    public $joinUrl;
 
-    public function __construct($appointment)
+    public function __construct($appointment, $joinUrl)
     {
         $this->appointment = $appointment;
+        $this->joinUrl = $joinUrl;
     }
 
-    public function broadcastOn(): Channel
+    public function broadcastOn(): PrivateChannel
     {
-        return new Channel('appointment.' . $this->appointment->patient_id);
+        return new PrivateChannel('patient.'.$this->appointment->patient_id);
     }
 
-    public function broadcastWith(): array
+    public function broadcastAs()
     {
-        return ['appointment_id' => $this->appointment->id];
+        return 'consultation-started';
     }
 }

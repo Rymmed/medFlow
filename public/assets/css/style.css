@@ -2,7 +2,7 @@
     --black-blue: #093c57;
     --blue: #04abbe;
     --light-blue: #6aeaf7;
-    --transparent-light-blue: rgba(4, 171, 190, 0.41);
+    --transparent-light-blue: rgba(4, 171, 190, 0.56);
 
 }
 
@@ -388,3 +388,24 @@
     background-color: #c82333;
 }
 
+.consultation-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--transparent-light-blue);
+    color: #fff;
+    padding: 20px;
+    border-Radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.consultation-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--light-blue);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

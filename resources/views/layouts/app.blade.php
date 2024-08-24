@@ -29,7 +29,62 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.css" rel="stylesheet"/>
-{{--    @vite(['resources/js/app.js'])--}}
+
+    <!-- Scripts -->
+    <script src="{{asset('assets/js/script.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/3568f1c09c.js" crossorigin="anonymous"></script>
+    <!--- JQuery JS Files --->
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('d2c1e4dc9f95bff44a13', {
+            cluster: 'eu',
+            authEndpoint: '/broadcasting/auth',
+        });
+        var userId = "{{ Auth::id() }}"; // Assume you have access to the authenticated user's ID
+        var channel = pusher.subscribe('private-patient.' + userId);
+        // var channel = pusher.subscribe('medflow-channel');
+        channel.bind('consultation-started', function(data) {
+            // Create the notification element
+            var notification = document.createElement('div');
+            notification.classList.add('consultation-notification');
+
+            // Create the message text
+            var message = document.createElement('p');
+            message.textContent = 'Votre médecin a commencé la consultation.';
+            message.appendChild(document.createElement('br'));
+            message.append('Cliquez sur le bouton ci-dessous pour rejoindre la salle de consultation:');
+            notification.appendChild(message);
+
+            // Create the button
+            var button = document.createElement('button');
+            button.classList.add('consultation-button');
+            button.textContent = 'Joindre';
+
+            // Attach click event to the button
+            button.addEventListener('click', function() {
+                window.location.href = data.joinUrl;
+            });
+
+            notification.appendChild(button);
+
+            // Append the notification to the body
+            document.body.appendChild(notification);
+
+            // Automatically remove the notification after 10 seconds
+            setTimeout(function() {
+                document.body.removeChild(notification);
+            }, 30000);
+        });
+    </script>
 </head>
 {{--@stack('scripts')--}}
     <body class="g-sidenav-show bg-white">
@@ -41,15 +96,7 @@
         @guest
             @yield('guest')
         @endguest
-        <!-- Scripts -->
-        <script src="{{asset('assets/js/script.js')}}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
-        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-        <!-- Font Awesome Icons -->
-        <script src="https://kit.fontawesome.com/3568f1c09c.js" crossorigin="anonymous"></script>
-        <!--- JQuery JS Files --->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!--- Choices.JS Files --->
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
         <!--- FullCalendar Files --->

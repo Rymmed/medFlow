@@ -165,7 +165,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('consultation.room');
     Route::post('/consultations/{appointmentId}/start', [ConsultationController::class, 'startOnlineConsultation'])
         ->name('consultations.start');
-    Route::get('/consultations/{appointmentId}/join', [ConsultationController::class, 'joinOnlineConsultation'])
+    Route::get('/consultations/{appointment_id}/join', [ConsultationController::class, 'joinOnlineConsultation'])
         ->name('consultations.join');
     Route::post('/appointment/completed/{appointmentId}', [ConsultationController::class, 'completeAppointment']);
 

@@ -166,7 +166,12 @@
 
                     // Update appointment status and redirect
                     await updateAppointmentStatus();
-                    window.location.href = '/myAppointments/{{ $appointment->id }}/patient/{{ $appointment->patient_id }}/record';
+                    @if(auth()->user()->role === 'doctor')
+                        window.location.href = '/myAppointments/{{ $appointment->id }}/patient/{{ $appointment->patient_id }}/record';
+                    @elseif(auth()->user()->role === 'patient')
+                        window.location.href = '/myProfile';
+                    @endif
+
                 }
             });
             function handleTrackSubscribed(track, publication, participant) {

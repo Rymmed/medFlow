@@ -17,6 +17,7 @@ use Agence104\LiveKit\AccessTokenOptions;
 use Agence104\LiveKit\VideoGrant;
 use Illuminate\Http\Response;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -52,10 +53,11 @@ class ConsultationController extends Controller
         $appointment->status = AppointmentStatus::STARTED;
         $appointment->save();
 
-        // Envoyer une notification au patient via l'événement
-        event(new ConsultationStarted($appointment));
         // URL pour rejoindre la consultation
-        $joinUrl = route('consultation.room', ['appointment_id' => $appointment->id]);
+        $joinUrl = route('consultations.join', ['appointment_id' => $appointment->id]);
+
+        // Envoyer une notification au patient via event
+        event(new ConsultationStarted($appointment, $joinUrl));
 
         // Envoyer une notification au patient via un email
         Mail::to($appointment->patient->email)->send(new ConsultationStartedMail($appointment, $joinUrl));
@@ -63,6 +65,7 @@ class ConsultationController extends Controller
         return redirect()->route('consultation.room', ['appointment_id' => $appointment->id]);
 
     }
+
     public function showConsultationRoom($appointmentId): View
     {
         $appointment = Appointment::findOrFail($appointmentId);
@@ -70,6 +73,7 @@ class ConsultationController extends Controller
         // Pass the doctor token to the view
         return view('consultation.room', compact('appointment'), ['doctorToken' => $appointment->doctor_token, 'patientToken' => $appointment->patient_token]);
     }
+
     /**
      * Générer un token JWT pour LiveKit.
      *
@@ -102,19 +106,21 @@ class ConsultationController extends Controller
     /**
      * Joindre la consultation en ligne (pour le patient).
      *
+     * @param Request $request
      * @param int $appointmentId
      * @return RedirectResponse
      */
-    public function joinOnlineConsultation(int $appointmentId): RedirectResponse
+    public function joinOnlineConsultation(Request $request, int $appointmentId): RedirectResponse
     {
-        // Récupérer le rendez-vous par son ID
         $appointment = Appointment::findOrFail($appointmentId);
+        $user = Auth::user();
 
-        // Retourner le token du patient pour rejoindre l'appel
-//        return response()->json([
-//            'patient_token' => $appointment->patient_token,
-//            'message' => 'You can join the consultation.',
-//        ]);
+        // Check if the user is the doctor or patient for this appointment
+        if ($user->id !== $appointment->doctor_id && $user->id !== $appointment->patient_id) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Proceed with the consultation
         return redirect()->route('consultation.room', ['appointment_id' => $appointment->id]);
     }
 
