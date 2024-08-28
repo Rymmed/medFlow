@@ -8,6 +8,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationReportController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
+use App\Http\Controllers\ExamResultController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InsuranceController;
@@ -122,17 +123,17 @@ Route::middleware(['auth'])->group(function () {
     Route::put('update-profile', [ProfileController::class, 'update'])->name('update-profile');
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
     Route::put('updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('updateProfileImg');
-    Route::get('/patient-profile/{patient_id}', [PatientController::class, 'show'])->name('patient-profile.show');
 
     Route::get('myAppointments/{appointment_id}/patient/{patient_id}/record', [PatientController::class, 'showPatientDetails'])->name('patient.record');
+    Route::get('patients/{patient_id}/record', [PatientController::class, 'showPatientDetails'])->name('myPatient.record');
 
-    Route::get('patients/{report_id}/prescriptions', [PrescriptionController::class, 'index'])->name('prescriptions.index');
-    Route::get('consultationReport/{report_id}/prescriptions/create', [PrescriptionController::class, 'create'])->name('prescriptions.create');
-    Route::post('/prescriptions/{report_id}', [PrescriptionController::class, 'store'])->name('prescriptions.store');
-    Route::get('/prescriptions/{prescription}', [PrescriptionController::class, 'show'])->name('prescriptions.show');
-    Route::get('/prescriptions/{prescription}/edit', [PrescriptionController::class, 'edit'])->name('prescriptions.edit');
-    Route::put('/prescriptions/{prescription}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
-    Route::delete('/prescriptions/{prescription}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
+    Route::get('patients/{record_id}/prescriptions', [PrescriptionController::class, 'index'])->name('prescriptions.index');
+    Route::get('consultationReport/{report_id}/medicalRecord/{record_id}/prescriptions/create', [PrescriptionController::class, 'create'])->name('prescription.create');
+    Route::post('consultationReport/{report_id}/prescriptions', [PrescriptionController::class, 'store'])->name('prescription.store');
+    Route::get('/prescriptions/{prescription_id}/show', [PrescriptionController::class, 'show'])->name('prescription.show');
+    Route::get('/prescriptions/{prescription_id}/edit', [PrescriptionController::class, 'edit'])->name('prescription.edit');
+    Route::put('/prescriptions/{prescription_id}/update', [PrescriptionController::class, 'update'])->name('prescription.update');
+    Route::delete('/prescriptions/{prescription_id}', [PrescriptionController::class, 'destroy'])->name('prescription.destroy');
 
     Route::resource('prescription-lines', PrescriptionLineController::class);
 
@@ -142,7 +143,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/consultationReport/show/{consultationReport}', [ConsultationReportController::class, 'show'])->name('consultationReport.show');
     Route::get('/consultationReport/{consultationReport}/edit', [ConsultationReportController::class, 'edit'])->name('consultationReport.edit');
     Route::put('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'update'])->name('consultationReport.update');
-    Route::delete('/consultationReport/{consultationReport}', [ConsultationReportController::class, 'destroy'])->name('consultationReport.destroy');
+    Route::delete('/consultationReport/{consultationReport_id}', [ConsultationReportController::class, 'destroy'])->name('consultationReport.destroy');
     Route::get('/consultationReports/search', [ConsultationReportController::class, 'search'])->name('consultationReport.search');
 
     Route::post('/medicalHistories/{medicalRecord_id}', [MedicalHistoryController::class, 'store'])->name('medicalHistory.store');
@@ -157,6 +158,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/medicalRecord/vaccinations/{vaccination_id}', [VaccinationController::class, 'update'])->name('vaccination.update');
     Route::delete('/medicalRecord/vaccinations/{vaccination_id}', [VaccinationController::class, 'destroy'])->name('vaccination.destroy');
 
+    Route::post('/medicalRecord/{medicalRecord_id}/examResult', [ExamResultController::class, 'store'])->name('examResult.store');
+    Route::put('/medicalRecord/examResults/{examResult_id}', [ExamResultController::class, 'update'])->name('examResult.update');
+    Route::delete('/medicalRecord/examResults/{examResult_id}', [ExamResultController::class, 'destroy'])->name('examResult.destroy');
+    Route::get('/storage/{doc}', [ExamResultController::class, 'downloadDoc'])->name('download.doc');
 
     Route::put('/medicalRecord/{medicalRecord_id}', [MedicalRecordController::class, 'update'])->name('medicalRecord.update');
     Route::put('/medicalRecord/{medicalRecord_id}/vitalSigns', [MedicalRecordController::class, 'updateVitalSigns'])->name('vitalSigns.update');

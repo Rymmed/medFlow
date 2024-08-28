@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AppointmentMail extends Mailable
+class AppointmentUpdatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,8 +29,8 @@ class AppointmentMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Confirmation du rendez-vous')
-            ->markdown('emails.appointment_confirmation')
+        return $this->subject('Mise à jour du rendez-vous')
+            ->markdown('emails.appointment_updated')
             ->with([
                 'appointment' => $this->appointment,
             ]);

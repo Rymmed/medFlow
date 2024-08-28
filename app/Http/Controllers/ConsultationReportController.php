@@ -51,6 +51,7 @@ class ConsultationReportController extends Controller
     {
         $appointment = Appointment::findOrFail($appointmentId);
         $patient = $appointment->patient;
+        $record_id = $patient->medicalRecord->id;
 
         $this->authorize('create', [ConsultationReport::class, $patient->id]);
         $existingReport = ConsultationReport::where('appointment_id', $appointmentId)->first();
@@ -70,6 +71,7 @@ class ConsultationReportController extends Controller
         if ($request->filled('treatment') || $request->filled('description')) {
             $prescription = Prescription::create([
                 'consultation_report_id' => $report->id,
+                'medicalRecord_id' => $record_id,
                 'treatment' => $request->treatment,
                 'description' => $request->description,
             ]);
@@ -131,7 +133,7 @@ class ConsultationReportController extends Controller
 
         $consultationReport->update($request->only(['visit_type', 'symptoms', 'diagnostic_hypotheses', 'final_diagnosis']));
 
-        return redirect()->route('consultationReport.index', $consultationReport->appointment->patient_id)->with('success', 'Rapport de consultation mis à jour avec succès.');
+        return redirect()->route('consultationReport.show', $consultationReport->id)->with('success', 'Rapport de consultation mis à jour avec succès.');
     }
 
     /**
@@ -143,9 +145,10 @@ class ConsultationReportController extends Controller
         $consultationReport = ConsultationReport::findOrFail($id);
         $this->authorize('delete', $consultationReport);
 
+        $patient_id = $consultationReport->appointment->patient->id;
         $consultationReport->delete();
 
-        return redirect()->route('consultationReport.index', $consultationReport->appointment->patient_id)->with('success', 'Rapport de consultation supprimé avec succès.');
+        return redirect()->route('myPatient.record', ['patient_id' => $patient_id]);
     }
 
     public function search(Request $request)
@@ -159,7 +162,7 @@ class ConsultationReportController extends Controller
             ->where(function($q) use ($query) {
                 $q->where('visit_type', 'LIKE', "%{$query}%");
             })
-            ->with('prescriptions.prescriptionLines')
+            ->with('prescription.prescriptionLines')
             ->orderBy('created_at', 'desc')
             ->get();
 

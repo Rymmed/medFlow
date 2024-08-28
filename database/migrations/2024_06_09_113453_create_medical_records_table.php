@@ -22,6 +22,12 @@ return new class extends Migration
             $table->enum('blood_group', \App\Enums\BloodGroup::getValues())->nullable();
             $table->enum('area', PatientArea::getValues())->nullable();
             $table->boolean('sedentary_lifestyle')->default('1');//0: active | 1: pas d'activité sportive
+            $table->integer('temperature')->nullable();
+            $table->integer('heart_rate')->nullable();
+            $table->string('blood_pressure')->nullable();
+            $table->integer('respiratory_rate')->nullable();
+            $table->integer('oxygen_saturation')->nullable();
+
             $table->timestamps();
 
             $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');

@@ -15,7 +15,7 @@
                     </li>
                     <li class="list-group-item border-0" onclick="showSection('vaccinations')">Vaccinations</li>
                     <li class="list-group-item border-0" onclick="showSection('vitalSigns')">Signes Vitaux</li>
-                    <li class="list-group-item border-0" onclick="showSection('examResults')">Résultats d'examens</li>
+                    <li class="list-group-item border-0" onclick="showSection('examResults')">Bilan Médicaux</li>
                     @if(auth()->user()->role === 'doctor')
                         <li class="list-group-item border-0" onclick="showSection('consultationReports')">Rapports de
                             Consultations
@@ -68,9 +68,9 @@
                             :medicalRecord="$medicalRecord"></x-patient-record.profile-vital-signs>
 
                     </div>
-                    <div id="examResults" class="section card">
+                    <div id="examResults" class="section">
                         <x-patient-record.exams-results
-                            :examResults="$medicalRecord->examResults"></x-patient-record.exams-results>
+                            :examResults="$medicalRecord->examResults" :medicalRecord="$medicalRecord"></x-patient-record.exams-results>
 
                     </div>
                     <div id="appointmentHistory" class="section card">

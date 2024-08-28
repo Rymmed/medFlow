@@ -43,12 +43,12 @@
                             <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($consultationReport->created_at)->format('d M, Y') }}</p>
                         </td>
                         <td class="text-center">
-                            @php $prescriptions = $consultationReport->prescriptions; @endphp
-                            @if($prescriptions->isEmpty())
+
+                            @if(is_Null($consultationReport->prescription))
                                 <span class="text-xs text-muted">Aucune</span>
                             @else
                                 <a class="text-xs font-weight-bold mb-0 cursor-pointer text-blue" data-bs-toggle="collapse"
-                                        data-bs-target="#prescriptions-{{ $consultationReport->id }}">
+                                        data-bs-target="#prescription-{{ $consultationReport->id }}">
                                     Afficher
                                 </a>
                             @endif
@@ -74,22 +74,20 @@
                             @endif
                         </td>
                     </tr>
-                    @if(!$prescriptions->isEmpty())
-                        <tr id="prescriptions-{{ $consultationReport->id }}" class="collapse">
+                    @if(!is_Null($consultationReport->prescription))
+                        <tr id="prescription-{{ $consultationReport->id }}" class="collapse">
                             <td colspan="4">
                                 <ul class="list-group">
-                                    @foreach($prescriptions as $prescription)
                                         <li class="list-group-item">
-                                            <strong>Traitement:</strong> {{ $prescription->treatment }}<br>
-                                            <strong>Description:</strong> {{ $prescription->description }}<br>
+                                            <strong>Traitement:</strong> {{ $consultationReport->prescription->treatment }}<br>
+                                            <strong>Description:</strong> {{ $consultationReport->prescription->description }}<br>
                                             <strong>Médicaments:</strong>
                                             <ul>
-                                                @foreach($prescription->prescriptionLines as $line)
+                                                @foreach($consultationReport->prescription->prescriptionLines as $line)
                                                     <li>{{ $line->name }} - {{ $line->dose }} {{ $line->type }} pour {{ $line->duration }}</li>
                                                 @endforeach
                                             </ul>
                                         </li>
-                                    @endforeach
                                 </ul>
                             </td>
                         </tr>

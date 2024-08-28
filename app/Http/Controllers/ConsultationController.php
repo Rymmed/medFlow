@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
 use App\Events\ConsultationStarted;
-use App\Mail\AppointmentMail;
+use App\Mail\AppointmentCanceledMail;
 use App\Mail\ConsultationStartedMail;
 use App\Models\Appointment;
 use App\Notifications\ConsultationNotification;
@@ -31,15 +31,16 @@ class ConsultationController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function startOnlineConsultation(Request $request, int $appointmentId): RedirectResponse
+    public function startOnlineConsultation(Request $request, int $appointmentId)
     {
         $appointment = Appointment::findOrFail($appointmentId);
 
-        $apiKey = env('LIVEKIT_API_KEY');
-        $apiSecret = env('LIVEKIT_API_SECRET');
+        $apiKey = config('app.livekit_api_key');
+        $apiSecret = config('app.livekit_api_secret');
         $roomName = 'consultation_room_' . $appointment->id;
         $doctorIdentity = 'doctor_' . $appointment->doctor_id;
         $patientIdentity = 'patient_' . $appointment->patient_id;
+
 
         // Générer le token pour le docteur
         $doctorToken = $this->generateLiveKitToken($apiKey, $apiSecret, $roomName, $doctorIdentity);

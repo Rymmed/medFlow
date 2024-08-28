@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
+use App\Mail\AppointmentCanceledMail;
+use App\Mail\AppointmentConfirmedMail;
+use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
 use App\Models\User;
@@ -10,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class FullCalendarController extends Controller
@@ -51,6 +55,7 @@ class FullCalendarController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = AppointmentStatus::CANCELLED;
         $appointment->save();
+        Mail::to($appointment->patient->email)->send(new AppointmentCanceledMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous annulé avec succès']);
     }
 
@@ -81,7 +86,6 @@ class FullCalendarController extends Controller
         $doctorInfo = DoctorInfo::where('doctor_id', $doctor_id)->first();
         $consultationDuration = $request->consultation_duration;
         $defaultDuration = $doctorInfo->consultation_duration;
-        var_dump($defaultDuration);
         $start = Carbon::parse($request->start_date);
         $appointment = Appointment::create([
             'doctor_id' => $doctor_id,
@@ -91,6 +95,7 @@ class FullCalendarController extends Controller
             'consultation_type' => $request->consultation_type,
             'status' => AppointmentStatus::CONFIRMED,
         ]);
+        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous créé avec succès', 'event' => $appointment]);
     }
 
@@ -124,6 +129,7 @@ class FullCalendarController extends Controller
             'start_date' => $updatedStartDate,
             'finish_date' => $updatedFinishDate,
         ]);
+        Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous déplacé avec succès']);
     }
 
@@ -143,6 +149,7 @@ class FullCalendarController extends Controller
             'finish_date' => $newFinishDate,
             'consultation_type' => $consultation_type,
         ]);
+        Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous mis à jour avec succès']);
 
     }

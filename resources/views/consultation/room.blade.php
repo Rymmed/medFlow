@@ -62,7 +62,7 @@
                 console.warn('getUserMedia not supported');
             }
 
-            const serverUrl = "{{ env('LIVEKIT_URL') }}";
+            const serverUrl = "{{ config('app.livekit_url') }}";
             const token = "{{ auth()->user()->role === 'doctor' ? $doctorToken : $patientToken }}";
             const identity = "{{ auth()->user()->role === 'doctor' ? 'Doctor' : 'Patient' }}";
 

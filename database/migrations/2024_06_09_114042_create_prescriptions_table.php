@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('consultation_report_id');
+            $table->unsignedBigInteger('consultation_report_id')->nullable();
+            $table->unsignedBigInteger('medicalRecord_id');
             $table->string('treatment');
             $table->text('description');
             $table->timestamps();
 
-            $table->foreign('consultation_report_id')->references('id')->on('consultation_reports')->onDelete('cascade');
+            $table->foreign('consultation_report_id')->references('id')->on('consultation_reports')->onDelete('set null');
+            $table->foreign('medicalRecord_id')->references('id')->on('medical_records')->onDelete('cascade');
         });
     }
 

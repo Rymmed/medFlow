@@ -76,7 +76,7 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="consultation_duration" class="form-label">Durée de la consultation</label>
+                            <label for="consultation_duration" class="form-label">Durée de la consultation (min)</label>
                             <input class="form-control" type="number" id="consultation_duration"
                                    name="consultation_duration">
                             @error('consultation_duration')
@@ -250,8 +250,8 @@
                         method: 'POST',
                         data: formData,
                         success: function (response) {
-                            $('#createModal').modal('hide');
                             showMessage(response.message, true);
+                            $('#createModal').modal('hide');
                             calendar.refetchEvents();
                         },
                         error: function (response) {

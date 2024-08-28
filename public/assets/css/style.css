@@ -23,7 +23,7 @@
 }
 
 .bg-transparent-blue {
-    background: var(--transparent-light-blue);
+    background-color: var(--transparent-light-blue);
 }
 
 .badge-pro {

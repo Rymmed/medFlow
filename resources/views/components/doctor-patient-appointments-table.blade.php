@@ -41,7 +41,7 @@
                         <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}</p>
                     </td>
                     <td class="align-middle text-center text-sm">
-                        <p class="text-xs font-weight-bold mb-0">{!! $appointment->consultationReport ? '<a href="' . route('consultationReport.show', $appointment->consultationReport->id) . '">Voir le rapport</a>' : '<span>---</span>' !!}</p>
+                        <p class="text-xs font-weight-bold mb-0">{!! $appointment->consultationReport ? '<a href="' . route('consultationReport.show', $appointment->consultationReport->id) . '">Voir le rapport</a>' : '<a href="' . route('consultationReport.create', $appointment->id) . '">Créer</a>' !!}</p>
                     </td>
                     <td class="text-center">
 

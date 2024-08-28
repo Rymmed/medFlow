@@ -21,7 +21,7 @@
 
             const formData = new FormData(this);
 
-            fetch('{{ route('prescriptions.store', $report->id) }}', {
+            fetch('{{ route('prescription.store', ['report_id' => $report->id]) }}', {
                 method: 'POST',
                 body: formData,
                 headers: {

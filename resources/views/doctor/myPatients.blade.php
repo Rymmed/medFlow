@@ -79,9 +79,10 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($patient->dob)->age }} {{ __('ans') }}</p>
                                         </td>
                                         <td class="text-center">
-                                            {{--                                            <a href="{{ route('patient.edit', $patient->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">--}}
-                                            {{--                                                <i class="fa fa-user-edit text-secondary"></i>--}}
-                                            {{--                                            </a>--}}
+                                            <a href="{{ route('myPatient.record', ['patient_id' => $patient->id]) }}"
+                                               class="text-xs font-weight-bold mb-0 cursor-pointer text-blue">
+                                                Dossier médical
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

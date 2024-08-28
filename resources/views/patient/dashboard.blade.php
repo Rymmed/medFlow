@@ -132,7 +132,7 @@
 
                 <!-- Exam Results -->
                 <div class="row mt-4">
-                        <x-patient-record.exams-results :examResults="$medicalRecord->examResults"></x-patient-record.exams-results>
+                        <x-patient-record.exams-results-table :examResults="$medicalRecord->examResults"></x-patient-record.exams-results-table>
                 </div>
             </div>
         </div>

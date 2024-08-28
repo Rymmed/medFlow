@@ -133,7 +133,7 @@
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i style="font-size: 1rem;"
-                               class="fa fa-lg fa-bed ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
+                               class="fa-solid fa-bed-pulse ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
                                aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1">Patients</span>
@@ -171,10 +171,22 @@
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i style="font-size: 1rem;"
-                               class="fas fa-business-time ps-2 pe-2 text-center text-dark {{ (Request::is('myAppointments') ? 'text-white' : 'text-dark') }} "
+                               class="fa-regular fa-calendar-check ps-2 pe-2 text-center text-dark {{ (Request::is('myAppointments') ? 'text-white' : 'text-dark') }} "
                                aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1">Rendez-Vous</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}"
+                       href="{{ route('myCalendar') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-regular fa-calendar ps-2 pe-2 text-center text-dark {{ (Request::is('myCalendar') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Calendrier</span>
                     </a>
                 </li>
                 <li class="nav-item pb-2">
@@ -195,24 +207,13 @@
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i style="font-size: 1rem;"
-                               class="fas fa-calendar-alt ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
+                               class="fa-solid fa-bed-pulse ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
                                aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1">Patients</span>
                     </a>
                 </li>
-                <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}"
-                       href="{{ route('myCalendar') }}">
-                        <div
-                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i style="font-size: 1rem;"
-                               class="fas fa-calendar-alt ps-2 pe-2 text-center text-dark {{ (Request::is('myCalendar') ? 'text-white' : 'text-dark') }} "
-                               aria-hidden="true"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Mon Calendrier</span>
-                    </a>
-                </li>
+
             @elseif(auth()->user()->role === 'patient')
                 <!-- Items for patient -->
                 <li class="nav-item pb-2">

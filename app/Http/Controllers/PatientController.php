@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class PatientController extends Controller
 {
@@ -26,10 +27,15 @@ class PatientController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function showPatientDetails($appointment_id, $patientId)
+    public function showPatientDetails($patientId, $appointment_id = null)
     {
         $doctor_id = Auth::id();
-        $appointment = Appointment::findOrFail($appointment_id);
+
+        if ($appointment_id) {
+            $appointment = Appointment::findOrFail($appointment_id);
+        } else {
+            $appointment = null;
+        }
 
         $this->authorize('view', User::findOrFail($patientId)->medicalRecord);
         $this->authorize('viewAny', [ConsultationReport::class, User::findOrFail($patientId)]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConsultationReport;
+use App\Models\MedicalRecord;
 use App\Models\Prescription;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -17,34 +18,35 @@ class PrescriptionController extends Controller
     /**
      * Display a listing of the prescriptions.
      *
-     * @param int $patient_id
+     * @param $record_id
      * @return View
      * @throws AuthorizationException
      */
-    public function index($report_id): View
+    public function index($record_id): View
     {
-        $report = ConsultationReport::findOrFail($report_id);
-        $patient = $report->appointment->patient;
+        $record = MedicalRecord::findOrFail($record_id);
+        $patient = $record->patient;
 
         // Authorize the viewAny action
         $this->authorize('viewAny', [Prescription::class, $patient]);
 
-        $prescriptions = Prescription::whereHas('consultationReport.appointment', function ($query) use ($patient) {
+        $prescriptions = Prescription::whereHas('medicalRecord', function ($query) use ($patient) {
             $query->where('patient_id', $patient->id);
         })->get();
 
-        return view('prescriptions.index', compact('prescriptions', 'patient', 'report'));
+        return view('prescriptions.index', compact('prescriptions', 'patient', 'record'));
     }
 
     /**
      * Display the specified prescription.
      *
-     * @param Prescription $prescription
+     * @param $prescription_id
      * @return View
      * @throws AuthorizationException
      */
-    public function show(Prescription $prescription): View
+    public function show($prescription_id): View
     {
+        $prescription = Prescription::findOrFail($prescription_id);
         // Authorize the view action
         $this->authorize('view', $prescription);
 
@@ -58,13 +60,17 @@ class PrescriptionController extends Controller
      * @return View
      * @throws AuthorizationException
      */
-    public function create(int $report_id): View
+    public function create(int $report_id, $record_id): View
     {
         $report = ConsultationReport::findOrFail($report_id);
         $this->authorize('create', [Prescription::class, $report_id]);
 
-        return view('prescriptions.create', compact('report'));
+        // Pas de prescription existante, donc on passe `null`
+        $prescription = null;
+
+        return view('prescriptions.form', compact('report', 'record_id', 'prescription'));
     }
+
 
     /**
      * Store a newly created prescription in storage.
@@ -84,8 +90,11 @@ class PrescriptionController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        $record_id = $report->appointment->patient->medicalRecord->id;
+
         $prescription = Prescription::create([
             'consultation_report_id' => $report_id,
+            'medicalRecord_id' => $record_id,
             'treatment' => $request->treatment,
             'description' => $request->description
         ]);
@@ -96,28 +105,31 @@ class PrescriptionController extends Controller
     /**
      * Show the form for editing the specified prescription.
      *
-     * @param Prescription $prescription
+     * @param $prescription_id
      * @return View
      * @throws AuthorizationException
      */
-    public function edit($id): View
+    public function edit($prescription_id): View
     {
-        $prescription = Prescription::findOrFail($id);
-        // Authorize the update action
+        $prescription = Prescription::findOrFail($prescription_id);
         $this->authorize('update', $prescription);
 
-        return view('prescriptions.edit', compact('prescription'));
+        // Récupérer les informations associées au rapport de consultation
+        $report = $prescription->consultationReport;
+        $record_id = $report->appointment->patient->medicalRecord->id;
+
+        return view('prescriptions.form', compact('report', 'record_id', 'prescription'));
     }
 
     /**
      * Update the specified prescription in storage.
      *
      * @param Request $request
-     * @param Prescription $id
+     * @param $id
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function update(Request $request, Prescription $id): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $prescription = Prescription::findOrFail($id);
         // Authorize the update action
@@ -148,7 +160,6 @@ class PrescriptionController extends Controller
 
         $prescription->delete();
 
-        return redirect()->route('prescriptions.index', $prescription->consultationReport->appointment->patient_id)
-            ->with('success', 'Prescription deleted successfully.');
+        return redirect()->back();
     }
 }

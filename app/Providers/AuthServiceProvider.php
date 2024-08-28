@@ -32,7 +32,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         ConsultationReport::class => ConsultationReportPolicy::class,
-        VitalSign::class => VitalSignPolicy::class,
         Prescription::class => PrescriptionPolicy::class,
         PrescriptionLine::class => PrescriptionLinePolicy::class,
         MedicalRecord::class => MedicalRecordPolicy::class,

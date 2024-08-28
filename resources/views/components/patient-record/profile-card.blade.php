@@ -35,7 +35,7 @@
             @if ($appointment->consultation_type === \App\Enums\ConsultationType::ONLINE)
                 <form action="{{ route('consultations.start', ['appointmentId' => $appointment->id]) }}" method="POST">
                     @csrf
-                    <button type="submit" formtarget="_blank" class="btn bg-gradient-blue text-white btn-md">
+                    <button type="submit" class="btn bg-gradient-blue text-white btn-md">
                         <i class="fa fa-video me-1"></i> Démarrer
                     </button>
                 </form>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
-use App\Mail\AppointmentMail;
+use App\Mail\AppointmentCanceledMail;
+use App\Mail\AppointmentConfirmedMail;
+use App\Mail\AppointmentRefusedMail;
+use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
-use App\Models\ConsultationInfo;
 use App\Models\DoctorInfo;
 use App\Models\Prescription;
 use App\Models\User;
@@ -93,7 +95,7 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         if ($request->status === $confirmed) {
             $appointment->finish_date = $start->copy()->addMinutes($consultationDuration);
-            Mail::to($appointment->patient->email)->send(new AppointmentMail($appointment));
+            Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
             if (!$doctor->patients()->where('patient_id', $appointment->patient_id)->exists()) {
                 $doctor->patients()->attach($appointment->patient_id);
             }
@@ -106,9 +108,11 @@ class AppointmentController extends Controller
                 break;
             case ($refused):
                 $message = 'Rendez-vous réfusé';
+                Mail::to($appointment->patient->email)->send(new AppointmentRefusedMail($appointment));
                 break;
             case ($cancelled):
                 $message = 'Rendez-vous annulé';
+                Mail::to($appointment->patient->email)->send(new AppointmentCanceledMail($appointment));
                 break;
             default:
                 $message = "";
