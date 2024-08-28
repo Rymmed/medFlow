@@ -124,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
     Route::put('updateProfileImg', [ProfileController::class, 'updateProfileImg'])->name('updateProfileImg');
 
-    Route::get('myAppointments/{appointment_id}/patient/{patient_id}/record', [PatientController::class, 'showPatientDetails'])->name('patient.record');
+    Route::get('/patient-{patient_id}/appointment-{appointment_id}/record', [PatientController::class, 'showPatientDetails'])->name('patient.record');
     Route::get('patients/{patient_id}/record', [PatientController::class, 'showPatientDetails'])->name('myPatient.record');
 
     Route::get('patients/{record_id}/prescriptions', [PrescriptionController::class, 'index'])->name('prescriptions.index');

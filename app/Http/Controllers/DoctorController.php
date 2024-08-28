@@ -111,7 +111,7 @@ class DoctorController extends Controller
     public function search(): View
     {
         $results = User::where('role', 'doctor');
-        return view('search_doctors', compact('results'));
+        return view('patient.search_doctors', compact('results'));
     }
     public function searchDoctors(Request $request)
     {
@@ -150,7 +150,7 @@ class DoctorController extends Controller
 
             $totalResults = $totalResultsQuery->select('users.*', 'doctor_infos.speciality')->get();
 
-            return view('search_doctors', [
+            return view('patient.search_doctors', [
                 'results' => $results,
                 'totalResults' => $totalResults,
                 'speciality' => $speciality,

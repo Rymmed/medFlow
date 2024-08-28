@@ -68,7 +68,7 @@
                                         </p>
                                         <p class="card-text text-xs"><i
                                                 class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
-                                        <div class="text-center ">
+                                        <div class="text-center">
                                             <a href="{{ route('appointment.request', ['doctor_id' => $doctor->id]) }}"
                                                class="btn bg-gradient-primary text-white">Prendre
                                                 rendez-vous</a>

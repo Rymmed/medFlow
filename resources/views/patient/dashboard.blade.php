@@ -13,6 +13,7 @@
             <div class="col-md-3 text-center">
                 <x-patient-record.profile-card :user="auth()->user()"></x-patient-record.profile-card>
                 <x-patient-record.medical-info :medicalRecord="$medicalRecord" :insurance="$medicalRecord->insurance"></x-patient-record.medical-info>
+                <x-patient-record.patient-doctors :doctors="auth()->user()->doctors"></x-patient-record.patient-doctors>
                 <x-patient-record.vaccinations :vaccinations="$medicalRecord->vaccinations"></x-patient-record.vaccinations>
             </div>
 
@@ -124,10 +125,15 @@
                     <!-- Consultation Reports -->
                         <x-patient-record.consultation-report :consultationReports="$consultationReports"></x-patient-record.consultation-report>
 
-                    <!-- Prescriptions -->
-{{--                    <div class="col-md-5">--}}
-{{--                        <x-patient-record.prescriptions :prescriptions="$prescriptions"></x-patient-record.prescriptions>--}}
-{{--                    </div>--}}
+
+                </div>
+                <div class="row mt-4">
+
+                        <!-- Prescriptions -->
+                        <div class="col-12">
+                            <x-patient-record.prescriptions :prescriptions="$prescriptions"></x-patient-record.prescriptions>
+                        </div>
+
                 </div>
 
                 <!-- Exam Results -->

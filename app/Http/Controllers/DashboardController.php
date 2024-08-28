@@ -66,7 +66,7 @@ class DashboardController extends Controller
                 })->orderBy('created_at', 'desc')->paginate(5);
 
 //                $this->authorize('view', $consultationReport);
-                $prescriptions = Prescription::whereIn('consultation_report_id', $consultationReports->pluck('id'))
+                $prescriptions = Prescription::where('medicalRecord_id', $medicalRecord->id)
                     ->with('prescriptionLines')
                     ->get();
 //                $this->authorize('view', $prescriptions);

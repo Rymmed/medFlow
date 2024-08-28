@@ -1,9 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
+    <div class="container ">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
                 <h3>Créer le rapport de consultation</h3>
                 <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
                      style="display: none;">
@@ -14,7 +14,6 @@
                 </div>
                 <form id="multi-step-form" method="POST" action="{{ route('consultationReport.store', $appointment->id) }}">
                     @csrf
-
                     <!-- Step 1: Consultation Report -->
                     <div id="step-1" class="form-step">
                         <div class="form-group">

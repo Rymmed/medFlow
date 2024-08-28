@@ -167,7 +167,7 @@
                     // Update appointment status and redirect
                     await updateAppointmentStatus();
                     @if(auth()->user()->role === 'doctor')
-                        window.location.href = '/myAppointments/{{ $appointment->id }}/patient/{{ $appointment->patient_id }}/record';
+                        window.location.href = '/patient-{{ $appointment->patient_id }}/appointment-{{ $appointment->id }}/record';
                     @elseif(auth()->user()->role === 'patient')
                         window.location.href = '/myProfile';
                     @endif
