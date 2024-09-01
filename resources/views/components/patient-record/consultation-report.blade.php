@@ -9,7 +9,7 @@
 {{--            <div class="mb-3">--}}
 {{--                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher..." autocomplete="off">--}}
 {{--            </div>--}}
-            <a href="{{ route('consultationReport.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
+            <a href="{{ route('consultationReports.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
                 Afficher Plus <i class="fas fa-angles-right me-1 text-xs"></i>
             </a>
         </div>

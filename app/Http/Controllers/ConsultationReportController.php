@@ -101,7 +101,10 @@ class ConsultationReportController extends Controller
         $report = ConsultationReport::findOrFail($id);
         $appointment = Appointment::findOrFail($report->appointment_id);
         $this->authorize('view' , $report);
-
+        if ($report->prescription)
+        {
+            $this->authorize('view', $report->prescription);
+        }
         return view('consultationReport.show', compact('report', 'appointment'));
     }
 

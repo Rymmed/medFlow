@@ -3,9 +3,7 @@
 @section('content')
     <div class="row">
         <div class="container col-md-4 col-lg-3 card px-1">
-            {{--            <div class="card-header">--}}
             <h6 class="m-3">Trouver un médecin</h6>
-            {{--            </div>--}}
             <div class="card-body">
                 <form action="{{ route('search_doctors') }}" method="POST" id="search-form">
                     @csrf
@@ -20,14 +18,6 @@
                             @endforeach
                         </select>
                     </div>
-                    {{--                    <div class="mb-3">--}}
-                    {{--                        <label for="firstName">Prénom :</label>--}}
-                    {{--                        <input type="text" id="firstName" name="firstName" class="form-control" value="{{ old('firstName', $firstName) }}">--}}
-                    {{--                    </div>--}}
-                    {{--                    <div class="mb-3">--}}
-                    {{--                        <label for="lastName">Nom :</label>--}}
-                    {{--                        <input type="text" id="lastName" name="lastName" class="form-control" value="{{ old('lastName', $lastName) }}">--}}
-                    {{--                    </div>--}}
                     <div class="mb-3">
                         <label for="country">Pays :</label>
                         <input type="text" id="country" name="country" class="form-control"
@@ -78,13 +68,13 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div class="d-flex justify-content-center my-5">
-                            {{ $results->links() }}
-                        </div>
                     @endif
                 </div>
             </div>
 
+        </div>
+        <div class="d-flex justify-content-center">
+            {{ $results->links() }}
         </div>
     </div>
 @endsection

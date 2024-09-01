@@ -1,29 +1,13 @@
-@props(['appointments', 'tab_id'])
+@props(['appointments'])
 <div class="table-responsive p-0">
     <table class="table align-items-center mb-0">
         <thead>
         <tr>
-            <th class="text-start text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Médecin
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Type
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Date
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Heure
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Rapport
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Status
-            </th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                Action
-            </th>
+            <th class="text-start text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Médecin</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Heure</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -32,10 +16,12 @@
                 <td class="text-start">
                     <div class="d-flex px-2 py-1">
                         <div class="me-2">
-                            <x-profile-image :class="'avatar avatar-sm shadow-sm'" :image="$appointment->doctor->profile_image"></x-profile-image>
+                            <x-profile-image :class="'avatar avatar-sm shadow-sm'"
+                                             :image="$appointment->doctor->profile_image"></x-profile-image>
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-xs">Dr. {{ $appointment->doctor->lastName }} {{ $appointment->doctor->firstName }}</h6>
+                            <h6 class="mb-0 text-xs">
+                                Dr. {{ $appointment->doctor->lastName }} {{ $appointment->doctor->firstName }}</h6>
                             <p class="text-xs text-secondary mb-0">{{ $appointment->doctor->doctor_info->speciality }}</p>
                         </div>
                     </div>
@@ -52,16 +38,8 @@
                 <td class="text-center">
                     <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($appointment->start_date)->format('H:i') }}</p>
                 </td>
-                <td class="align-middle text-center text-sm">
-                    <p class="text-xs font-weight-bold mb-0">{!! $appointment->consultationReport ? '<a href="' . route('consultationReport.show', $appointment->consultationReport->id) . '">Voir le rapport</a>' : '<span>---</span>' !!}</p>
-                </td>
                 <td class="text-center">
-                    <p class="text-xs font-weight-bold mb-0">
-                        <x-appointment-status-badge :status="$appointment->status"></x-appointment-status-badge>
-                    </p>
-                </td>
-                <td class="text-center">
-                    @if($appointment->status === \App\Enums\AppointmentStatus::CONFIRMED)
+                    @if(!in_array($appointment->status, [\App\Enums\AppointmentStatus::REFUSED, \App\Enums\AppointmentStatus::CANCELLED]))
                         <!-- Action Icons -->
                         <div class="d-flex justify-content-center">
                             <!-- Reschedule Icon -->
@@ -108,8 +86,8 @@
 
                                         <input type="hidden" name="action" value="reschedule">
                                         <div class="form-group mb-3">
-                                            <label for="new_date-{{ $appointment->id }}-tab{{ $tab_id }}">Nouvelle Date</label>
-                                            <input type="datetime-local" name="new_date" id="new_date-{{ $appointment->id }}-tab{{ $tab_id }}"
+                                            <label for="new_date-{{ $appointment->id }}">Nouvelle Date</label>
+                                            <input type="datetime-local" name="new_date" id="new_date-{{ $appointment->id }}"
                                                    class="form-control" required>
                                         </div>
                                         <div class="modal-footer">

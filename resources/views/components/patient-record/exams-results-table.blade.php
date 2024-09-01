@@ -24,9 +24,6 @@
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Résultat
                     </th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Action
-                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,9 +46,6 @@
                             <p class="text-xs font-weight-bold mb-0">
                                 {{ ($examResult->result)? : '' }}
                             </p>
-                        </td>
-                        <td class="text-center">
-
                         </td>
                     </tr>
                 @endforeach

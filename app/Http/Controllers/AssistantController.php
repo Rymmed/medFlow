@@ -29,6 +29,8 @@ class AssistantController extends Controller
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'gender' => 'required|boolean',
+            'phone_number' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -40,6 +42,8 @@ class AssistantController extends Controller
         $assistant->firstName = $request->firstName;
         $assistant->email = $request->email;
         $assistant->password = Hash::make($request->password);
+        $assistant->gender = $request->gender;
+        $assistant->phone_number = $request->phone_number;
         $assistant->role = 'assistant';
         $assistant->doctor_id = $request->input('doctor_id');
         $assistant->save();
@@ -67,6 +71,8 @@ class AssistantController extends Controller
             'lastName' => 'required|string',
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email,'.$id,
+            'gender' => 'required|boolean',
+            'phone_number' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -78,6 +84,8 @@ class AssistantController extends Controller
         $assistant->lastName = $request->lastName;
         $assistant->firstName = $request->firstName;
         $assistant->email = $request->email;
+        $assistant->gender = $request->gender;
+        $assistant->phone_number = $request->phone_number;
         $assistant->doctor_id = $request->input('doctor_id');
 
         $assistant->save();

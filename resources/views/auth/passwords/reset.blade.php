@@ -25,7 +25,7 @@
                                     <label for="password">{{ __('Nouveau mot de passe') }}</label>
                                     <div class="mb-3 position-relative">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="{{ __('Entrez votre mot de passe') }}" aria-label="Password" aria-describedby="password-addon">
-                                        <x-show-password></x-show-password>
+                                        <x-show-password :toggleComponent="'password'"></x-show-password>
                                         @error('password')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -35,7 +35,8 @@
                                     <label for="password-confirm">{{ __('Confirmer le mot de passe') }}</label>
                                     <div class="mb-3 position-relative align-content-center">
                                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{ __('Confirmez votre mot de passe') }}" required autocomplete="new-password">
-                                        <x-show-password></x-show-password>
+                                        <x-show-password
+                                            :toggleComponent="'password-confirm'"></x-show-password>
                                     </div>
                                 </div>
                                 <div class="text-center">

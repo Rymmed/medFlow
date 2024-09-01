@@ -3,22 +3,20 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
-                <div class="btn-group mb-3" role="group" aria-label="Calendar Actions">
-                    <button type="button" id="create-event-btn" class="btn btn-info bg-gradient">{{__('Ajouter')}}</button>
-                </div>
-            </div>
-            <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
-                 style="display: none;">
-                <span class="alert-text text-white"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    <i class="fa fa-close" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-        <div class="row">
             <div class="card col-8">
                 <div id="calendar"></div>
+            </div>
+            <div class="col-md-4 align-content-center">
+                <div class="btn-group mb-3" role="group" aria-label="Calendar Actions">
+                    <button type="button" id="create-event-btn" class="btn btn-info bg-gradient-blue"><i class="far fa-calendar-plus me-1"></i>{{__('Rendez-vous')}}</button>
+                </div>
+                <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
+                     style="display: none;">
+                    <span class="alert-text text-white"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -48,24 +46,8 @@
                             @error('patient_id')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror
-                            <button type="button" id="new-patient-btn" class="btn btn-success"><i
-                                    class="fas fa-plus"></i> {{__('Patient')}}</button>
-                        </div>
-                        <div class="mb-3 d-none" id="new-patient-fields-firstName">
-                            <label for="new-patient-firstName" class="form-label">Prénom du patient</label>
-                            <input type="text" class="form-control" id="new-patient-firstName"
-                                   name="new_patient_firstName">
-                            @error('new_patient_firstName')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div class="mb-3 d-none" id="new-patient-fields-lastName">
-                            <label for="new-patient-lastName" class="form-label">Nom du patient</label>
-                            <input type="text" class="form-control" id="new-patient-lastName"
-                                   name="new_patient_lastName">
-                            @error('new_patient_lastName')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
+                            <a href="{{ route('doctor-patients.create') }}" target="_blank" type="button" id="new-patient-btn" class="btn btn-success"><i
+                                    class="fas fa-plus"></i> {{__('Patient')}}</a>
                         </div>
                         <div class="mb-3">
                             <label for="start_date" class="form-label">Date et heure de début</label>
@@ -133,10 +115,6 @@
                             <input type="datetime-local" class="form-control" id="update-finish_date"
                                    name="update-finish_date" required>
                         </div>
-                        {{--                        <div class="mb-3">--}}
-                        {{--                            <label for="update-consultation_duration" class="form-label">Durée de consultation</label>--}}
-                        {{--                            <input type="number" class="form-control" id="update-consultation_duration" name="update-consultation_duration">--}}
-                        {{--                        </div>--}}
                         <div class="mb-3">
                             <label for="update-consultation_type" class="form-label">Type de consultation</label>
                             <select class="form-control" id="update-consultation_type" name="update-consultation_type"
@@ -296,12 +274,6 @@
                     allowHTML: true,
                 });
 
-                document.getElementById('new-patient-btn').addEventListener('click', function () {
-                    document.getElementById('new-patient-fields-lastName').classList.toggle('d-none');
-                    document.getElementById('new-patient-fields-firstName').classList.toggle('d-none');
-                    document.getElementById('new-patient-lastName').toggleAttribute('required');
-                    document.getElementById('new-patient-firstName').toggleAttribute('required');
-                });
                 const cancelBtn = document.getElementById('cancel-btn');
 
                 cancelBtn.addEventListener('click', function (e) {

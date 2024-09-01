@@ -122,7 +122,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="dob">{{ __('Date de naissance') }}</label>
+                                                <label for="dob">{{ __('Date de naissance') }} *</label>
                                                 <div class="mb-3">
                                                     <input type="date" class="form-control" name="dob" id="dob"
                                                            required>
@@ -159,7 +159,7 @@
                                     <div class="step step-2">
                                         <!-- Patient Fields -->
                                         <div id="patientFields" class="specific-fields" style="display: none;">
-                                            {{--                                            <h3>Informations Personnelles de Santé</h3>--}}
+                                            <h3>Vous pouvez passer cette étape</h3>
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label for="height">{{ __('Taille (cm)')}}</label>
@@ -221,7 +221,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input" name="alcohol"
-                                                               id="alcohol_no" value="0" checked>
+                                                               id="alcohol_no" value="0">
                                                         <label class="form-check-label" for="alcohol_no">Non</label>
                                                     </div>
                                                     @error('alcohol')
@@ -237,7 +237,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input" name="smoking"
-                                                               id="smoking_no" value="0" checked>
+                                                               id="smoking_no" value="0">
                                                         <label class="form-check-label" for="smoking_no">Non</label>
                                                     </div>
                                                     @error('smoking')
@@ -254,8 +254,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input"
-                                                               name="sedentary_lifestyle" id="sedentary_no" value="1"
-                                                               checked>
+                                                               name="sedentary_lifestyle" id="sedentary_no" value="1">
                                                         <label class="form-check-label" for="sedentary_no">Non</label>
                                                     </div>
                                                     @error('sedentary_lifestyle')
@@ -270,7 +269,7 @@
                                         <div id="doctorFields" class="specific-fields" style="display: none;">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <label for="speciality">{{ __('Spécialité') }}</label>
+                                                    <label for="speciality">{{ __('Spécialité') }} *</label>
                                                     <div class="mb-3">
                                                         <select class="form-select" name="speciality" id="speciality">
                                                             <option value="" disabled
@@ -353,7 +352,7 @@
 
                                     <!-- Step 3 -->
                                     <div class="step step-3">
-                                        <h3>Step 3</h3>
+                                        <h3><h3>Vous pouvez passer cette étape</h3></h3>
 
                                         <!-- Address Fields -->
                                         <div id="patientFields2" class="specific-fields" style="display: none;">

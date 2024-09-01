@@ -10,6 +10,7 @@ class AppointmentStatus
     const CANCELLED = 'Annulé';
     const STARTED = 'Commencé';
     const COMPLETED = 'Completé';
+    const PENDING_RESCHEDULE = 'Reporté';
 
     public static function getValues(): array
     {
@@ -20,6 +21,7 @@ class AppointmentStatus
             self::CANCELLED,
             self::STARTED,
             self::COMPLETED,
+            self::PENDING_RESCHEDULE
         ];
     }
 }

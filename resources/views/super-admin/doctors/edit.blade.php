@@ -67,10 +67,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="speciality" class="form-control-label">{{ __('Spécialité') }}</label>
-                                <div class="@error('speciality')border border-danger rounded-3 @enderror">
-                                    <select class="form-select" name="speciality" id="speciality"   >
-                                        <option value="{{ $doctor->speciality }}" disabled selected>{{ $doctor->speciality }}</option>
+                                <label for="speciality" class="form-control-label">{{ __('Specialité') }}</label>
+                                <div class="@error('speciality') border border-danger rounded-3 @enderror">
+                                    <select class="form-select" name="speciality" id="speciality">
+                                        <option value="{{ $doctor->doctor_info->speciality }}" selected>{{ $doctor->doctor_info->speciality }}</option>
                                         @foreach(config('specialities') as $speciality)
                                             <option value="{{ $speciality }}">{{ $speciality }}</option>
                                         @endforeach
@@ -91,6 +91,24 @@
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
+                            </div>
+                        </div>
+                        <!-- Genre -->
+                        <div class="col-md-4">
+                            <label for="gender">{{ __('Genre') }} *</label>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="male"
+                                value="{{ \App\Enums\Gender::MALE }}"
+                                {{ $doctor->gender == \App\Enums\Gender::MALE ? 'checked' : '' }}>
+                                <label class="custom-control-label"
+                                for="male">{{ __('Homme') }}</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="female"
+                                value="{{ \App\Enums\Gender::FEMALE }}"
+                                {{ $doctor->gender == \App\Enums\Gender::FEMALE ? 'checked' : '' }}>
+                                <label class="custom-control-label"
+                                for="female">{{ __('Femme') }}</label>
                             </div>
                         </div>
 

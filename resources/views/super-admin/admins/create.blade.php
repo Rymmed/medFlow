@@ -52,6 +52,23 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Genre -->
+                        <div class="col-md-4">
+                            <label for="gender">{{__('Genre') }} *</label>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="male"
+                                       value="{{ \App\Enums\Gender::MALE }}">
+                                <label class="custom-control-label"
+                                       for="male">{{__('Homme')}}</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender"
+                                       id="female"
+                                       value="{{ \App\Enums\Gender::FEMALE }}">
+                                <label class="custom-control-label"
+                                       for="female">{{__('Femme')}}</label>
+                            </div>
+                        </div>
                         <!-- Email -->
                         <div class="col-md-4">
                             <div class="form-group">

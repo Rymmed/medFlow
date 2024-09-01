@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\AppointmentStatus;
+use App\Models\Appointment;
 use App\Models\User;
 use App\Models\ConsultationReport;
 
@@ -10,11 +12,6 @@ class PatientProfileService
     {
         $patient = User::findOrFail($patientId);
         $medicalRecord = $patient->medicalRecord;
-        $appointments = $patient->patientAppointments;
-
-        if ($doctor_id) {
-            $appointments = $appointments->where('doctor_id', $doctor_id);
-        }
 
         $familialMedicalHistories = $medicalRecord->medicalHistories
             ->where('type', \App\Enums\MedicalHistType::FAMILIAL)
@@ -32,15 +29,9 @@ class PatientProfileService
             ->where('type', \App\Enums\MedicalHistType::PERSONAL)
             ->where('subtype', \App\Enums\MedicalHistSubtype::SURGICAL);
 
-        $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($appointments) {
-            $query->whereIn('id', $appointments->pluck('id'));
-        })->paginate(10);
-
         return compact(
             'patient',
             'medicalRecord',
-            'appointments',
-            'consultationReports',
             'familialMedicalHistories',
             'familialSurgicalHistories',
             'personalMedicalHistories',

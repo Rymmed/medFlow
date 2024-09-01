@@ -12,9 +12,11 @@
             <!-- Personal & Medical Info, Vaccinations -->
             <div class="col-md-3 text-center">
                 <x-patient-record.profile-card :user="auth()->user()"></x-patient-record.profile-card>
-                <x-patient-record.medical-info :medicalRecord="$medicalRecord" :insurance="$medicalRecord->insurance"></x-patient-record.medical-info>
+                <x-patient-record.medical-info :medicalRecord="$medicalRecord"
+                                               :insurance="$medicalRecord->insurance"></x-patient-record.medical-info>
                 <x-patient-record.patient-doctors :doctors="auth()->user()->doctors"></x-patient-record.patient-doctors>
-                <x-patient-record.vaccinations :vaccinations="$medicalRecord->vaccinations"></x-patient-record.vaccinations>
+                <x-patient-record.vaccinations
+                    :vaccinations="$medicalRecord->vaccinations"></x-patient-record.vaccinations>
             </div>
 
             <!-- Main Content: Appointments, Consultation Reports, Prescriptions -->
@@ -84,62 +86,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body px-0 pt-0 pb-2">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all"
-                                            type="button" role="tab" aria-controls="all" aria-selected="true">Tous
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="upcoming-tab" data-bs-toggle="tab"
-                                            data-bs-target="#upcoming"
-                                            type="button" role="tab" aria-controls="upcoming" aria-selected="false">À venir
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent"
-                                            type="button" role="tab" aria-controls="recent" aria-selected="false">Anciens
-                                    </button>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-                                    <x-patient-record.appointments-table
-                                        :appointments="$appointments"></x-patient-record.appointments-table>
-                                </div>
-                                <div class="tab-pane fade" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
-                                    <x-patient-record.appointments-table
-                                        :appointments="$upcomingAppointments"></x-patient-record.appointments-table>
-                                </div>
-                                <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
-                                    <x-patient-record.appointments-table
-                                        :appointments="$recentAppointments"></x-patient-record.appointments-table>
-                                </div>
-                            </div>
-                        </div>
+                        <x-patient-record.appointments-list :appointments="$appointments"
+                                                            :upcomingAppointments="$upcomingAppointments"
+                                                            :recentAppointments="$recentAppointments"></x-patient-record.appointments-list>
                     </div>
                 </div>
-
                 <div class="row mt-4">
                     <!-- Consultation Reports -->
-                        <x-patient-record.consultation-report :consultationReports="$consultationReports"></x-patient-record.consultation-report>
-
-
+                    <x-patient-record.consultation-report
+                        :consultationReports="$consultationReports"></x-patient-record.consultation-report>
                 </div>
-                <div class="row mt-4">
-
-                        <!-- Prescriptions -->
-                        <div class="col-12">
-                            <x-patient-record.prescriptions :prescriptions="$prescriptions"></x-patient-record.prescriptions>
-                        </div>
-
-                </div>
-
                 <!-- Exam Results -->
                 <div class="row mt-4">
-                        <x-patient-record.exams-results-table :examResults="$medicalRecord->examResults"></x-patient-record.exams-results-table>
+                    <x-patient-record.exams-results-table
+                        :examResults="$medicalRecord->examResults"></x-patient-record.exams-results-table>
                 </div>
+                <!-- Prescriptions -->
+                <div class="row mt-4">
+                    <x-patient-record.prescriptions :prescriptions="$prescriptions"></x-patient-record.prescriptions>
+                </div>
+
             </div>
         </div>
     </div>

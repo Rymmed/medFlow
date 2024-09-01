@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Annuler</button>
-                                        <button type="button" class="btn bg-gradient-danger" id="confirmDelete-{{ $vaccination->id }}" data-vaccination-id="{{ $vaccination->id }}">Supprimer</button>
+                                        <button type="button" class="btn bg-gradient-danger" id="confirmDelete-" data-vaccination-id="{{ $vaccination->id }}">Supprimer</button>
                                     </div>
                                 </div>
                             </div>

@@ -27,6 +27,8 @@ class AdminController extends Controller
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'gender' => 'required|boolean',
+            'phone_number' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -38,6 +40,8 @@ class AdminController extends Controller
         $admin->firstName = $request->firstName;
         $admin->email = $request->email;
         $admin->password = bcrypt($request->password);
+        $admin->gender = $request->gender;
+        $admin->phone_number = $request->phone_number;
         $admin->role = 'admin';
         $admin->save();
         Mail::to($admin->email)->send(new NewUserWelcome($admin));
@@ -63,7 +67,8 @@ class AdminController extends Controller
             'lastName' => 'required|string',
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email,'.$id,
-            // Ajoutez d'autres règles de validation au besoin
+            'gender' => 'required|boolean',
+            'phone_number' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -75,7 +80,8 @@ class AdminController extends Controller
         $admin->lastName = $request->lastName;
         $admin->firstName = $request->firstName;
         $admin->email = $request->email;
-
+        $admin->gender = $request->gender;
+        $admin->phone_number = $request->phone_number;
         $admin->save();
 
         return redirect()->back()->with('success', 'Profil utilisateur mis à jour avec succès.');

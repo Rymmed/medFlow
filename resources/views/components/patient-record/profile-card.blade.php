@@ -20,7 +20,7 @@
     <div>
         @if(auth()->user()->role === 'patient' && Route::is('dashboard'))
             <a href="{{ route('myProfile') }}" type="button" class="btn bg-gradient-blue text-white btn-md">
-                Modifier profil
+                <i class="fa fa-edit"></i> Mes données
             </a>
         @endif
         @if(auth()->user()->role === 'doctor' && isset($appointment) && $appointment->status === \App\Enums\AppointmentStatus::CONFIRMED)

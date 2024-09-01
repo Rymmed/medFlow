@@ -9,6 +9,7 @@ use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
 use App\Models\User;
+use App\Services\AppointmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,9 +19,20 @@ use Illuminate\View\View;
 
 class FullCalendarController extends Controller
 {
+    protected $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
     public function index(): View
     {
-        $doctor = auth()->user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $patients = $doctor->patients()->get();
         return view('doctor.myCalendar', compact('patients'));
     }
@@ -28,7 +40,13 @@ class FullCalendarController extends Controller
     public function getAppointments(): JsonResponse
     {
         $events = [];
-        $appointments = Appointment::where('doctor_id', Auth()->user()->id)
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
+        $appointments = Appointment::where('doctor_id', $doctor->id)
             ->where('status', AppointmentStatus::CONFIRMED)
             ->get();
 
@@ -40,7 +58,7 @@ class FullCalendarController extends Controller
                 'id' => $appointment->id,
                 'title' => $appointment->patient->firstName . ' ' . $appointment->patient->lastName,
                 'start' => $appointment->start_date,
-                'end' => $appointment->finish_date ? : $start->copy()->addMinutes($defaultDuration),
+                'end' => $appointment->finish_date ?: $start->copy()->addMinutes($defaultDuration),
                 'consultation_duration' => $appointment->doctor()->first()->doctor_info()->first()->consultation_duration,
                 'consultation_type' => $appointment->consultation_type,
                 'consultation_reason' => $appointment->consultation_reason,
@@ -62,27 +80,23 @@ class FullCalendarController extends Controller
 
     public function createAppointment(Request $request): JsonResponse
     {
-        $doctor = auth()->user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $doctor_id = $doctor->id;
         $request->validate([
             'start_date' => 'required|date|after_or_equal:now',
         ]);
 
-        if ($request->patient_id === 'new') {
-            $patient = User::create([
-                'firstName' => $request->new_patient_firstName,
-                'lastName' => $request->new_patient_lastName,
-                'role' => 'patient',
-            ]);
+        $patient = User::find($request->patient_id);
 
+        if (!$doctor->patients()->where('patient_id', $patient->id)->exists()) {
             $doctor->patients()->attach($patient->id);
-        } else {
-            $patient = User::find($request->patient_id);
-
-            if (!$doctor->patients()->where('patient_id', $patient->id)->exists()) {
-                $doctor->patients()->attach($patient->id);
-            }
         }
+
         $doctorInfo = DoctorInfo::where('doctor_id', $doctor_id)->first();
         $consultationDuration = $request->consultation_duration;
         $defaultDuration = $doctorInfo->consultation_duration;
@@ -95,7 +109,7 @@ class FullCalendarController extends Controller
             'consultation_type' => $request->consultation_type,
             'status' => AppointmentStatus::CONFIRMED,
         ]);
-        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
+//        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous créé avec succès', 'event' => $appointment]);
     }
 
@@ -135,21 +149,7 @@ class FullCalendarController extends Controller
 
     public function updateAppointment(Request $request, $id): JsonResponse
     {
-        $appointment = Appointment::findOrFail($id);
-        $request->validate([
-            'update-start_date' => 'required|date|after_or_equal:now',
-            'update-finish_date' => 'required|date|after:update-start_date',
-        ]);
-        $newStartDate = Carbon::parse($request->input('update-start_date'));
-        $newFinishDate = Carbon::parse($request->input('update-finish_date'));
-        $consultation_type = $request->input('update-consultation_type');
-
-        $appointment->update([
-            'start_date' => $newStartDate,
-            'finish_date' => $newFinishDate,
-            'consultation_type' => $consultation_type,
-        ]);
-        Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
+        $appointment = $this->appointmentService->update($request, $id);
         return response()->json(['success' => true, 'message' => 'Rendez-vous mis à jour avec succès']);
 
     }

@@ -69,7 +69,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|max:255',
-            'dob' => 'date',
+            'dob' => 'required|date',
             'phone_number' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'gender' => 'required|boolean',
@@ -150,11 +150,6 @@ class RegisterController extends Controller
             $medicalRecord->alcohol = $data['alcohol'] ?? null;
             $medicalRecord->area = $data['area'] ?? null;
             $medicalRecord->sedentary_lifestyle = $data['sedentary_lifestyle'] ?? null;
-            $medicalRecord->temperature = null;
-            $medicalRecord->heart_rate = null;
-            $medicalRecord->blood_pressure = null;
-            $medicalRecord->respiratory_rate = null;
-            $medicalRecord->oxygen_saturation = null;
             $medicalRecord->save();
         }
 

@@ -35,7 +35,7 @@
                         <label for="speciality" class="form-control-label">{{ __('Specialité') }}</label>
                         <div class="@error('speciality') border border-danger rounded-3 @enderror">
                             <select class="form-select" name="speciality" id="speciality">
-                                <option value="{{ $doctor_info->speciality }}" selected></option>
+                                <option value="{{ $doctor_info->speciality }}" selected>{{ $doctor_info->speciality }}</option>
                                 @foreach(config('specialities') as $speciality)
                                     <option value="{{ $speciality }}">{{ $speciality }}</option>
                                 @endforeach

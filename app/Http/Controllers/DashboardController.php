@@ -6,13 +6,8 @@ use App\Enums\AppointmentStatus;
 use App\Enums\UserRole;
 use App\Models\Appointment;
 use App\Models\ConsultationReport;
-use App\Models\ExamResult;
-use App\Models\Insurance;
-use App\Models\MedicalHistory;
 use App\Models\MedicalRecord;
 use App\Models\Prescription;
-use App\Models\Vaccination;
-use App\Models\VitalSign;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +15,7 @@ use Illuminate\Validation\Rules\In;
 
 class DashboardController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *
@@ -56,20 +52,33 @@ class DashboardController extends Controller
                 $doctors = $patient->doctors;
 
                 $medicalRecord = MedicalRecord::where('patient_id', $patient_id)->first();
-//                $this->authorize('view', $medicalRecord);
-                $appointments = Appointment::where('patient_id', $patient_id)->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])->orderBy('start_date', 'desc')->paginate(10);
-                $upcomingAppointments = $appointments->where('start_date', '>', now());
-                $recentAppointments = $appointments->where('start_date', '<=', now());
 
-                $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($recentAppointments) {
-                    $query->whereIn('id', $recentAppointments->pluck('id'));
+                // Récupérer tous les rendez-vous du patient
+                $appointments = $patient->patientAppointments()
+                    ->whereNotIn('status', [AppointmentStatus::CANCELLED, AppointmentStatus::REFUSED, AppointmentStatus::PENDING, AppointmentStatus::PENDING_RESCHEDULE])
+                    ->orderBy('start_date', 'desc')
+                    ->paginate(5);
+
+                // Rendez-vous à venir
+                $upcomingAppointments = $appointments->filter(function ($appointment) {
+                    return in_array($appointment->status, [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED])
+                        && $appointment->start_date > now();
+                });
+
+                // Historique des rendez-vous
+                $recentAppointments = $appointments->filter(function ($appointment) {
+                    return in_array($appointment->status, [AppointmentStatus::COMPLETED])
+                        || ($appointment->status === AppointmentStatus::CONFIRMED && $appointment->start_date <= now());
+                });
+
+                $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($patient) {
+                    $query->where('patient_id', $patient->id);
                 })->orderBy('created_at', 'desc')->paginate(5);
 
-//                $this->authorize('view', $consultationReport);
                 $prescriptions = Prescription::where('medicalRecord_id', $medicalRecord->id)
                     ->with('prescriptionLines')
-                    ->get();
-//                $this->authorize('view', $prescriptions);
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(2);
 
                 return view('patient.dashboard', compact(
                     'doctors',

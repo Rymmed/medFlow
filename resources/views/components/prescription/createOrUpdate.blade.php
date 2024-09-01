@@ -75,39 +75,4 @@
             });
     });
 
-    document.getElementById('add-line-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        if (!prescriptionId) {
-            showMessage('Vous devez créer l\'ordonnance avant', false);
-            return;
-        }
-
-        const formData = new FormData(this);
-        formData.append('prescription_id', prescriptionId);
-
-        fetch('{{ route('prescription-lines.store') }}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const table = document.getElementById('prescription-lines-table').querySelector('tbody');
-                    const newRow = table.insertRow();
-
-                    newRow.insertCell(0).textContent = data.line.name;
-                    newRow.insertCell(1).textContent = data.line.dose;
-                    newRow.insertCell(2).textContent = data.line.duration;
-
-                    document.getElementById('add-line-form').reset();
-                    $('#LineCreationModal').modal('hide');
-                } else {
-                    showMessage('Échec dans l\'ajout d\'une ligne', false);
-                }
-            });
-    });
 </script>

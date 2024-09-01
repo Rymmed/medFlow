@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
+use App\Mail\AppointmentCanceledByPatientMail;
 use App\Mail\AppointmentCanceledMail;
 use App\Mail\AppointmentConfirmedMail;
 use App\Mail\AppointmentRefusedMail;
+use App\Mail\AppointmentRescheduleMail;
 use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
 use App\Models\Prescription;
 use App\Models\User;
+use App\Services\AppointmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -23,9 +26,38 @@ use Illuminate\View\View;
 
 class AppointmentController extends Controller
 {
+    protected $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     public function index()
     {
+        $patient = auth()->user();
+        $appointments = $patient->patientAppointments()
+            ->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])
+            ->orderBy('start_date', 'desc')
+            ->get();
 
+        // Rendez-vous à venir
+        $upcomingAppointments = $appointments->filter(function ($appointment) {
+            return in_array($appointment->status, [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED])
+                && $appointment->start_date > now();
+        });
+
+        // Historique des rendez-vous (completés, annulés, refusés)
+        $recentAppointments = $appointments->filter(function ($appointment) {
+            return in_array($appointment->status, [AppointmentStatus::COMPLETED, AppointmentStatus::CANCELLED, AppointmentStatus::REFUSED])
+                || ($appointment->status === AppointmentStatus::CONFIRMED && $appointment->start_date <= now());
+        });
+
+        return view('patient.appointments', compact(
+            'appointments',
+            'upcomingAppointments',
+            'recentAppointments'
+        ));
     }
 
     public function requestForm($doctor_id)
@@ -70,21 +102,41 @@ class AppointmentController extends Controller
 
     public function myAppointments(): View
     {
-        $doctor = Auth::user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $pending = AppointmentStatus::PENDING;
+        $reschedule = AppointmentStatus::PENDING_RESCHEDULE;
         $confirmed = AppointmentStatus::CONFIRMED;
         $refused = AppointmentStatus::REFUSED;
         $appointments = $doctor->doctorAppointments()->with('patient')->get();
         $pendingAppointments = $appointments->where('status', $pending);
+        $rescheduleAppointments = $appointments->where('status', $reschedule);
         $confirmedAppointments = $appointments->where('status', $confirmed);
         $refusedAppointments = $appointments->where('status', $refused);
         $patients = $doctor->patients;
-        return view('doctor.myAppointments', compact('appointments', 'pendingAppointments', 'confirmedAppointments', 'refusedAppointments', 'patients'));
+        return view('doctor.myAppointments',
+            compact(
+                'appointments',
+                'pendingAppointments',
+                'rescheduleAppointments',
+                'confirmedAppointments', 'refusedAppointments',
+                'patients'
+            )
+        );
     }
 
     public function updateStatus(Request $request)
     {
-        $doctor = auth()->user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $cancelled = AppointmentStatus::CANCELLED;
         $confirmed = AppointmentStatus::CONFIRMED;
         $refused = AppointmentStatus::REFUSED;
@@ -95,7 +147,6 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         if ($request->status === $confirmed) {
             $appointment->finish_date = $start->copy()->addMinutes($consultationDuration);
-            Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
             if (!$doctor->patients()->where('patient_id', $appointment->patient_id)->exists()) {
                 $doctor->patients()->attach($appointment->patient_id);
             }
@@ -105,6 +156,7 @@ class AppointmentController extends Controller
         switch ($appointment->status) {
             case ($confirmed):
                 $message = 'Rendez-vous confirmé';
+                Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
                 break;
             case ($refused):
                 $message = 'Rendez-vous réfusé';
@@ -119,6 +171,93 @@ class AppointmentController extends Controller
                 break;
         }
         return back()->with(['success' => $message, 'status' => $appointment->status]);
+    }
 
+    public function updateAppointment(Request $request, $id): RedirectResponse
+    {
+        $appointment = $this->appointmentService->update($request, $id);
+        return back()->with(['success' => 'Rendez-vous mis à jour avec succès']);
+    }
+
+    /**
+     * Allow the patient to cancel or request to reschedule an appointment.
+     *
+     * @param Request $request
+     * @param int $appointment_id
+     * @return RedirectResponse
+     */
+    public function requestRescheduleOrCancel(Request $request, $appointment_id): RedirectResponse
+    {
+        $appointment = Appointment::findOrFail($appointment_id);
+
+        // Check if the appointment belongs to the authenticated patient
+        if ($appointment->patient_id !== Auth::id()) {
+            return back()->withErrors('Vous ne pouvez pas modifier ce rendez-vous.');
+        }
+
+        $request->validate([
+            'action' => 'required|string|in:cancel,reschedule',
+            'new_date' => 'required_if:action,reschedule|date|after:now',
+        ]);
+
+        $doctor = $appointment->doctor;
+        $action = $request->action;
+
+        if ($action === 'cancel') {
+            $appointment->status = AppointmentStatus::CANCELLED;
+            $appointment->save();
+            Mail::to($doctor->email)->send(new AppointmentCanceledByPatientMail($appointment));
+
+            return back()->with('success', 'Votre rendez-vous a été annulé.');
+        } elseif ($action === 'reschedule') {
+            $newDate = $request->new_date;
+            $availabilityCheck = $doctor->isAvailable($newDate);
+
+            if (!$availabilityCheck['isAvailable']) {
+                return back()->withErrors($availabilityCheck['errors']);
+            }
+
+            // Update appointment date and status to pending reschedule
+//            $appointment->start_date = $newDate;
+            $appointment->status = AppointmentStatus::PENDING_RESCHEDULE;
+            $appointment->save();
+            Mail::to($doctor->email)->send(new AppointmentRescheduleMail($appointment, $newDate));
+
+            return back()->with('success', 'Votre demande de report de rendez-vous a été envoyée.');
+        }
+
+        return back()->withErrors('Action non valide.');
+    }
+
+    public function getRequests()
+    {
+        $patient = auth()->user();
+        $appointments = $patient->patientAppointments()
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        $refusedRequests = $appointments->filter(function ($appointment) {
+            return $appointment->status === AppointmentStatus::REFUSED;
+        });
+        $canceledRequests = $appointments->filter(function ($appointment) {
+            return $appointment->status === AppointmentStatus::CANCELLED;
+        });
+
+        // Demandes de rendez-vous en attente
+        $appointmentRequests = $appointments->filter(function ($appointment) {
+            return $appointment->status === AppointmentStatus::PENDING;
+        });
+
+        // Demandes de report de rendez-vous
+        $appointmentReported = $appointments->filter(function ($appointment) {
+            return $appointment->status === AppointmentStatus::PENDING_RESCHEDULE;
+        });
+
+        return view('patient.requests', compact(
+            'refusedRequests',
+            'canceledRequests',
+            'appointmentRequests',
+            'appointmentReported'
+        ));
     }
 }

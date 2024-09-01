@@ -24,7 +24,7 @@
                             <h6 class="mb-0 text-xs">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
                             <p class="text-xs text-secondary mb-0">{{ $doctor->doctor_info->speciality }}</p>
                         </div>
-                        <div class="col-2 align-items-center">
+                        <div class="col-2 mt-2">
                             <a href="{{ route('appointment.request', ['doctor_id' => $doctor->id]) }}"
                                class="text-primary"><i class="far fa-calendar-plus me-1"></i></a>
                         </div>

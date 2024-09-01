@@ -1,8 +1,5 @@
 @props(['consultationReports', 'patient'])
-<!-- Afficher les liens de pagination -->
-<div class="d-flex justify-content-center mt-3">
-    {{ $consultationReports->links() }}
-</div>
+
 <div class="card-header pb-0">
     <div class="d-flex flex-row justify-content-between">
         <div>
@@ -138,5 +135,9 @@
             @endforeach
             </tbody>
         </table>
+        <!-- Afficher les liens de pagination -->
+        <div class="d-flex justify-content-center mt-3">
+            {{ $consultationReports->links() }}
+        </div>
     </div>
 </div>

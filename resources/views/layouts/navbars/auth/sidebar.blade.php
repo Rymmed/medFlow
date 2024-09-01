@@ -72,7 +72,7 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Mon Profil</span>
+                    <span class="nav-link-text ms-1">{{auth()->user()->role === 'patient' ? 'Dossier Médical': 'Mon Profil'}}</span>
                 </a>
             </li>
             <!-- Depending on the user's role, show specific items -->
@@ -190,6 +190,18 @@
                     </a>
                 </li>
                 <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('myPatients') ? 'active' : '') }}"
+                       href="{{ route('myPatients') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-solid fa-bed-pulse ps-2 pe-2 text-center text-dark {{ (Request::is('myPatients') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Patients</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
                     <a class="nav-link {{ (Request::is('doctor-assistants') ? 'active' : '') }}"
                        href="{{ route('doctor-assistants.index') }}">
                         <div
@@ -201,28 +213,84 @@
                         <span class="nav-link-text ms-1">Assistants</span>
                     </a>
                 </li>
+
+            @elseif(auth()->user()->role === 'patient')
+                <!-- Items for patient -->
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('appointments') ? 'active' : '') }}"
+                       href="{{ route('patient.appointments') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-regular fa-calendar-check ps-2 pe-2 text-center text-dark {{ (Request::is('appointments') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Rendez-vous</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('requests') ? 'active' : '') }}"
+                       href="{{ route('patient.requests') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-solid fa-bullhorn ps-2 pe-2 text-center text-dark {{ (Request::is('requests') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Demandes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('consultationReports/*') ? 'active' : '') }}"
+                       href="{{ route('consultationReports.index', ['patient_id' => auth()->id()]) }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-solid fa-clipboard ps-2 pe-2 text-center text-dark {{ (Request::is('consultationReports/*') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Rapports</span>
+                    </a>
+                </li>
+
+
+            @elseif(auth()->user()->role === 'assistant')
+                <!-- Items for assistant -->
                 <li class="nav-item pb-2">
-                    <a class="nav-link {{ (Request::is('patients') ? 'active' : '') }}"
+                    <a class="nav-link {{ (Request::is('myAppointments') ? 'active' : '') }}"
+                       href="{{ route('appointments.myAppointments') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-regular fa-calendar-check ps-2 pe-2 text-center text-dark {{ (Request::is('myAppointments') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Rendez-Vous</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('myCalendar') ? 'active' : '') }}"
+                       href="{{ route('myCalendar') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-regular fa-calendar ps-2 pe-2 text-center text-dark {{ (Request::is('myCalendar') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Calendrier</span>
+                    </a>
+                </li>
+                <li class="nav-item pb-2">
+                    <a class="nav-link {{ (Request::is('myPatients') ? 'active' : '') }}"
                        href="{{ route('myPatients') }}">
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i style="font-size: 1rem;"
-                               class="fa-solid fa-bed-pulse ps-2 pe-2 text-center text-dark {{ (Request::is('patients') ? 'text-white' : 'text-dark') }} "
+                               class="fa-solid fa-bed-pulse ps-2 pe-2 text-center text-dark {{ (Request::is('myPatients') ? 'text-white' : 'text-dark') }} "
                                aria-hidden="true"></i>
                         </div>
                         <span class="nav-link-text ms-1">Patients</span>
                     </a>
-                </li>
-
-            @elseif(auth()->user()->role === 'patient')
-                <!-- Items for patient -->
-                <li class="nav-item pb-2">
-
-                </li>
-            @elseif(auth()->user()->role === 'assistant')
-                <!-- Items for assistant -->
-                <li class="nav-item">
-
                 </li>
             @endif
 {{--            <li class="nav-item pb-2">--}}
