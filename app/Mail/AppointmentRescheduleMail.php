@@ -11,7 +11,7 @@ class AppointmentRescheduleMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $appointment;
-    protected $newDate;
+    protected $oldDate;
 
     /**
      * Create a new message instance.
@@ -21,7 +21,7 @@ class AppointmentRescheduleMail extends Mailable
     public function __construct($appointment, $newDate)
     {
         $this->appointment = $appointment;
-        $this->newDate = $newDate;
+        $this->oldDate = $newDate;
     }
 
     /**
@@ -35,7 +35,7 @@ class AppointmentRescheduleMail extends Mailable
             ->markdown('emails.appointment_rescheduled')
             ->with([
                 'appointment' => $this->appointment,
-                'newDate' => $this->newDate
+                'oldDate' => $this->oldDate
             ]);
     }
 }

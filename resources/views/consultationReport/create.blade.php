@@ -87,7 +87,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="lineModalLabel">Ajouter Ligne de Prescription</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close">
+                            <span class="text-dark" aria-hidden="true"><i
+                                    class="fa fa-close"></i></span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <form id="add-line-form">
@@ -187,15 +191,5 @@
                     .catch(error => showMessage('Erreur lors de la création du rapport de consultation et de l\'ordonnance', false));
             });
         });
-
-        function showMessage(message, isSuccess) {
-            const messageContainer = document.getElementById('message-container');
-            const messageText = messageContainer.querySelector('.alert-text');
-
-            messageText.textContent = message;
-            messageContainer.classList.remove('alert-primary', 'alert-success');
-            messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
-            messageContainer.style.display = 'block';
-        }
     </script>
 @endsection

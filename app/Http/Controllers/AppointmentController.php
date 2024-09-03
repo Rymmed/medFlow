@@ -8,15 +8,11 @@ use App\Mail\AppointmentCanceledMail;
 use App\Mail\AppointmentConfirmedMail;
 use App\Mail\AppointmentRefusedMail;
 use App\Mail\AppointmentRescheduleMail;
-use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
-use App\Models\Prescription;
 use App\Models\User;
 use App\Services\AppointmentService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +33,7 @@ class AppointmentController extends Controller
     {
         $patient = auth()->user();
         $appointments = $patient->patientAppointments()
-            ->whereNotIn('status', [AppointmentStatus::REFUSED, AppointmentStatus::CANCELLED])
+            ->whereIn('status', [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED, AppointmentStatus::COMPLETED])
             ->orderBy('start_date', 'desc')
             ->get();
 
@@ -48,15 +44,20 @@ class AppointmentController extends Controller
         });
 
         // Historique des rendez-vous (completés, annulés, refusés)
-        $recentAppointments = $appointments->filter(function ($appointment) {
+        $oldAppointments = $appointments->filter(function ($appointment) {
             return in_array($appointment->status, [AppointmentStatus::COMPLETED, AppointmentStatus::CANCELLED, AppointmentStatus::REFUSED])
                 || ($appointment->status === AppointmentStatus::CONFIRMED && $appointment->start_date <= now());
         });
 
+        // Paginer les collections manuellement
+        $upcomingAppointments = $this->appointmentService->paginate($upcomingAppointments, 10, 'upcoming_page');
+        $oldAppointments = $this->appointmentService->paginate($oldAppointments, 10, 'old_page');
+        $appointments = $this->appointmentService->paginate($appointments, 10, 'all_page');
+
         return view('patient.appointments', compact(
             'appointments',
             'upcomingAppointments',
-            'recentAppointments'
+            'oldAppointments'
         ));
     }
 
@@ -217,11 +218,11 @@ class AppointmentController extends Controller
                 return back()->withErrors($availabilityCheck['errors']);
             }
 
-            // Update appointment date and status to pending reschedule
-//            $appointment->start_date = $newDate;
+            $oldDate = $appointment->start_date;
+            $appointment->start_date = $request->new_date;
             $appointment->status = AppointmentStatus::PENDING_RESCHEDULE;
             $appointment->save();
-            Mail::to($doctor->email)->send(new AppointmentRescheduleMail($appointment, $newDate));
+            Mail::to($doctor->email)->send(new AppointmentRescheduleMail($appointment, $oldDate));
 
             return back()->with('success', 'Votre demande de report de rendez-vous a été envoyée.');
         }
@@ -244,20 +245,24 @@ class AppointmentController extends Controller
         });
 
         // Demandes de rendez-vous en attente
-        $appointmentRequests = $appointments->filter(function ($appointment) {
+        $pendingRequests = $appointments->filter(function ($appointment) {
             return $appointment->status === AppointmentStatus::PENDING;
         });
 
         // Demandes de report de rendez-vous
-        $appointmentReported = $appointments->filter(function ($appointment) {
+        $reportedRequests = $appointments->filter(function ($appointment) {
             return $appointment->status === AppointmentStatus::PENDING_RESCHEDULE;
         });
 
+        $refusedRequests = $this->appointmentService->paginate($refusedRequests, 10, 'refused_page');
+        $canceledRequests = $this->appointmentService->paginate($canceledRequests, 10, 'canceled_page');
+        $pendingRequests = $this->appointmentService->paginate($pendingRequests, 10, 'pending_page');
+        $reportedRequests = $this->appointmentService->paginate($reportedRequests, 10, 'reported_page');
         return view('patient.requests', compact(
             'refusedRequests',
             'canceledRequests',
-            'appointmentRequests',
-            'appointmentReported'
+            'pendingRequests',
+            'reportedRequests'
         ));
     }
 }

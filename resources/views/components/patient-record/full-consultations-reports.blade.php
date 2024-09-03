@@ -84,11 +84,6 @@
                             @endif
                         </p>
                     </td>
-                    {{--                    <td class="align-middle text-center text-sm">--}}
-                    {{--                        <p class="text-xs font-weight-bold mb-0"><a--}}
-                    {{--                                href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}">Voir--}}
-                    {{--                                le rapport</a></p>--}}
-                    {{--                    </td>--}}
                     <td class="text-center text-sm">
                         @if(Auth::user()->role === 'doctor')
                             <div class="action-buttons justify-content-center">

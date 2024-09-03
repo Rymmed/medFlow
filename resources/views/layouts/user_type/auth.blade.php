@@ -12,17 +12,6 @@
                 </div>
             </main>
 
-{{--        @elseif (auth()->user()->role === 'patient')--}}
-{{--            <main class="main-content position-relative max-height-vh-100 h-100 mt-0 border-radius-sm {{ (Request::is('rtl') ? 'overflow-hidden' : '') }}">--}}
-{{--                @include('layouts.navbars.auth.nav-patient')--}}
-{{--                <div class="container-fluid py-4">--}}
-{{--                    @yield('content')--}}
-{{--                </div>--}}
-{{--                <div class="container-fluid py-4">--}}
-{{--                    @include('layouts.footers.auth.footer')--}}
-{{--                </div>--}}
-{{--            </main>--}}
-
         @elseif (\Request::is('profile'))
             @include('layouts.navbars.auth.sidebar')
             <div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
@@ -42,9 +31,9 @@
 
         @else
             @include('layouts.navbars.auth.sidebar')
-            <main class="main-content border-radius-xl position-relative bg-gray-100 my-4 me-4" id="main-content">
+            <main class="main-content border-radius-xl position-relative max-height-vh-100 h-100 bg-gray-100 me-4" id="main-content">
                 @include('layouts.navbars.auth.nav')
-                <div class="container-fluid py-4">
+                <div class="container-fluid py-4 mb-4">
                     @yield('content')
                 </div>
             </main>

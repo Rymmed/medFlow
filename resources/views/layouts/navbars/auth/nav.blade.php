@@ -16,13 +16,13 @@
             <div class="pe-md-3 d-flex align-items-center ">
                 <div class="input-group">
                     <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <input type="text" class="form-control" placeholder="Type here...">
+                    <input type="text" class="form-control" placeholder="Tapez ici...">
                 </div>
             </div>
         </div>
         <div class="d-flex justify-content-end">
                 <div class="navbar-nav">
-                    <div class="col-auto nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <div class="col-auto nav-item d-xl-none me-2 d-flex align-items-center">
                         <a href="javascript:" class="nav-link text-body p-0" id="iconNavbarSidenav">
                             <div class="sidenav-toggler-inner">
                                 <i class="sidenav-toggler-line"></i>
@@ -36,7 +36,7 @@
 {{--                            <i class="fa fa-envelope fixed-plugin-button-nav cursor-pointer"></i>--}}
 {{--                        </a>--}}
 {{--                    </div>--}}
-                    <div class="col-auto nav-item dropdown pe-2 d-flex align-items-center">
+                    <div class="col-auto nav-item dropdown me-2 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-bell cursor-pointer"></i>

@@ -93,6 +93,7 @@
             <!-- Notification container -->
             <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000;"></div>
         @endauth
+
         @guest
             @yield('guest')
         @endguest
@@ -101,13 +102,7 @@
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
         <!--- FullCalendar Files --->
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-{{--        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>--}}
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js'></script>
-{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@5.11.3/main.min.js"></script>--}}
-{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.min.js"></script>--}}
-{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.min.js"></script>--}}
-{{--        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@5.11.3/main.min.js"></script>--}}
-{{--        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@5.11.3/main.min.js'></script>--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <!--   Core JS Files   -->
         <script src="{{asset('assets/js/core/popper.min.js')}}"></script>

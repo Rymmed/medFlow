@@ -26,7 +26,7 @@ class Prescription extends Model
 
     public function medicalRecord(): BelongsTo
     {
-        return $this->belongsTo(MedicalRecord::class);
+        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
     }
 
     public function prescriptionLines(): HasMany

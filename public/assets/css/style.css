@@ -101,14 +101,12 @@
     overflow-y: auto;
     scroll-behavior: smooth;
 }
-/*.sidenav-footer {*/
-/*    width: 100%;*/
-/*}*/
 
-/*.user-profile {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*}*/
+.sidenav-footer .navbar-nav .nav-item{
+    margin: 0 auto;
+    padding-bottom: .675rem;
+    padding-top: .675rem;
+}
 
 .user-info {
     display: flex;

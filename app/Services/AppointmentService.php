@@ -7,7 +7,9 @@ use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\ConsultationReport;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class AppointmentService
@@ -31,5 +33,19 @@ class AppointmentService
         Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
 
         return compact('appointment');
+    }
+
+    public function paginate(Collection $items, $perPage = 10, $pageName = 'page')
+    {
+        $page = request()->input($pageName, 1);
+        $total = $items->count();
+
+        $results = $items->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return new LengthAwarePaginator($results, $total, $perPage, $page, [
+            'path' => request()->url(),
+            'query' => request()->query(),
+            'pageName' => $pageName,
+        ]);
     }
 }

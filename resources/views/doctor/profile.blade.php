@@ -50,7 +50,9 @@
         <div class="container-fluid py-4">
             <x-general-info></x-general-info>
             <x-security></x-security>
-            <x-doctor-info.doctor_info :doctor_info="$doctor_info" ></x-doctor-info.doctor_info>
+            <x-doctor-info.doctor_info
+                :doctor_info="$doctor_info"
+            ></x-doctor-info.doctor_info>
         </div>
 
     </div>

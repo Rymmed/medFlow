@@ -18,31 +18,37 @@
                         {{ __('Aucune ordonnance disponible.') }}
                     </div>
                 @else
-                    <div class="list-group">
-                        @foreach($prescriptions as $prescription)
-                            <div class="list-group-item flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-{{--                                    <h5 class="mb-1">{{ __('Ordonnance :') }} {{ $prescription->id }}</h5>--}}
-                                    <small>{{ $prescription->created_at->format('d/m/Y') }}</small>
-                                </div>
-                                <p class="mb-1"><strong>{{ __('Traitement:') }}</strong> {{ $prescription->treatment }}</p>
-                                <p class="mb-1"><strong>{{ __('Description:') }}</strong> {{ $prescription->description }}</p>
-                                @if(!($prescription->prescriptionLines->isEmpty()))
-                                <div class="mt-2">
-                                    <h6>{{ __('Détails de la prescription:') }}</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach($prescription->prescriptionLines as $line)
-                                            <li class="mb-2">
-                                                <span class="badge bg-primary">{{ $line->name }}</span>
-                                                <span class="text-muted">{{ $line->dose }} pendant {{ $line->duration }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                @endif
-                            </div>
-                        @endforeach
+                    <div class="container">
+                        <div class="row">
+
+                                @foreach($prescriptions as $prescription)
+                                    <div class="col-md-6 mb-4">
+                                        <div class="list-group-item flex-column align-items-start">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <small>{{ $prescription->created_at->format('d/m/Y') }}</small>
+                                            </div>
+                                            <p class="mb-1"><strong>{{ __('Traitement:') }}</strong> {{ $prescription->treatment }}</p>
+                                            <p class="mb-1"><strong>{{ __('Description:') }}</strong> {{ $prescription->description }}</p>
+                                            @if(!($prescription->prescriptionLines->isEmpty()))
+                                                <div class="mt-2">
+                                                    <h6>{{ __('Détails de la prescription:') }}</h6>
+                                                    <ul class="list-unstyled">
+                                                        @foreach($prescription->prescriptionLines as $line)
+                                                            <li class="mb-2">
+                                                                <span class="badge bg-primary">{{ $line->name }}</span>
+                                                                <span class="text-muted">{{ $line->dose }} pendant {{ $line->duration }}</span>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                        </div>
                     </div>
+
                 @endif
             </div>
         </div>

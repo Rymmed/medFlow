@@ -17,9 +17,8 @@ class PrescriptionPolicy
 
     public function view(User $user, Prescription $prescription)
     {
-        $report = $prescription->consultationReport;
-        $doctor = $report->doctor;
-        $patient = $report->appointment->patient;
+        $medicalRecord = $prescription->medicalRecord;
+        $patient = $medicalRecord->patient;
         return $user->id === $patient->id ||  $user->patients()->where('patient_id', $patient->id)->exists();
     }
 

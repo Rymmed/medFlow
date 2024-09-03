@@ -10,6 +10,7 @@ use App\Models\Appointment;
 use App\Models\ConsultationReport;
 use App\Models\MedicalRecord;
 use App\Models\User;
+use App\Services\AppointmentService;
 use App\Services\PatientProfileService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -18,15 +19,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class PatientController extends Controller
 {
-    protected PatientProfileService $patientProfileService;
+    protected $patientProfileService;
+    protected $appointmentService;
 
-    public function __construct(PatientProfileService $patientProfileService)
+    public function __construct(PatientProfileService $patientProfileService, AppointmentService $appointmentService)
     {
         $this->patientProfileService = $patientProfileService;
+        $this->appointmentService = $appointmentService;
     }
 
     /**
@@ -46,7 +48,7 @@ class PatientController extends Controller
         $patientAppointments = $patient->patientAppointments();
         $appointments = $doctor->doctorAppointments()
             ->where('patient_id', $patientId)
-            ->whereNotIn('status', [AppointmentStatus::CANCELLED, AppointmentStatus::REFUSED])
+            ->whereIn('status', [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED, AppointmentStatus::COMPLETED])
             ->orderBy('start_date', 'desc')
             ->get();
 
@@ -57,10 +59,15 @@ class PatientController extends Controller
         });
 
         // Historique des rendez-vous
-        $recentAppointments = $appointments->filter(function ($appointment) {
+        $oldAppointments = $appointments->filter(function ($appointment) {
             return in_array($appointment->status, [AppointmentStatus::COMPLETED])
                 || ($appointment->status === AppointmentStatus::CONFIRMED && $appointment->start_date <= now());
         });
+
+        $upcomingAppointments = $this->appointmentService->paginate($upcomingAppointments, 10, 'upcoming_page');
+        $oldAppointments = $this->appointmentService->paginate($oldAppointments, 10, 'old_page');
+        $appointments = $this->appointmentService->paginate($appointments, 10, 'all_page');
+
         $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($patientAppointments) {
             $query->whereIn('id', $patientAppointments->pluck('id'));
         })->orderBy('created_at', 'desc')->paginate(10);
@@ -75,20 +82,14 @@ class PatientController extends Controller
                 compact('appointment',
                     'appointments',
                     'upcomingAppointments',
-                    'recentAppointments',
+                    'oldAppointments',
                     'consultationReports'
                 )
             )
         );
     }
 
-    public function index()
-    {
-        $patients = User::where('role', 'patient')->get();
-        return view('super-admin.patients.index', compact('patients'));
-    }
-
-    public function myPatients()
+    public function myPatients(Request $request)
     {
         $user = auth()->user();
         if ($user->role === 'doctor') {
@@ -96,18 +97,38 @@ class PatientController extends Controller
         } elseif ($user->role === 'assistant') {
             $doctor = $user->doctor;
         }
-        $patients = $doctor->patients;
-        return view('doctor.patients.index', compact('patients'));
-    }
+        $query = $doctor->patients();
 
-    public function create()
-    {
-        return view('super-admin.patients.create');
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('firstName', 'like', '%' . $search . '%')
+                    ->orWhere('lastName', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('phone_number', 'like', '%' . $search . '%');
+            });
+        }
+        $patients = $query->paginate(10);
+        if ($request->ajax()) {
+            return view('doctor.patients.patients_table', compact('patients'))->render();
+        }
+        return view('doctor.patients.index', compact('patients'));
     }
 
     public function createByDoctor()
     {
         return view('doctor.patients.create');
+    }
+
+    public function index()
+    {
+        $patients = User::where('role', 'patient')->paginate(10);
+        return view('super-admin.patients.index', compact('patients'));
+    }
+
+    public function create()
+    {
+        return view('super-admin.patients.create');
     }
 
     public function store(Request $request)

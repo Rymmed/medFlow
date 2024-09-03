@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\ConsultationReport;
 use App\Models\Prescription;
@@ -37,7 +38,8 @@ class ConsultationReportController extends Controller
     {
         $appointment = Appointment::findOrFail($appointment_id);
         $patient = $appointment->patient;
-
+        $appointment->status = AppointmentStatus::STARTED;
+        $appointment->save();
         $this->authorize('create', [ConsultationReport::class, $patient->id]);
 
         return view('consultationReport.create', compact('appointment'));
@@ -88,7 +90,8 @@ class ConsultationReportController extends Controller
                 }
             }
         }
-
+        $appointment->status = AppointmentStatus::COMPLETED;
+        $appointment->save();
         return response()->json(['success' => true, 'report_id' => $report->id]);
     }
 

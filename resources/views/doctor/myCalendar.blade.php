@@ -28,8 +28,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-normal" id="createModalLabel">Ajouter un Rendez-vous</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span class="text-dark" aria-hidden="true"><i class="fa fa-close"></i></span>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close">
+                        <span class="text-dark" aria-hidden="true"><i
+                                class="fa fa-close"></i></span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -90,8 +92,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-normal" id="updateModalLabel">Mettre à jour le Rendez-vous</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span class="text-dark" aria-hidden="true"><i class="fa fa-close"></i></span>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close">
+                        <span class="text-dark" aria-hidden="true"><i
+                                class="fa fa-close"></i></span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -139,16 +143,6 @@
     </div>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                function showMessage(message, isSuccess) {
-                    const messageContainer = document.getElementById('message-container');
-                    const messageText = messageContainer.querySelector('.alert-text');
-
-                    messageText.textContent = message;
-                    messageContainer.classList.remove('alert-primary', 'alert-success');
-                    messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
-                    messageContainer.style.display = 'block';
-                }
-
                 var calendarEl = document.getElementById('calendar');
                 let currentEvent;
                 var calendar = new FullCalendar.Calendar(calendarEl, {

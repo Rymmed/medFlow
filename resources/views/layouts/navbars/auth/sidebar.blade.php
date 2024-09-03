@@ -72,7 +72,7 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">{{auth()->user()->role === 'patient' ? 'Dossier Médical': 'Mon Profil'}}</span>
+                    <span class="nav-link-text ms-1">{{auth()->user()->role === 'patient' ? 'Dossier Médical': 'Mon Compte'}}</span>
                 </a>
             </li>
             <!-- Depending on the user's role, show specific items -->
@@ -252,7 +252,18 @@
                         <span class="nav-link-text ms-1">Rapports</span>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('patients/*/prescriptions') ? 'active' : '') }}"
+                       href="{{ route('prescriptions.index', ['record_id' => auth()->user()->medicalRecord->id]) }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa-solid fa-receipt ps-2 pe-2 text-center text-dark {{ (Request::is('patients/*/prescriptions') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Ordonnances</span>
+                    </a>
+                </li>
 
             @elseif(auth()->user()->role === 'assistant')
                 <!-- Items for assistant -->
@@ -293,51 +304,14 @@
                     </a>
                 </li>
             @endif
-{{--            <li class="nav-item pb-2">--}}
-{{--                <a class="nav-link {{ (Request::is('myMessages') ? 'active' : '') }}"--}}
-{{--                   href="javascript:;">--}}
-{{--                    <div--}}
-{{--                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">--}}
-{{--                        <i style="font-size: 1rem;"--}}
-{{--                           class="fa fa-envelope ps-2 pe-2 text-center text-dark {{ (Request::is('myMessages') ? 'text-white' : 'text-dark') }}"></i>--}}
-{{--                    </div>--}}
-{{--                    <span class="nav-link-text ms-1">Messages</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
-
-{{--            <li class="nav-item pb-2">--}}
-{{--                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"--}}
-{{--                   href="javascript:;">--}}
-{{--                    <div--}}
-{{--                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">--}}
-{{--                        <i style="font-size: 1rem;"--}}
-{{--                           class="fa fa-bell ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>--}}
-{{--                    </div>--}}
-{{--                    <span class="nav-link-text ms-1">Notifications</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
-{{--            <li class="nav-item pb-2">--}}
-{{--                <a class="nav-link {{ (Request::is('settings') ? 'active' : '') }}"--}}
-{{--                   href="javascript:;">--}}
-{{--                    <div--}}
-{{--                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">--}}
-{{--                        <i style="font-size: 1rem;"--}}
-{{--                           class="fas fa-cog fixed-plugin-button-nav ps-2 pe-2 text-center text-dark {{ (Request::is('settings') ? 'text-white' : 'text-dark') }}"></i>--}}
-{{--                    </div>--}}
-{{--                    <span class="nav-link-text ms-1">Paramètres</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
-
         </ul>
-
-        {{--        </div>--}}
     </div>
     <!-- Profile section at the bottom -->
-    <div class="sidenav-footer w-auto">
+    <div class="sidenav-footer">
         <hr class="horizontal dark">
         <ul class="navbar-nav">
             <li class="nav-item pb-2">
-                <a class="nav-link"
+                <a class="nav-link pb-2"
                    href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">

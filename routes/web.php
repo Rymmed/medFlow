@@ -74,6 +74,7 @@ Route::middleware(['has.role:super-admin,admin'])->group(function () {
 });
 
 Route::middleware(['has.role:doctor,assistant'])->group(function () {
+
     Route::get('myAppointments', [AppointmentController::class, 'myAppointments'])->name('appointments.myAppointments');
     Route::put('myAppointments/updateStatus', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
     Route::put('myAppointments/update-appointment/{id}', [AppointmentController::class, 'updateAppointment'])->name('appointments.update-appointment');
@@ -88,6 +89,8 @@ Route::middleware(['has.role:doctor,assistant'])->group(function () {
     Route::get('myPatients', [PatientController::class, 'myPatients'])->name('myPatients');
     Route::get('myPatients/create', [PatientController::class, 'createByDoctor'])->name('doctor-patients.create');
     Route::post('myPatients/store', [PatientController::class, 'store'])->name('doctor-patients.store');
+    Route::get('myPatients/{patient}', [PatientController::class, 'edit'])->name('doctor-patients.edit');
+    Route::put('myPatients/{patient}', [PatientController::class, 'update'])->name('doctor-patients.update');
 });
 Route::middleware(['has.role:doctor'])->group(function () {
     Route::get('doctor', function () {

@@ -1,7 +1,5 @@
-<footer class="footer my-3 mb-0">
-    <div class="container-fluid">
+<footer class="footer my-2">
         <div class="row justify-content-center">
-
                 <div class="copyright text-center text-sm text-muted text-center">
                     <script>
                         document.write(new Date().getFullYear())
@@ -11,6 +9,4 @@
                     for a better health care.
                 </div>
             </div>
-
-    </div>
 </footer>

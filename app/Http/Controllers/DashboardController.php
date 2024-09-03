@@ -55,21 +55,23 @@ class DashboardController extends Controller
 
                 // Récupérer tous les rendez-vous du patient
                 $appointments = $patient->patientAppointments()
-                    ->whereNotIn('status', [AppointmentStatus::CANCELLED, AppointmentStatus::REFUSED, AppointmentStatus::PENDING, AppointmentStatus::PENDING_RESCHEDULE])
+                    ->whereIn('status', [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED, AppointmentStatus::COMPLETED])
                     ->orderBy('start_date', 'desc')
-                    ->paginate(5);
+                    ->get();
 
                 // Rendez-vous à venir
                 $upcomingAppointments = $appointments->filter(function ($appointment) {
                     return in_array($appointment->status, [AppointmentStatus::CONFIRMED, AppointmentStatus::STARTED])
                         && $appointment->start_date > now();
-                });
+                })->take(5);
 
                 // Historique des rendez-vous
-                $recentAppointments = $appointments->filter(function ($appointment) {
+                $oldAppointments = $appointments->filter(function ($appointment) {
                     return in_array($appointment->status, [AppointmentStatus::COMPLETED])
                         || ($appointment->status === AppointmentStatus::CONFIRMED && $appointment->start_date <= now());
-                });
+                })->take(5);
+
+                $appointments = $appointments->take(5);
 
                 $consultationReports = ConsultationReport::whereHas('appointment', function ($query) use ($patient) {
                     $query->where('patient_id', $patient->id);
@@ -86,7 +88,7 @@ class DashboardController extends Controller
                     'medicalRecord',
                     'appointments',
                     'upcomingAppointments',
-                    'recentAppointments',
+                    'oldAppointments',
                     'prescriptions'
                 ));
                 break;

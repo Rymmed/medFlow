@@ -1,6 +1,8 @@
 @props(['status'])
 @if($status === \App\Enums\AppointmentStatus::PENDING)
 <span class="badge-pro badge-sm badge-primary">{{$status}}</span>
+@elseif( $status === \App\Enums\AppointmentStatus::PENDING_RESCHEDULE)
+    <span class="badge-pro badge-sm badge-primary">{{$status}}</span>
 @elseif( $status === \App\Enums\AppointmentStatus::CONFIRMED)
 <span class="badge-pro badge-sm badge-success">{{$status}}</span>
 @elseif( $status === \App\Enums\AppointmentStatus::REFUSED)

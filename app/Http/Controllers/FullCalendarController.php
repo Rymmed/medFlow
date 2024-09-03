@@ -78,7 +78,7 @@ class FullCalendarController extends Controller
     }
 
 
-    public function createAppointment(Request $request): JsonResponse
+    public function createAppointment(Request $request)
     {
         $user = auth()->user();
         if ($user->role === 'doctor') {
@@ -90,12 +90,6 @@ class FullCalendarController extends Controller
         $request->validate([
             'start_date' => 'required|date|after_or_equal:now',
         ]);
-
-        $patient = User::find($request->patient_id);
-
-        if (!$doctor->patients()->where('patient_id', $patient->id)->exists()) {
-            $doctor->patients()->attach($patient->id);
-        }
 
         $doctorInfo = DoctorInfo::where('doctor_id', $doctor_id)->first();
         $consultationDuration = $request->consultation_duration;
@@ -109,8 +103,13 @@ class FullCalendarController extends Controller
             'consultation_type' => $request->consultation_type,
             'status' => AppointmentStatus::CONFIRMED,
         ]);
-//        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
-        return response()->json(['success' => true, 'message' => 'Rendez-vous créé avec succès', 'event' => $appointment]);
+        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
+        $message = 'Rendez-vous créé avec succès';
+        if($user->role === 'assistant')
+        {
+            return back()->with(['success' => $message]);
+        }
+        return response()->json(['success' => true, 'message' => $message, 'event' => $appointment]);
     }
 
     public function dropAppointment(Request $request, $id): JsonResponse

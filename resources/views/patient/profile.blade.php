@@ -17,6 +17,8 @@
                     <li class="list-group-item border-0" onclick="showSection('vitalSigns')">Signes Vitaux</li>
                     <li class="list-group-item border-0" onclick="showSection('examResults')">Bilan Médicaux</li>
                     @if(auth()->user()->role === 'doctor')
+                        <li class="list-group-item border-0" onclick="showSection('prescriptions')">Ordonnances
+                        </li>
                         <li class="list-group-item border-0" onclick="showSection('consultationReports')">Rapports de
                             Consultations
                         </li>
@@ -33,10 +35,10 @@
             <div class="col-md-9">
                 <div class="container-fluid">
                     @if(auth()->user()->role === 'doctor')
-                    <div class="btn-group mb-3" role="group" aria-label="Calendar Actions">
-                        <button type="button" id="create-event-btn" class="btn btn-info bg-gradient-blue"><i
-                                class="far fa-calendar-plus me-1"></i>{{__('Rendez-Vous')}}</button>
-                    </div>
+                        <div class="btn-group mb-3" role="group" aria-label="Calendar Actions">
+                            <button type="button" id="create-event-btn" class="btn btn-info bg-gradient-blue"><i
+                                    class="far fa-calendar-plus me-1"></i>{{__('Rendez-Vous')}}</button>
+                        </div>
                     @endif
                     <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
                          style="display: none;">
@@ -82,6 +84,9 @@
                                 :consultationReports="$consultationReports"
                                 :patient="$patient"></x-patient-record.full-consultations-reports>
                         </div>
+                            <div id="prescriptions" class="section">
+                                <x-prescription.all-prescriptions :prescriptions="$medicalRecord->prescriptions"></x-prescription.all-prescriptions>
+                            </div>
                         <div id="appointmentHistory" class="section card">
                             <div class="row">
                                 <!-- Appointments -->
@@ -95,7 +100,7 @@
                                     </div>
                                     <x-patient-record.appointments-list :appointments="$appointments"
                                                                         :upcomingAppointments="$upcomingAppointments"
-                                                                        :recentAppointments="$recentAppointments"></x-patient-record.appointments-list>
+                                                                        :oldAppointments="$oldAppointments"></x-patient-record.appointments-list>
                                 </div>
                             </div>
                         </div>
@@ -165,16 +170,6 @@
             // Show the last section or default section
             showSection(lastSection);
 
-            // Function to display messages
-            function showMessage(message, isSuccess) {
-                const messageContainer = document.getElementById('message-container');
-                const messageText = messageContainer.querySelector('.alert-text');
-
-                messageText.textContent = message;
-                messageContainer.classList.remove('alert-primary', 'alert-success');
-                messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
-                messageContainer.style.display = 'block';
-            }
         });
 
         function showSection(sectionId) {
