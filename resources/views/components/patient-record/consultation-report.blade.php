@@ -6,9 +6,6 @@
             <div>
                 <h5 class="mb-0">Rapports de consultation</h5>
             </div>
-{{--            <div class="mb-3">--}}
-{{--                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher..." autocomplete="off">--}}
-{{--            </div>--}}
             <a href="{{ route('consultationReports.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
                 Afficher Plus <i class="fas fa-angles-right me-1 text-xs"></i>
             </a>
@@ -98,78 +95,4 @@
         </div>
     </div>
 </div>
-<script>
-    document.getElementById('searchInput').addEventListener('input', function() {
-        let query = this.value;
 
-        fetch(`/consultationReports/search?query=${encodeURIComponent(query)}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                let tableBody = document.querySelector('#consultationReportTable');
-                tableBody.innerHTML = '';
-
-                if (!Array.isArray(data)) {
-                    console.error('Unexpected response format:', data);
-                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Erreur de format de données</td></tr>';
-                    return;
-                }
-
-                if (data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Aucun résultat trouvé</td></tr>';
-                } else {
-                    data.consultationReports.forEach(item => {
-                        let rowHtml = `
-                <tr>
-                    <td class="text-center">
-                        <p class="text-xs font-weight-bold mb-0 text-capitalize">${item.visit_type}</p>
-                    </td>
-                    <td class="text-center">
-                        <p class="text-xs font-weight-bold mb-0">${item.created_at}</p>
-                    </td>
-                    <td class="text-center">
-                        ${item.prescriptions.length > 0 ?
-                            '<a class="text-xs font-weight-bold mb-0 cursor-pointer text-blue" data-bs-toggle="collapse" data-bs-target="#prescriptions-' + item.id + '">Afficher</a>' :
-                            '<span class="text-xs text-muted">Aucune</span>'}
-                    </td>
-                    <td class="align-middle text-center text-sm">
-                        <p class="text-xs font-weight-bold mb-0"><a href="/consultationReport/show/${item.id}">Voir</a></p>
-                    </td>
-                </tr>
-                `;
-
-                        if (item.prescriptions.length > 0) {
-                            let prescriptionsHtml = item.prescriptions.map(prescription => `
-                        <li class="list-group-item">
-                            <strong>Traitement:</strong> ${prescription.treatment}<br>
-                            <strong>Description:</strong> ${prescription.description}<br>
-                            <strong>Médicaments:</strong>
-                            <ul>
-                                ${prescription.prescriptionLines.map(line => `<li>${line.name} - ${line.dose} ${line.type} pour ${line.duration}</li>`).join('')}
-                            </ul>
-                        </li>
-                    `).join('');
-
-                            rowHtml += `
-                    <tr id="prescriptions-${item.id}" class="collapse">
-                        <td colspan="4">
-                            <ul class="list-group">
-                                ${prescriptionsHtml}
-                            </ul>
-                        </td>
-                    </tr>
-                    `;
-                        }
-
-                        tableBody.insertAdjacentHTML('beforeend', rowHtml);
-                    });
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-
-</script>

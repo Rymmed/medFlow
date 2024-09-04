@@ -8,7 +8,6 @@ function showMessage(message, isSuccess) {
     messageContainer.style.display = 'block';
 }
 
-// Minimize Sidebar
 document.addEventListener("DOMContentLoaded", function () {
     let activeTabId = localStorage.getItem('activeTabId');
 
@@ -34,6 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
         itemSelectText: '',
         allowHTML: true,
     });
+});
+
+// Minimize Sidebar
+document.addEventListener("DOMContentLoaded", function () {
     var logoImg = document.getElementById("logo-img");
     var minimizedLogoImg = document.getElementById("minimized-img");
     var toggleLeftButton = document.getElementById("toggleLeftButton");
