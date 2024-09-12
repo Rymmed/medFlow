@@ -159,7 +159,7 @@
                                     <div class="step step-2">
                                         <!-- Patient Fields -->
                                         <div id="patientFields" class="specific-fields" style="display: none;">
-                                            <h3>Vous pouvez passer cette étape</h3>
+
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label for="height">{{ __('Taille (cm)')}}</label>
@@ -262,7 +262,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-
+                                            <p class="text-sm">Vous pouvez passer cette étape !</p>
                                         </div>
 
                                         <!-- Doctor Fields -->
@@ -297,11 +297,11 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label
-                                                        for="office_phone_number">{{ __('Numéro de téléphone du bureau') }}</label>
+                                                        for="office_phone_number">{{ __('N° de téléphone du cabinet') }}</label>
                                                     <div class="mb-3">
                                                         <input type="text" class="form-control"
                                                                name="office_phone_number" id="office_phone_number"
-                                                               placeholder="{{ __('Entrez le n° de téléphone du bureau') }}">
+                                                               placeholder="{{ __('Entrez n° de téléphone du cabinet') }}">
                                                         @error('office_phone_number')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -352,8 +352,6 @@
 
                                     <!-- Step 3 -->
                                     <div class="step step-3">
-                                        <h3><h3>Vous pouvez passer cette étape</h3></h3>
-
                                         <!-- Address Fields -->
                                         <div id="patientFields2" class="specific-fields" style="display: none;">
                                             <div class="row">
@@ -491,7 +489,7 @@
 
                                             </div>
                                         </div>
-
+                                        <p class="text-sm">Vous pouvez passer cette étape !</p>
                                         <button type="button" class="btn btn-info bg-gradient prev-step">Précédent</button>
                                         <button type="submit" class="btn btn-info bg-gradient">{{ __('S\'inscrire') }}</button>
                                     </div>

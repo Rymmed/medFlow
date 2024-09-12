@@ -3,7 +3,7 @@
 @section('content')
     <div class="container ">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <h3>Créer le rapport de consultation</h3>
                 <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
                      style="display: none;">
@@ -53,7 +53,7 @@
 
                     <!-- Step 3: Prescription Lines (Optional) -->
                     <div id="step-3" class="form-step d-none">
-                        <div class="card">
+                        <div class="card mb-3">
                             <div class="card-header">
                                 <h5>Lignes de l'ordonnance</h5>
                             </div>

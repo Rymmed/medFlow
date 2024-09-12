@@ -28,14 +28,14 @@
                 Rendez-vous :<br> {{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/y à H:i') }}
             </p>
             <a href="{{ route('consultationReport.create', ['appointment_id' => $appointment->id]) }}"
-               class="btn bg-gradient-blue text-white btn-md">
+               class="btn bg-gradient-blue text-white btn-md" target="_blank">
                 <i class="far fa-plus me-1"></i> Rapport
             </a>
 
             @if ($appointment->consultation_type === \App\Enums\ConsultationType::ONLINE)
                 <form action="{{ route('consultations.start', ['appointmentId' => $appointment->id]) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn bg-gradient-blue text-white btn-md">
+                    <button type="submit" formtarget="_blank" class="btn bg-gradient-blue text-white btn-md">
                         <i class="fa fa-video me-1"></i> Démarrer
                     </button>
                 </form>

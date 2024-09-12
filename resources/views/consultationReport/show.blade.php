@@ -1,7 +1,7 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="card shadow-lg">
             <div class="bg-transparent-blue border-radius-xl ">
                 <h4 class="m-3 text-white">Rapport de consultation</h4>
