@@ -7,6 +7,7 @@ use App\Mail\AppointmentCanceledByPatientMail;
 use App\Mail\AppointmentCanceledMail;
 use App\Mail\AppointmentConfirmedMail;
 use App\Mail\AppointmentRefusedMail;
+use App\Mail\AppointmentRequest;
 use App\Mail\AppointmentRescheduleMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
@@ -98,6 +99,7 @@ class AppointmentController extends Controller
             'consultation_reason' => $request->consultation_reason,
             'consultation_type' => $request->consultation_type,
         ]);
+        Mail::to($doctor->email)->send(new AppointmentRequest($appointment));
         return back()->with('success', 'La demande de rendez-vous a été envoyée avec succès.');
     }
 
