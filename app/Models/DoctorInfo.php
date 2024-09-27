@@ -24,6 +24,7 @@ class DoctorInfo extends Model
         'online_fees',
         'home_service_fees',
         'in_person_fees',
+        'average_rating',
     ];
 
     public function doctor(): BelongsTo

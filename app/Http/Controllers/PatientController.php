@@ -184,7 +184,7 @@ class PatientController extends Controller
         $medicalRecord->sedentary_lifestyle = $request->sedentary_lifestyle ?? null;
         $medicalRecord->save();
         Mail::to($patient->email)->send(new NewUserWelcome($patient));
-        return redirect()->back()->with('success', 'Patient ajouté avec succès.');
+        return redirect()->route('myPatients')->with('success', 'Patient ajouté avec succès.');
     }
 
     public function show($id)

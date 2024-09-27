@@ -240,6 +240,19 @@
                         <span class="nav-link-text ms-1">Demandes</span>
                     </a>
                 </li>
+                <!-- Items for patient -->
+                <li class="nav-item">
+                    <a class="nav-link {{ (Request::is('myDoctors') ? 'active' : '') }}"
+                       href="{{ route('myDoctors') }}">
+                        <div
+                            class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i style="font-size: 1rem;"
+                               class="fa fa-solid fa-stethoscope ps-2 pe-2 text-center text-dark {{ (Request::is('myDoctors') ? 'text-white' : 'text-dark') }} "
+                               aria-hidden="true"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Mes Médecins</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link {{ (Request::is('consultationReports/*') ? 'active' : '') }}"
                        href="{{ route('consultationReports.index', ['patient_id' => auth()->id()]) }}">

@@ -41,32 +41,56 @@
                     @elseif(isset($results))
                         <div class="row justify-content-center position-absolute">
                             @foreach($results as $doctor)
-                                <div class="col-md-5  mb-4">
+                                <div class="col-md-5 mb-4">
                                     <div class="card p-4">
                                         <div class="text-center">
                                             <x-profile-image :class="'avatar avatar-xl border-radius-section shadow'"
                                                              :image="$doctor->profile_image"></x-profile-image>
                                             <h6 class="card-title text-sm text-center mt-2">
-                                                Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
+                                                Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}
+                                            </h6>
                                         </div>
 
-                                        <p class="card-text text-xs"><i
-                                                class="fas fa-notes-medical mx-2"></i>{{ $doctor->doctor_info->speciality }}
-                                        </p>
-                                        <p class="card-text text-xs"><i
-                                                class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}
-                                        </p>
-                                        <p class="card-text text-xs"><i
-                                                class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
+                                        <p class="card-text text-xs"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor->doctor_info->speciality }}</p>
+                                        <p class="card-text text-xs"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
+                                        <p class="card-text text-xs"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
+
+                                        <!-- Système de notation en étoiles -->
+                                        <div class="text-center">
+                                            <div class="rating-stars">
+                                                @php
+                                                    $rating = $doctor->averageRating() ?? 0;  // Valeur par défaut 0 si aucune note
+                                                    $fullStars = floor($rating); // Nombre d'étoiles pleines
+                                                    $halfStar = $rating - $fullStars >= 0.5; // Étoile à moitié pleine ?
+                                                @endphp
+
+                                                    <!-- Affichage des étoiles pleines -->
+                                                @for ($i = 0; $i < $fullStars; $i++)
+                                                    <i class="fas fa-star text-warning"></i>
+                                                @endfor
+
+                                                <!-- Affichage d'une étoile à moitié pleine -->
+                                                @if ($halfStar)
+                                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                                @endif
+
+                                                <!-- Affichage des étoiles vides -->
+                                                @for ($i = $fullStars + $halfStar; $i < 5; $i++)
+                                                    <i class="far fa-star text-warning"></i>
+                                                @endfor
+
+                                                <p class="text-xs mt-2">Moyenne : {{ number_format($rating, 1) }} / 5</p>
+                                            </div>
+                                        </div>
+
                                         <div class="text-center">
                                             <a href="{{ route('appointment.request', ['doctor_id' => $doctor->id]) }}"
-                                               class="btn bg-gradient-primary text-white">Prendre
-                                                rendez-vous</a>
+                                               class="btn bg-gradient-primary text-white">Prendre rendez-vous</a>
                                         </div>
-
                                     </div>
                                 </div>
                             @endforeach
+
                         </div>
                     @endif
                 </div>

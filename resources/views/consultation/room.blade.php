@@ -7,6 +7,10 @@
             <a href="{{ route('consultationReport.create', ['appointment_id' => $appointment->id]) }}"
                class="btn bg-gradient-blue text-white btn-md" target="_blank"><i class="far fa-plus me-1"></i>Rapport de consultation</a>
         @endif
+        @if(auth()->user()->role === 'patient')
+            <a href="{{ route('feedback.create', ['doctor_id' => $appointment->doctor_id]) }}"
+               class="btn bg-gradient-blue text-white btn-md" target="_blank"><i class="fa-regular fa-star me-1"></i>Votre avis</a>
+        @endif
         <div class="video-container">
             <video id="local-video" class="video-small" autoplay playsinline></video>
             <video id="remote-video" class="video-large" autoplay playsinline></video>

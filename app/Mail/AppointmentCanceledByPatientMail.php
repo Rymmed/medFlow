@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentCanceledByPatientMail extends Mailable
 {
@@ -29,8 +30,15 @@ class AppointmentCanceledByPatientMail extends Mailable
      */
     public function build()
     {
+        if (Auth::id() == $this->appointment->patient_id) {
+            $emailView =  'emails.appointment_canceled_by_patient';
+        }
+        else {
+            $emailView =  'emails.appointment_canceled_by_doctor';
+        }
+
         return $this->subject('Annulation du rendez-vous')
-            ->markdown('emails.appointment_canceled_by_patient')
+            ->markdown($emailView)
             ->with([
                 'appointment' => $this->appointment,
             ]);

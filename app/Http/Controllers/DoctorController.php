@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Enums\ConsultationType;
 use App\Mail\NewUserWelcome;
 use App\Models\Availability;
@@ -118,12 +119,18 @@ class DoctorController extends Controller
         $doctor->delete();
         return redirect()->route('doctors.index')->with('success', 'Médecin supprimé avec succès.');
     }
-
-    public function search(): View
+    public function myDoctors()
     {
-        $results = User::where('role', 'doctor');
-        return view('patient.search_doctors', compact('results'));
+        $patient = auth()->user(); // Get the authenticated patient
+
+        // Récupérer tous les docteurs avec leurs derniers rendez-vous pour le patient authentifié
+        $doctors = $patient->doctors()->with(['doctorAppointments' => function ($query) use ($patient) {
+            $query->where('patient_id', $patient->id)->where('status', AppointmentStatus::COMPLETED)->latest('start_date')->first();
+        }])->get();
+
+        return view('patient.doctors', compact('doctors'));
     }
+
     public function searchDoctors(Request $request)
     {
         $speciality = $request->input('speciality');

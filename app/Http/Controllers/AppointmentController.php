@@ -9,6 +9,7 @@ use App\Mail\AppointmentConfirmedMail;
 use App\Mail\AppointmentRefusedMail;
 use App\Mail\AppointmentRequest;
 use App\Mail\AppointmentRescheduleMail;
+use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
 use App\Models\User;
@@ -193,10 +194,10 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::findOrFail($appointment_id);
 
-        // Check if the appointment belongs to the authenticated patient
-        if ($appointment->patient_id !== Auth::id()) {
-            return back()->withErrors('Vous ne pouvez pas modifier ce rendez-vous.');
-        }
+//        // Check if the appointment belongs to the authenticated patient
+//        if ($appointment->patient_id !== Auth::id() || $appointment->doctor_id !== Auth::id()) {
+//            return back()->withErrors('Vous ne pouvez pas modifier ce rendez-vous.');
+//        }
 
         $request->validate([
             'action' => 'required|string|in:cancel,reschedule',
@@ -209,8 +210,13 @@ class AppointmentController extends Controller
         if ($action === 'cancel') {
             $appointment->status = AppointmentStatus::CANCELLED;
             $appointment->save();
-            Mail::to($doctor->email)->send(new AppointmentCanceledByPatientMail($appointment));
 
+            if (Auth::id() === $appointment->doctor_id) {
+                Mail::to($appointment->patient->email)->send(new AppointmentCanceledByPatientMail($appointment));
+            }
+            else {
+                Mail::to($doctor->email)->send(new AppointmentCanceledByPatientMail($appointment));
+            }
             return back()->with('success', 'Votre rendez-vous a été annulé.');
         } elseif ($action === 'reschedule') {
             $newDate = $request->new_date;
@@ -222,10 +228,16 @@ class AppointmentController extends Controller
 
             $oldDate = $appointment->start_date;
             $appointment->start_date = $request->new_date;
-            $appointment->status = AppointmentStatus::PENDING_RESCHEDULE;
-            $appointment->save();
-            Mail::to($doctor->email)->send(new AppointmentRescheduleMail($appointment, $oldDate));
 
+            if (Auth::id() === $appointment->doctor_id) {
+                Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
+                $appointment->status = AppointmentStatus::CONFIRMED;
+            }
+            else {
+                Mail::to($doctor->email)->send(new AppointmentRescheduleMail($appointment, $oldDate));
+                $appointment->status = AppointmentStatus::PENDING_RESCHEDULE;
+            }
+            $appointment->save();
             return back()->with('success', 'Votre demande de report de rendez-vous a été envoyée.');
         }
 

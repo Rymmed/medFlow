@@ -345,7 +345,7 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="type" class="form-label">Type</label>
-                                            <input type="text" class="form-control" id="type" name="type">
+                                            <input type="text" class="form-control" id="add-type" name="type">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="number" class="form-label">Numéro</label>

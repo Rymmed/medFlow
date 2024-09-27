@@ -119,7 +119,7 @@
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                 Annuler
                                             </button>
-                                            <button type="submit" class="btn btn-primary">Envoyer la Demande</button>
+                                            <button type="submit" class="btn btn-primary">Reporter</button>
                                         </div>
                                     </form>
                                 </div>
@@ -163,3 +163,33 @@
         </tbody>
     </table>
 </div>
+<script>
+    document.querySelectorAll('[id^="rescheduleModal-"]').forEach(button => {
+        button.addEventListener('click', function () {
+            let appointmentId = this.getAttribute('data-appointment-id');
+            let tabId = this.getAttribute('data-tab-id');
+
+            let newDateInput = document.getElementById('new_date-' + appointmentId + '-tab' + tabId);
+            let form = document.querySelector('#rescheduleModal-' + appointmentId + ' form');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission to allow handling via JavaScript
+                form.submit(); // Submit the form once conditions are met
+            });
+        });
+    });
+
+    document.querySelectorAll('[id^="cancelModal-"]').forEach(button => {
+        button.addEventListener('click', function () {
+            let appointmentId = this.getAttribute('data-appointment-id');
+
+            let form = document.querySelector('#cancelModal-' + appointmentId + ' form');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission to allow handling via JavaScript
+                form.submit(); // Submit the form once conditions are met
+            });
+        });
+    });
+
+</script>

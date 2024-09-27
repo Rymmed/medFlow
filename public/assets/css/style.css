@@ -407,3 +407,7 @@
     border-radius: 5px;
     cursor: pointer;
 }
+.rating-stars i {
+    font-size: 18px;
+    margin: 0 2px;
+}

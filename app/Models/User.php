@@ -102,6 +102,16 @@ use Illuminate\Notifications\Notifiable;
          return $this->hasMany(ConsultationReport::class, 'doctor_id');
      }
 
+     public function feedbacks(): HasMany
+     {
+         return $this->hasMany(Feedback::class, 'doctor_id');
+     }
+
+     public function averageRating()
+     {
+         return $this->feedbacks()->avg('rating');
+     }
+
      public function isAvailable($appointmentStartTime): array
      {
          $dayOfWeek = Carbon::parse($appointmentStartTime)->dayOfWeek;

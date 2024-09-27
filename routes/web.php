@@ -9,6 +9,7 @@ use App\Http\Controllers\ConsultationReportController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\DoctorInfoController;
 use App\Http\Controllers\ExamResultController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InsuranceController;
@@ -109,10 +110,11 @@ Route::middleware(['has.role:patient'])->group(function () {
     Route::get('patient', function () {
         return view('patient.dashboard');
     })->name('patient.dashboard');
-
+    Route::get('myDoctors', [DoctorController::class, 'myDoctors'])->name('myDoctors');
     Route::get('appointments', [AppointmentController::class, 'index'])->name('patient.appointments');
     Route::get('requests', [AppointmentController::class, 'getRequests'])->name('patient.requests');
-    Route::post('requests/{appointment_id}', [AppointmentController::class, 'requestRescheduleOrCancel'])->name('appointment.RescheduleOrCancel');
+    Route::get('/doctor-{doctor_id}/feedbacks/create', [FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedbacks', [FeedbackController::class, 'store'])->name('feedback.store');
 });
 
 Route::middleware(['has.role:assistant'])->group(function () {
@@ -175,7 +177,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/medicalRecord/{medicalRecord_id}', [MedicalRecordController::class, 'update'])->name('medicalRecord.update');
     Route::put('/medicalRecord/{medicalRecord_id}/vitalSigns', [MedicalRecordController::class, 'updateVitalSigns'])->name('vitalSigns.update');
-
+    Route::post('requests/{appointment_id}', [AppointmentController::class, 'requestRescheduleOrCancel'])->name('appointment.RescheduleOrCancel');
     Route::get('/consultation/room/{appointment_id}', [ConsultationController::class, 'showConsultationRoom'])
         ->name('consultation.room');
     Route::post('/consultations/{appointmentId}/start', [ConsultationController::class, 'startOnlineConsultation'])

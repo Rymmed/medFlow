@@ -28,9 +28,10 @@ class ExamResultPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, $patient): bool
+    public function create(User $user, $patient_id): bool
     {
-        return $user->id === $patient->id || $user->patients()->where('patient_id', $patient->id)->exists();
+
+        return $user->id === $patient_id || $user->patients()->where('patient_id', $patient_id)->exists();
     }
 
     /**
