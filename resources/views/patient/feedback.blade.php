@@ -36,7 +36,28 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <p>{{ $feedback->comment }}</p>
-                            <small class="text-muted">Note : {{ $feedback->rating }} / 5</small>
+                            <small class="text-muted">
+                                @php
+                                    $rating = $feedback->rating;  // Valeur par défaut 0 si aucune note
+                                    $fullStars = floor($rating); // Nombre d'étoiles pleines
+                                    $halfStar = $rating - $fullStars >= 0.5; // Étoile à moitié pleine ?
+                                @endphp
+
+                                    <!-- Affichage des étoiles pleines -->
+                                @for ($i = 0; $i < $fullStars; $i++)
+                                    <i class="fas fa-star text-warning"></i>
+                                @endfor
+
+                                <!-- Affichage d'une étoile à moitié pleine -->
+                                @if ($halfStar)
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                @endif
+
+                                <!-- Affichage des étoiles vides -->
+                                @for ($i = $fullStars + $halfStar; $i < 5; $i++)
+                                    <i class="far fa-star text-warning"></i>
+                                @endfor   {{ \Carbon\Carbon::parse($feedback->created_at )->format('d/m/Y') }}
+                            </small>
                         </div>
                     </div>
                 @empty

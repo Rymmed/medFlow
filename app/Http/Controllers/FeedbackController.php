@@ -15,7 +15,7 @@ class FeedbackController extends Controller
     public function create($doctor_id)
     {
         $doctor = User::findOrFail($doctor_id);
-        $feedbacks = Feedback::where('doctor_id', $doctor_id)->get();
+        $feedbacks = Feedback::where('doctor_id', $doctor_id)->orderBy('created_at', 'desc')->get();
 
         // Calculer la moyenne des notes
         $averageRating = round($doctor->averageRating(), 2);
@@ -31,7 +31,7 @@ class FeedbackController extends Controller
             'doctor_id' => 'required|exists:users,id'
         ]);
         // Appeler l'API de prédiction de la note
-        $response = Http::post('https://a347-35-231-154-155.ngrok-free.app/predict', [
+        $response = Http::post('https://f909-35-221-157-144.ngrok-free.app/predict', [
             'comment' => $request->comment,
         ]);
 
