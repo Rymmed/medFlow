@@ -11,7 +11,7 @@
                     <li class="list-group-item border-0" onclick="showSection('generalInfo')">Informations Générales
                     </li>
                     <li class="list-group-item border-0" onclick="showSection('medicalHistory')">Antécédents
-                        Médicales
+                        Médicaux
                     </li>
                     <li class="list-group-item border-0" onclick="showSection('vaccinations')">Vaccinations</li>
                     <li class="list-group-item border-0" onclick="showSection('vitalSigns')">Signes Vitaux</li>
