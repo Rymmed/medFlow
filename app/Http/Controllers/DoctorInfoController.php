@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DoctorInfoController extends Controller
@@ -27,7 +28,6 @@ class DoctorInfoController extends Controller
             'home_service_fees' => 'nullable|string',
             'in_person_fees' => 'nullable|string',
             'consultation_types' => 'required|array',
-            'consultation_types.*' => ['required', Rule::in(ConsultationType::getValues())],
         ]);
 
         $doctor_info = DoctorInfo::where('doctor_id', $doctor_id)->firstOrFail();
@@ -37,9 +37,9 @@ class DoctorInfoController extends Controller
         $doctor_info->end_time = $validator['end_time'];
         $doctor_info->office_phone_number = $validator['office_phone_number'];
         $doctor_info->consultation_duration = $validator['consultation_duration'];
-        $doctor_info->online_fees = $validator['online_fees'];
-        $doctor_info->home_service_fees = $validator['home_service_fees'];
-        $doctor_info->in_person_fees = $validator['in_person_fees'];
+        $doctor_info->online_fees = $validator['online_fees'] ?? null;
+        $doctor_info->home_service_fees = $validator['home_service_fees'] ?? null;
+        $doctor_info->in_person_fees = $validator['in_person_fees']?? null;
         $doctor_info->consultation_types = json_encode($validator['consultation_types']);
         $doctor_info->save();
 

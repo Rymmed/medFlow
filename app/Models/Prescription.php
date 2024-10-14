@@ -16,11 +16,17 @@ class Prescription extends Model
         'treatment',
         'description',
         'consultation_report_id',
+        'medicalRecord_id'
     ];
 
     public function consultationReport(): BelongsTo
     {
         return $this->belongsTo(ConsultationReport::class);
+    }
+
+    public function medicalRecord(): BelongsTo
+    {
+        return $this->belongsTo(MedicalRecord::class, 'medicalRecord_id');
     }
 
     public function prescriptionLines(): HasMany

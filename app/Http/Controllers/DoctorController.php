@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
+use App\Enums\ConsultationType;
 use App\Mail\NewUserWelcome;
 use App\Models\Availability;
+use App\Models\DoctorInfo;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DoctorController extends Controller
@@ -33,6 +37,7 @@ class DoctorController extends Controller
             'email' => 'required|email|unique:users,email',
             'speciality' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
+            'gender' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -43,13 +48,15 @@ class DoctorController extends Controller
         $doctor->lastName = $request->lastName;
         $doctor->firstName = $request->firstName;
         $doctor->email = $request->email;
-        $doctor->speciality = $request->speciality;
         $doctor->password = Hash::make($request->password);
+        $doctor->gender = $request->gender;
+        $doctor->phone_number = $request->phone_number;
         $doctor->role = 'doctor';
         $doctor->save();
-        $availability = new Availability();
-        $availability->doctor_id = $doctor->id ;
-        $availability->save();
+        $doctor_info = new DoctorInfo();
+        $doctor_info->doctor_id = $doctor->id ;
+        $doctor_info->speciality = $request->speciality;
+        $doctor_info->save();
         Mail::to($doctor->email)->send(new NewUserWelcome($doctor));
         return redirect()->back()->with('success', 'Médecin ajouté avec succès.');
     }
@@ -72,6 +79,8 @@ class DoctorController extends Controller
             'lastName' => 'required|string',
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email,'.$id,
+            'gender' => 'required|boolean',
+            'phone_number' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -83,7 +92,10 @@ class DoctorController extends Controller
         $doctor->lastName = $request->lastName;
         $doctor->firstName = $request->firstName;
         $doctor->email = $request->email;
-        $doctor->speciality = $request->speciality;
+        $doctor->doctor_info->speciality = $request->speciality;
+        $doctor->gender = $request->gender;
+        $doctor->phone_number = $request->phone_number;
+        $doctor->doctor_info->save();
         $doctor->save();
 
         return redirect()->back()->with('success', 'Profil médecin mis à jour avec succès.');
@@ -107,12 +119,18 @@ class DoctorController extends Controller
         $doctor->delete();
         return redirect()->route('doctors.index')->with('success', 'Médecin supprimé avec succès.');
     }
-
-    public function search(): View
+    public function myDoctors()
     {
-        $results = User::where('role', 'doctor');
-        return view('search_doctors', compact('results'));
+        $patient = auth()->user(); // Get the authenticated patient
+
+        // Récupérer tous les docteurs avec leurs derniers rendez-vous pour le patient authentifié
+        $doctors = $patient->doctors()->with(['doctorAppointments' => function ($query) use ($patient) {
+            $query->where('patient_id', $patient->id)->where('status', AppointmentStatus::COMPLETED)->latest('start_date')->first();
+        }])->get();
+
+        return view('patient.doctors', compact('doctors'));
     }
+
     public function searchDoctors(Request $request)
     {
         $speciality = $request->input('speciality');
@@ -140,7 +158,7 @@ class DoctorController extends Controller
             $totalResultsQuery = clone $doctorsQuery;
 
             // Paginate the results
-            $results = $doctorsQuery->select('users.*', 'doctor_infos.speciality')->paginate(9)->appends([
+            $results = $doctorsQuery->select('users.*', 'doctor_infos.speciality')->paginate(6)->appends([
                 'speciality' => $speciality,
                 'city' => $city,
                 'country' => $country,
@@ -150,7 +168,7 @@ class DoctorController extends Controller
 
             $totalResults = $totalResultsQuery->select('users.*', 'doctor_infos.speciality')->get();
 
-            return view('search_doctors', [
+            return view('patient.search_doctors', [
                 'results' => $results,
                 'totalResults' => $totalResults,
                 'speciality' => $speciality,

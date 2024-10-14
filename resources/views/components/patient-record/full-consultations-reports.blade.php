@@ -1,8 +1,5 @@
 @props(['consultationReports', 'patient'])
-<!-- Afficher les liens de pagination -->
-<div class="d-flex justify-content-center mt-3">
-    {{ $consultationReports->links() }}
-</div>
+
 <div class="card-header pb-0">
     <div class="d-flex flex-row justify-content-between">
         <div>
@@ -70,33 +67,61 @@
                     </td>
                     <td class="text-center">
                         <p class="text-xs font-weight-bold mb-0">
-                            @if ($consultationReport->prescriptions->isEmpty())
+                            @if (is_null($consultationReport->prescription))
                                 @if(auth()->user()->id === $consultationReport->doctor_id)
-                                    <a href="{{route('prescriptions.create', $consultationReport->id)}}">Créer</a>
+                                    <a href="{{route('prescription.create', ['report_id' =>$consultationReport->id, 'record_id' => $patient->medicalRecord->id])}}">Créer</a>
                                 @else
                                     Pas de prescriptions
                                 @endif
                             @else
-                                <a href="{{route('prescriptions.index', ['report_id' => $consultationReport->id])}}">Voir</a>
+                                <a @if(auth()->user()->id === $consultationReport->doctor_id)
+                                       href="{{route('prescription.edit', ['prescription_id' => $consultationReport->prescription->id])}}"
+                                @else
+                                    href="{{route('prescription.show', ['prescription_id' => $consultationReport->prescription->id])}}"
+                                    @endif
+                                >Voir
+                                </a>
                             @endif
                         </p>
                     </td>
-                    {{--                    <td class="align-middle text-center text-sm">--}}
-                    {{--                        <p class="text-xs font-weight-bold mb-0"><a--}}
-                    {{--                                href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}">Voir--}}
-                    {{--                                le rapport</a></p>--}}
-                    {{--                    </td>--}}
                     <td class="text-center text-sm">
                         @if(Auth::user()->role === 'doctor')
                             <div class="action-buttons justify-content-center">
-                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i
+                                        class="fas fa-eye"></i></a>
                                 @if(auth()->user()->id === $consultationReport->doctor_id)
-                                    <a href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}"><i class="fa fa-edit text-secondary"></i></a>
+                                    <a href="{{ route('consultationReport.edit', ['consultationReport' => $consultationReport->id]) }}"><i
+                                            class="fa fa-edit text-secondary"></i></a>
+                                    <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteReportModal-{{ $consultationReport->id }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    <div class="modal fade" id="deleteReportModal-{{ $consultationReport->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteLineModalLabel-{{ $consultationReport->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteReportModalLabel-{{ $consultationReport->id }}">Confirmer la suppression</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                        <span class="text-dark" aria-hidden="true"><i class="fa fa-close"></i></span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Êtes-vous sûr de vouloir supprimer ce rapport?</p>
+                                                    <form action="{{ route('consultationReport.destroy', ['consultationReport_id' => $consultationReport->id]) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         @else
                             <p class="text-xs font-weight-bold mb-0">
-                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('consultationReport.show', ['consultationReport' => $consultationReport->id]) }}"><i
+                                        class="fas fa-eye"></i></a>
                             </p>
                         @endif
 
@@ -105,5 +130,9 @@
             @endforeach
             </tbody>
         </table>
+        <!-- Afficher les liens de pagination -->
+        <div class="d-flex justify-content-center mt-3">
+            {{ $consultationReports->links() }}
+        </div>
     </div>
 </div>

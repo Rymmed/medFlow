@@ -62,16 +62,34 @@ class PrescriptionLineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PrescriptionLine $perscriptionLine)
+    public function update(Request $request, $id)
     {
-        //
+        $prescriptionLine = PrescriptionLine::findOrFail($id);
+        // Authorize the update action
+        $this->authorize('update', $prescriptionLine);
+
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'dose' => 'required|string',
+            'duration' => 'required|string',
+        ]);
+
+        $prescriptionLine->update($validatedData);
+
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PrescriptionLine $perscriptionLine)
+    public function destroy($id)
     {
-        //
+        $prescriptionLine = PrescriptionLine::findOrFail($id);
+        // Authorize the delete action
+        $this->authorize('delete', $prescriptionLine);
+
+        $prescriptionLine->delete();
+
+        return redirect()->back();
     }
 }

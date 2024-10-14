@@ -1,4 +1,4 @@
-@props(['medicalRecord', 'insuranceDetails'])
+@props(['medicalRecord', 'insurance'])
 
 <div class="accordion-item mt-2">
     <div class="card px-2">
@@ -37,7 +37,7 @@
             <p class="text-sm text-dark text-bold info-text">{{ __('Activité Physique') }}: <span
                     class="text-secondary ms-4">{{ $medicalRecord->sedentary_lifestyle ? 'Non' : 'Oui' }}</span></p>
             <p class="text-sm text-dark text-bold info-text">{{ __('Assurance') }}: <span
-                    class="text-secondary ms-4">{{ $insuranceDetails ? $insuranceDetails->type . '-' . $insuranceDetails->number : 'non rempli' }}</span>
+                    class="text-secondary ms-4">{{ $insurance ? $insurance->type . '-' . $insurance->number : 'non rempli' }}</span>
             </p>
         </div>
     </div>

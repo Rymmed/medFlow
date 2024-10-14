@@ -6,7 +6,7 @@
             <div>
                 <h5 class="mb-0">Rapports de consultation</h5>
             </div>
-            <a href="{{ route('consultationReport.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
+            <a href="{{ route('consultationReports.index', Auth::id()) }}" class="text-info text-sm mb-0 animate-link">
                 Afficher Plus <i class="fas fa-angles-right me-1 text-xs"></i>
             </a>
         </div>
@@ -17,24 +17,38 @@
                 <thead>
                 <tr>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Type de visit
+                        Type de visite
                     </th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Date de création
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Ordonnance
                     </th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Action
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="consultationReportTable">
                 @foreach($consultationReports as $consultationReport)
                     <tr>
                         <td class="text-center">
-                            <p class="text-xs font-weight-bold mb-0 text-capitalize">{{ ($consultationReport->visit_type) }}</p>
+                            <p class="text-xs font-weight-bold mb-0 text-capitalize">{{ $consultationReport->visit_type }}</p>
                         </td>
                         <td class="text-center">
                             <p class="text-xs font-weight-bold mb-0">{{ \Carbon\Carbon::parse($consultationReport->created_at)->format('d M, Y') }}</p>
+                        </td>
+                        <td class="text-center">
+
+                            @if(is_Null($consultationReport->prescription))
+                                <span class="text-xs text-muted">Aucune</span>
+                            @else
+                                <a class="text-xs font-weight-bold mb-0 cursor-pointer text-blue" data-bs-toggle="collapse"
+                                        data-bs-target="#prescription-{{ $consultationReport->id }}">
+                                    Afficher
+                                </a>
+                            @endif
                         </td>
                         <td class="align-middle text-center text-sm">
                             @if(Auth::user()->role === 'doctor')
@@ -57,9 +71,28 @@
                             @endif
                         </td>
                     </tr>
+                    @if(!is_Null($consultationReport->prescription))
+                        <tr id="prescription-{{ $consultationReport->id }}" class="collapse">
+                            <td colspan="4">
+                                <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <strong>Traitement:</strong> {{ $consultationReport->prescription->treatment }}<br>
+                                            <strong>Description:</strong> {{ $consultationReport->prescription->description }}<br>
+                                            <strong>Médicaments:</strong>
+                                            <ul>
+                                                @foreach($consultationReport->prescription->prescriptionLines as $line)
+                                                    <li>{{ $line->name }} - {{ $line->dose }} {{ $line->type }} pour {{ $line->duration }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+

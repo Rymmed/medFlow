@@ -65,6 +65,24 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Genre -->
+                        <div class="col-md-4">
+                            <label for="gender">{{ __('Genre') }} *</label>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="male"
+                                       value="{{ \App\Enums\Gender::MALE }}"
+                                    {{ $assistant->gender == \App\Enums\Gender::MALE ? 'checked' : '' }}>
+                                <label class="custom-control-label"
+                                       for="male">{{ __('Homme') }}</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="female"
+                                       value="{{ \App\Enums\Gender::FEMALE }}"
+                                    {{ $assistant->gender == \App\Enums\Gender::FEMALE ? 'checked' : '' }}>
+                                <label class="custom-control-label"
+                                       for="female">{{ __('Femme') }}</label>
+                            </div>
+                        </div>
                         <!-- Numéro de téléphone -->
                         <div class="col-md-4">
                             <div class="form-group">

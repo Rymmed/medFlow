@@ -1,20 +1,21 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+    <div class="container">
     <div class="row">
-        <div class="col-2 text-center">
+        <div class="col-auto text-center">
             <x-profile-image :class="'avatar avatar-xxl border-radius-section shadow'" :image=" $doctor->profile_image"></x-profile-image>
         </div>
-        <div class="col-3">
+        <div class="col-auto">
             <h6 class="card-title">Dr. {{ $doctor->lastName }} {{ $doctor->firstName }}</h6>
             <p class="card-text text-sm"><i class="fas fa-notes-medical mx-2"></i>{{ $doctor_info->speciality }}</p>
-            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>({{ $doctor->city }}) ? $doctor->city : 'non précis' - {{ $doctor->country }}</p>
+            <p class="card-text text-sm mt-3"><i class="fas fa-map-marker-alt mx-2"></i>{{ $doctor->city }} {{ $doctor->country }}</p>
             <p class="card-text text-sm"><i class="fas fa-phone-alt mx-2"></i>{{ $doctor->phone_number }}</p>
         </div>
-        <div class="col-6">
+        <div class="col-auto">
             <p class="text-dark text-bold text-sm">Disponibilité: </p>
-            <p class="text-sm">{{ $doctor->doctor_info->formattedDays() }}</p>
-            <p class="text-sm">{{ $doctor->doctor_info->formattedTime() }}</p>
+            <p class="text-sm"><i class="fa-solid fa-calendar-day"></i> {{ $doctor->doctor_info->formattedDays() }}</p>
+            <p class="text-sm"><i class="fa-solid fa-business-time"></i> {{ $doctor->doctor_info->formattedTime() }}</p>
         </div>
     </div>
 
@@ -45,7 +46,7 @@
             @endif
 
             <div class="row d-flex">
-                <div class="col-4 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="start_date">Date et heure :</label>
                     <div class="@error('date')border border-danger rounded-3 @enderror">
                         <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
@@ -54,17 +55,7 @@
                         @enderror
                     </div>
                 </div>
-
-{{--                <div class="col-4 mb-3">--}}
-{{--                    <label for="time">Heure :</label>--}}
-{{--                    <div class="@error('time')border border-danger rounded-3 @enderror">--}}
-{{--                        <input type="time" id="time" name="time" class="form-control" required>--}}
-{{--                        @error('time')--}}
-{{--                        <p class="text-danger text-xs mt-2">{{ $message }}</p>--}}
-{{--                        @enderror--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-                <div class="col-4 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="consultation_type">Type de consultation :</label>
                     <select id="consultation_type" name="consultation_type" class="form-select" required>
                         @foreach($consultation_types as $type)
@@ -74,7 +65,7 @@
                 </div>
             </div>
             <div class="row d-flex">
-                <div class="col-4 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="consultation_reason">Motif de consultation :</label>
                     <div class="@error('consultation_reason')border border-danger rounded-3 @enderror">
                         <textarea id="consultation_reason" name="consultation_reason" class="form-control" rows="4" placeholder="{{ __('Pourquoi vous voulez un rendez-vous?') }}" required></textarea>
@@ -85,7 +76,8 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Envoyer la demande de rendez-vous</button>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-share text-white me-2"></i></i>Envoyer la demande</button>
         </form>
+    </div>
     </div>
 @endsection

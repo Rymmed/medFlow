@@ -29,6 +29,7 @@ class AssistantDoctorController extends Controller
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'gender' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -40,11 +41,13 @@ class AssistantDoctorController extends Controller
         $assistant->firstName = $request->firstName;
         $assistant->email = $request->email;
         $assistant->password = Hash::make($request->password);
+        $assistant->gender = $request->gender;
         $assistant->role = 'assistant';
         $assistant->doctor_id = auth()->user()->id;
         $assistant->save();
         Mail::to($assistant->email)->send(new NewUserWelcome($assistant));
-        return redirect()->back()->with('success', 'Assistant ajouté avec succès.');
+
+        return redirect()->route('doctor-assistants.index')->with('success', 'Assistant ajouté avec succès.');
     }
 
     public function show($id)
@@ -66,6 +69,7 @@ class AssistantDoctorController extends Controller
             'lastName' => 'required|string',
             'firstName' => 'required|string',
             'email' => 'required|email|unique:users,email,'.$id,
+            'gender' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {

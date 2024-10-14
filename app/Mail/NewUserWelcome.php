@@ -13,42 +13,30 @@ use Illuminate\Queue\SerializesModels;
 class NewUserWelcome extends Mailable
 {
     use Queueable, SerializesModels;
-    public $user;
+
+    protected $user;
     /**
      * Create a new message instance.
+     *
+     * @param $user
      */
-    public function __construct(User $user)
+    public function __construct($user)
     {
         $this->user = $user;
     }
 
     /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Bienvenue dans notre Plateforme',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.new_user_welcome',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
+     * Build the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return $this
      */
-    public function attachments(): array
+    public function build()
     {
-        return [];
+        return $this->subject('Bienvenue dans notre Plateforme')
+            ->markdown('emails.new_user_welcome')
+            ->with([
+                'user' => $this->user,
+            ]);
     }
+
 }

@@ -5,16 +5,20 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\BloodGroup;
 use App\Enums\ConsultationType;
 use App\Enums\PatientArea;
+use App\Enums\VitalSignsType;
 use App\Http\Controllers\Controller;
+use App\Mail\NewUserWelcome;
 use App\Models\Availability;
 use App\Models\DoctorInfo;
 use App\Models\MedicalRecord;
 use App\Models\User;
+use App\Models\VitalSign;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -39,7 +43,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -54,7 +58,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -65,7 +69,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|max:255',
-            'dob' => 'date',
+            'dob' => 'required|date',
             'phone_number' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'gender' => 'required|boolean',
@@ -94,7 +98,7 @@ class RegisterController extends Controller
             $patientRules = [
                 'height' => 'nullable|numeric',
                 'weight' => 'nullable|numeric',
-                'blood_group' =>['nullable','string',Rule::in(BloodGroup::getValues())],
+                'blood_group' => ['nullable', 'string', Rule::in(BloodGroup::getValues())],
                 'smoking' => 'nullable|boolean',
                 'alcohol' => 'nullable|boolean',
                 'area' => ['nullable', 'string', Rule::in(PatientArea::getValues())],
@@ -110,7 +114,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return User
      */
     protected function create(array $data)
@@ -171,7 +175,7 @@ class RegisterController extends Controller
 
             $doctor_info->save();
         }
-
+        Mail::to($user->email)->send(new NewUserWelcome($user));
         return $user;
     }
 

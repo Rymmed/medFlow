@@ -50,7 +50,9 @@
         <div class="container-fluid py-4">
             <x-general-info></x-general-info>
             <x-security></x-security>
-            <x-doctor-info.doctor_info :doctor_info="$doctor_info" ></x-doctor-info.doctor_info>
+            <x-doctor-info.doctor_info
+                :doctor_info="$doctor_info"
+            ></x-doctor-info.doctor_info>
         </div>
 
     </div>
@@ -60,9 +62,18 @@
             const choices = new Choices(daysOfWeekSelect, {
                 removeItemButton: true,
                 placeholder: true,
-                placeholderValue: 'Sélectionnez des jours de travail',
+                placeholderValue: 'Sélectionnez vos jours de travail',
                 shouldSort: false,
                 itemSelectText: 'Appuyer pour séléctionner',
+                allowHTML: true,
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const consultationTypesSelect = document.getElementById('consultation_types');
+            const choices = new Choices(consultationTypesSelect, {
+                removeItemButton: true,
+                placeholder: true,
+                itemSelectText: '',
                 allowHTML: true,
             });
         });

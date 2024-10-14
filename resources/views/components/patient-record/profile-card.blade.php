@@ -18,15 +18,28 @@
     </p>
     <p class="text-secondary text-sm">{{ $user->email }}</p>
     <div>
-        @if(auth()->user()->role === 'patient')
-            <a href="{{ route('myProfile') }}" type="button" class="btn bg-gradient-blue text-white btn-md">Modifier
-                profil</a>
-        @elseif(auth()->user()->role === 'doctor')
+        @if(auth()->user()->role === 'patient' && Route::is('dashboard'))
+            <a href="{{ route('myProfile') }}" type="button" class="btn bg-gradient-blue text-white btn-md">
+                <i class="fa fa-edit"></i> Mes données
+            </a>
+        @endif
+        @if(auth()->user()->role === 'doctor' && isset($appointment) && $appointment->status === \App\Enums\AppointmentStatus::CONFIRMED)
             <p class="text-primary">
-                Rendez-vous: {{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/y à H:i') }}</p>
-            <a href="{{ route('consultationReport.create', ['appointment_id' => $appointment->id]) }}" type="button"
-               class="btn bg-gradient-blue text-white btn-md"><i class="far fa-plus me-1"></i>Rapport de
-                consultation</a>
+                Rendez-vous :<br> {{ \Carbon\Carbon::parse($appointment->start_date)->format('d/m/y à H:i') }}
+            </p>
+            <a href="{{ route('consultationReport.create', ['appointment_id' => $appointment->id]) }}"
+               class="btn bg-gradient-blue text-white btn-md" target="_blank">
+                <i class="far fa-plus me-1"></i> Rapport
+            </a>
+
+            @if ($appointment->consultation_type === \App\Enums\ConsultationType::ONLINE)
+                <form action="{{ route('consultations.start', ['appointmentId' => $appointment->id]) }}" method="POST">
+                    @csrf
+                    <button type="submit" formtarget="_blank" class="btn bg-gradient-blue text-white btn-md">
+                        <i class="fa fa-video me-1"></i> Démarrer
+                    </button>
+                </form>
+            @endif
         @endif
     </div>
 </div>

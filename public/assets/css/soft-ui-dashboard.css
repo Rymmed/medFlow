@@ -27,7 +27,7 @@
     --bs-light: #e9ecef;
     --bs-dark: #344767;
     --bs-white: #fff;
-    --bs-font-sans-serif: "Josefin Sans";
+    --bs-font-sans-serif: "Josefin Sans", Serif;
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, hsla(0, 0%, 100%, .15), hsla(0, 0%, 100%, 0))
 }
@@ -42,6 +42,12 @@
     }
 }
 
+html, body {
+    height: 100%;
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+}
+
 body {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -51,9 +57,10 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-    /*width: 100%;*/
-    /*overflow-x: hidden;*/
-    /*height: 100%;*/
+    padding: 0;
+    overflow-x: hidden;
+    /*overflow-y: hidden;*/
+    min-height: 100%;
 }
 
 hr {
@@ -5335,7 +5342,7 @@ textarea.form-control, textarea.form-control-lg, textarea.form-control-sm {
 }
 
 .progress-bar {
-    background-color: #04abbe;
+    background-color: #17c1e8;
     color: #fff;
     flex-direction: column;
     justify-content: center;

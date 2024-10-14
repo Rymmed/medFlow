@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\ConsultationReport;
 use App\Models\Prescription;
@@ -37,7 +38,8 @@ class ConsultationReportController extends Controller
     {
         $appointment = Appointment::findOrFail($appointment_id);
         $patient = $appointment->patient;
-
+        $appointment->status = AppointmentStatus::STARTED;
+        $appointment->save();
         $this->authorize('create', [ConsultationReport::class, $patient->id]);
 
         return view('consultationReport.create', compact('appointment'));
@@ -51,6 +53,7 @@ class ConsultationReportController extends Controller
     {
         $appointment = Appointment::findOrFail($appointmentId);
         $patient = $appointment->patient;
+        $record_id = $patient->medicalRecord->id;
 
         $this->authorize('create', [ConsultationReport::class, $patient->id]);
         $existingReport = ConsultationReport::where('appointment_id', $appointmentId)->first();
@@ -70,6 +73,7 @@ class ConsultationReportController extends Controller
         if ($request->filled('treatment') || $request->filled('description')) {
             $prescription = Prescription::create([
                 'consultation_report_id' => $report->id,
+                'medicalRecord_id' => $record_id,
                 'treatment' => $request->treatment,
                 'description' => $request->description,
             ]);
@@ -86,7 +90,8 @@ class ConsultationReportController extends Controller
                 }
             }
         }
-
+        $appointment->status = AppointmentStatus::COMPLETED;
+        $appointment->save();
         return response()->json(['success' => true, 'report_id' => $report->id]);
     }
 
@@ -99,7 +104,10 @@ class ConsultationReportController extends Controller
         $report = ConsultationReport::findOrFail($id);
         $appointment = Appointment::findOrFail($report->appointment_id);
         $this->authorize('view' , $report);
-
+        if ($report->prescription)
+        {
+            $this->authorize('view', $report->prescription);
+        }
         return view('consultationReport.show', compact('report', 'appointment'));
     }
 
@@ -131,7 +139,7 @@ class ConsultationReportController extends Controller
 
         $consultationReport->update($request->only(['visit_type', 'symptoms', 'diagnostic_hypotheses', 'final_diagnosis']));
 
-        return redirect()->route('consultationReport.index', $consultationReport->appointment->patient_id)->with('success', 'Rapport de consultation mis à jour avec succès.');
+        return redirect()->route('consultationReport.show', $consultationReport->id)->with('success', 'Rapport de consultation mis à jour avec succès.');
     }
 
     /**
@@ -143,8 +151,28 @@ class ConsultationReportController extends Controller
         $consultationReport = ConsultationReport::findOrFail($id);
         $this->authorize('delete', $consultationReport);
 
+        $patient_id = $consultationReport->appointment->patient->id;
         $consultationReport->delete();
 
-        return redirect()->route('consultationReport.index', $consultationReport->appointment->patient_id)->with('success', 'Rapport de consultation supprimé avec succès.');
+        return redirect()->route('myPatient.record', ['patient_id' => $patient_id]);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $patient_id = auth()->user()->id;
+
+        $consultationReports = ConsultationReport::whereHas('appointment', function ($queryBuilder) use ($patient_id) {
+            $queryBuilder->where('patient_id', $patient_id);
+        })
+            ->where(function($q) use ($query) {
+                $q->where('visit_type', 'LIKE', "%{$query}%");
+            })
+            ->with('prescription.prescriptionLines')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($consultationReports);
+    }
+
 }

@@ -122,7 +122,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="dob">{{ __('Date de naissance') }}</label>
+                                                <label for="dob">{{ __('Date de naissance') }} *</label>
                                                 <div class="mb-3">
                                                     <input type="date" class="form-control" name="dob" id="dob"
                                                            required>
@@ -159,7 +159,7 @@
                                     <div class="step step-2">
                                         <!-- Patient Fields -->
                                         <div id="patientFields" class="specific-fields" style="display: none;">
-                                            {{--                                            <h3>Informations Personnelles de Santé</h3>--}}
+
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label for="height">{{ __('Taille (cm)')}}</label>
@@ -199,7 +199,7 @@
                                                     <label for="blood_group">{{ __('Groupe sanguin') }}</label>
                                                     <div class="mb-3">
                                                         <select class="form-select" name="blood_group" id="blood_group">
-                                                            <option value="unknown" selected>Non Connu</option>
+                                                            <option value="" selected>Non Connu</option>
                                                             @foreach(\App\Enums\BloodGroup::getValues() as $bloodGroup)
                                                                 <option
                                                                     value="{{ $bloodGroup }}">{{ $bloodGroup }}</option>
@@ -221,7 +221,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input" name="alcohol"
-                                                               id="alcohol_no" value="0" checked>
+                                                               id="alcohol_no" value="0">
                                                         <label class="form-check-label" for="alcohol_no">Non</label>
                                                     </div>
                                                     @error('alcohol')
@@ -237,7 +237,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input" name="smoking"
-                                                               id="smoking_no" value="0" checked>
+                                                               id="smoking_no" value="0">
                                                         <label class="form-check-label" for="smoking_no">Non</label>
                                                     </div>
                                                     @error('smoking')
@@ -254,8 +254,7 @@
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" class="form-check-input"
-                                                               name="sedentary_lifestyle" id="sedentary_no" value="1"
-                                                               checked>
+                                                               name="sedentary_lifestyle" id="sedentary_no" value="1">
                                                         <label class="form-check-label" for="sedentary_no">Non</label>
                                                     </div>
                                                     @error('sedentary_lifestyle')
@@ -263,19 +262,18 @@
                                                     @enderror
                                                 </div>
                                             </div>
-
+                                            <p class="text-sm">Vous pouvez passer cette étape !</p>
                                         </div>
 
                                         <!-- Doctor Fields -->
                                         <div id="doctorFields" class="specific-fields" style="display: none;">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <label for="speciality">{{ __('Spécialité') }}</label>
+                                                    <label for="speciality">{{ __('Spécialité') }} *</label>
                                                     <div class="mb-3">
-                                                        <select class="form-select" name="speciality" id="speciality"
-                                                                required>
-                                                            <option value="" disabled
-                                                                    selected>{{ __('Sélectionner une spécialité') }}</option>
+                                                        <select class="form-select" name="speciality" id="speciality">
+{{--                                                            <option value="" disabled--}}
+{{--                                                                    selected>{{ __('Sélectionner une spécialité') }}</option>--}}
                                                             @foreach(config('specialities') as $speciality)
                                                                 <option
                                                                     value="{{ $speciality }}">{{ $speciality }}</option>
@@ -299,11 +297,11 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label
-                                                        for="office_phone_number">{{ __('Numéro de téléphone du bureau') }}</label>
+                                                        for="office_phone_number">{{ __('N° de téléphone du cabinet') }}</label>
                                                     <div class="mb-3">
                                                         <input type="text" class="form-control"
                                                                name="office_phone_number" id="office_phone_number"
-                                                               placeholder="{{ __('Entrez le n° de téléphone du bureau') }}">
+                                                               placeholder="{{ __('Entrez n° de téléphone du cabinet') }}">
                                                         @error('office_phone_number')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -354,8 +352,6 @@
 
                                     <!-- Step 3 -->
                                     <div class="step step-3">
-                                        <h3>Step 3</h3>
-
                                         <!-- Address Fields -->
                                         <div id="patientFields2" class="specific-fields" style="display: none;">
                                             <div class="row">
@@ -399,7 +395,7 @@
                                                     <label for="start_time">{{ __('Heure de début') }}</label>
                                                     <div class="mb-3">
                                                         <input type="time" class="form-control" name="start_time"
-                                                               id="start_time" required>
+                                                               id="start_time">
                                                         @error('start_time')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -409,7 +405,7 @@
                                                     <label for="end_time">{{ __('Heure de fin') }}</label>
                                                     <div class="mb-3">
                                                         <input type="time" class="form-control" name="end_time"
-                                                               id="end_time" required>
+                                                               id="end_time">
                                                         @error('end_time')
                                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                                         @enderror
@@ -434,7 +430,7 @@
                                                     <div class="mb-3">
                                                         <select class="form-select" id="days_of_week"
                                                                 name="days_of_week[]"
-                                                                required multiple>
+                                                                multiple>
                                                             <option value="" disabled
                                                             >{{ __('Sélectionner vos jours') }}</option>
                                                             @foreach(['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] as $index => $day)
@@ -449,7 +445,7 @@
                                                         for="consultation_types">{{ __('Types de consultation') }}</label>
                                                     <div class="mb-3">
                                                         <select class="form-select" name="consultation_types[]"
-                                                                id="consultation_types" multiple required>
+                                                                id="consultation_types" multiple>
                                                             <option value="" disabled
                                                             >{{ __('Quels types offrez-vous ?') }}</option>
                                                             @foreach(\App\Enums\ConsultationType::getValues() as $type)
@@ -493,7 +489,7 @@
 
                                             </div>
                                         </div>
-
+                                        <p class="text-sm">Vous pouvez passer cette étape !</p>
                                         <button type="button" class="btn btn-info bg-gradient prev-step">Précédent</button>
                                         <button type="submit" class="btn btn-info bg-gradient">{{ __('S\'inscrire') }}</button>
                                     </div>
@@ -600,16 +596,6 @@
             showStep(currentStep);
         });
 
-        // speciality selection
-        document.addEventListener('DOMContentLoaded', function () {
-            const specialitySelect = document.getElementById('speciality');
-            const choices = new Choices(specialitySelect, {
-                removeItemButton: true,
-                placeholder: true,
-                itemSelectText: '',
-                allowHTML: true,
-            });
-        });
         document.addEventListener('DOMContentLoaded', function () {
             const daysOfWeekSelect = document.getElementById('days_of_week');
             const choices = new Choices(daysOfWeekSelect, {

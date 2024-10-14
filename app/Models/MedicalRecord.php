@@ -21,6 +21,11 @@ class MedicalRecord extends Model
         'alcohol',
         'area',
         'sedentary_lifestyle',
+        'temperature',
+        'heart_rate',
+        'blood_pressure',
+        'respiratory_rate',
+        'oxygen_saturation'
     ];
 
     public function patient(): BelongsTo
@@ -43,13 +48,13 @@ class MedicalRecord extends Model
         return $this->hasMany(ExamResult::class, 'medicalRecord_id');
     }
 
-    public function vitalSigns(): HasMany
-    {
-        return $this->hasMany(VitalSign::class, 'medicalRecord_id');
-    }
-
-    public function insuranceDetails(): HasOne
+    public function insurance(): HasOne
     {
         return $this->hasOne(Insurance::class, 'medicalRecord_id');
+    }
+
+    public function prescriptions(): HasMany
+    {
+        return $this->hasMany(Prescription::class, 'medicalRecord_id');
     }
 }

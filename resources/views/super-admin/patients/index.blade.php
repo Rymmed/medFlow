@@ -50,19 +50,22 @@
                                         Photo
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Nom
-                                    </th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Prénom
-                                    </th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Status
+                                        Nom & Prénom
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Email
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Date de Création
+                                        N° téléphone
+                                    </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Sexe
+                                    </th>
+{{--                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">--}}
+{{--                                        Status--}}
+{{--                                    </th>--}}
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Date d'ajout
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Action
@@ -74,55 +77,61 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
+                                            <x-profile-image :class="'avatar avatar-sm shadow-sm'"
+                                                             :image="$patient->profile_image"></x-profile-image>
                                         </div>
-{{--                                        <div>--}}
-{{--                                            <img src="{{ asset('path/to/patient/photos/'.$patient->avatar) }}" class="avatar avatar-sm me-3">--}}
-{{--                                        </div>--}}
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->lastName }}</p>
-                                    </td>
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->firstName }}</p>
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                        <x-status-badge :status="$patient->status" />
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->lastName }} {{ $patient->firstName }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $patient->email }}</p>
                                     </td>
                                     <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $patient->phone_number ? : '---' }}</p>
+                                    </td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">@if($patient->gender === 0)
+                                                {{ __('Homme') }}
+                                            @else
+                                                {{ __('Femme') }}
+                                            @endif</p>
+                                    </td>
+{{--                                                                        <td class="align-middle text-center text-sm">--}}
+{{--                                                                            <x-status-badge :status="$patient->status" />--}}
+{{--                                                                        </td>--}}
+                                    <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $patient->created_at->format('d/m/Y') }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('patients.edit', $patient->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
-                                            <i class="fa fa-user-edit text-secondary"></i>
+                                        <a href="{{ route('patients.edit', $patient->id) }}" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
+                                            <i class="fa fa-user-edit text-blue"></i>
                                         </a>
-                                        @if ($patient->status === 0)
-                                        <form id="activate-status" action="{{ route('patients.activate', $patient->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">
-                                                <i class="fa fa-check text-secondary"></i>
-                                            </button>
-                                        </form>
-                                        @else
-                                            <form id="deactivate-status" action="{{ route('patients.deactivate', $patient->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">
-                                                <i class="fa fa-close text-secondary"></i>
-                                            </button>
-                                        </form>
-                                        @endif
-                                        <form id="destroy" action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="d-inline">
+{{--                                        @if ($patient->status === 0)--}}
+{{--                                        <form id="activate-status" action="{{ route('patients.activate', $patient->id) }}" method="POST" class="d-inline">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('PUT')--}}
+{{--                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">--}}
+{{--                                                <i class="fa fa-check text-secondary"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </form>--}}
+{{--                                        @else--}}
+{{--                                            <form id="deactivate-status" action="{{ route('patients.deactivate', $patient->id) }}" method="POST" class="d-inline">--}}
+{{--                                                @csrf--}}
+{{--                                                @method('PUT')--}}
+{{--                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">--}}
+{{--                                                <i class="fa fa-close text-secondary"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </form>--}}
+{{--                                        @endif--}}
+                                        <form id="destroy-{{ $patient->id }}" action="{{ route('patients.destroy', $patient->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="mx-3 border-0" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-original-title="Supprimer">
-                                                <i class="fa fa-trash text-secondary"></i>
-                                            </button>
+                                            <a type="button" class="mx-3 border-0" data-bs-toggle="modal" data-bs-target="#confirmationModal-{{ $patient->id }}" data-bs-original-title="Supprimer">
+                                                <i class="fa fa-trash text-primary"></i>
+                                            </a>
                                         </form>
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -133,11 +142,11 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal fade" id="confirmationModal-{{ $patient->id }}" tabindex="-1" aria-labelledby="confirmationModalLabel-{{ $patient->id }}" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmationModalLabel">Confirmer la suppression</h5>
+                        <h5 class="modal-title" id="confirmationModalLabel-{{ $patient->id }}">Confirmer la suppression</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -145,20 +154,23 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn bg-gradient-danger" id="confirmDelete">Supprimer</button>
+                        <button type="button" class="btn bg-gradient-danger" id="confirmDelete-" data-user-id="{{ $patient->id }}">Supprimer</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
+        document.querySelectorAll('[id^="confirmDelete-"]').forEach(button => {
+            button.addEventListener('click', function () {
+                let userId = this.getAttribute('data-user-id');
+                let form = document.getElementById('destroy-' + userId);
+                form.submit();
+            });
+        });
         document.getElementById('deactivate-status').addEventListener('click', function() {
             document.getElementById('activate-status').style.display = 'none';
             document.getElementById('deactivate-status').style.display = 'block';
-        });
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            const form = document.querySelector('#destroy');
-            form.submit();
         });
     </script>
 @endsection

@@ -21,6 +21,13 @@
                     aria-selected="false">Médicales
             </button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="insurance-tab" data-bs-toggle="tab"
+                    data-bs-target="#insurance"
+                    type="button" role="tab" aria-controls="insurance"
+                    aria-selected="false">Assurance
+            </button>
+        </li>
     </ul>
     <div class="tab-content" id="infosTabContent">
         <div class="tab-pane fade show active" id="personal-infos" role="tabpanel"
@@ -50,7 +57,7 @@
                 <span>{{ \Carbon\Carbon::parse($patient->dob)->format('d/m/Y') }}</span>
             </div>
             @if(auth()->user()->id === $patient->id)
-                <button class="btn bg-gradient-primary m-4" type="button" data-bs-toggle="modal"
+                <button class="btn bg-gradient-blue text-white m-4" type="button" data-bs-toggle="modal"
                         data-bs-target="#updatePersonalInfosModal">
                     <i class="fa fa-edit me-1"></i> Modifier
                 </button>
@@ -67,6 +74,53 @@
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <form id="update-personal-infos-form" method="POST" action="{{ route('update-profile') }}">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label">Nom</label>
+                                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{ auth()->user()->lastName }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label">Prénom</label>
+                                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{ auth()->user()->firstName }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ auth()->user()->email }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="phone_number" class="form-label">N° de téléphone</label>
+                                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ auth()->user()->phone_number }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="dob" class="form-label">Date de naissance</label>
+                                            <input type="date" class="form-control" id="dob" name="dob" value="{{ auth()->user()->dob }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="address" class="form-label">Adresse</label>
+                                            <input type="text" class="form-control" id="address" name="address" value="{{ auth()->user()->address }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="city" class="form-label">Ville</label>
+                                            <input type="text" class="form-control" id="city" name="city" value="{{ auth()->user()->city }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="country" class="form-label">Pays</label>
+                                            <input type="text" class="form-control" id="country" name="country" value="{{ auth()->user()->country }}">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="save-personal-infos-button" class="btn btn-primary">Sauvegarder</button>
+                                </form>
 
                             </div>
                         </div>
@@ -104,7 +158,7 @@
                 <strong class="me-3">Activité physique:</strong>
                 <span data-field="sedentary_lifestyle">{{ $medicalRecord->sedentary_lifestyle ? 'Non' : 'Oui' }}</span>
             </div>
-            <button class="btn bg-gradient-primary m-4" type="button" data-bs-toggle="modal"
+            <button class="btn bg-gradient-blue text-white m-4" type="button" data-bs-toggle="modal"
                     data-bs-target="#updateMedicalInfosModal">
                 <i class="fa fa-edit me-1"></i> Modifier
             </button>
@@ -140,6 +194,7 @@
                                     <div class="col-md-6">
                                         <label for="blood_group" class="form-label">Groupe Sanguin</label>
                                         <select class="form-control" id="blood_group" name="blood_group">
+                                            <option value="{{ $medicalRecord->blood_group }}" selected>{{ $medicalRecord->blood_group }}</option>
                                             @foreach(\App\Enums\BloodGroup::getValues() as $blood_group)
                                                 <option value="{{ $blood_group }}">{{ $blood_group }}</option>
                                             @endforeach
@@ -205,6 +260,108 @@
                 </div>
             </div>
         </div>
+        <div class="tab-pane fade" id="insurance" role="tabpanel"
+             aria-labelledby="medical-infos-tab">
+            @if($medicalRecord->insurance)
+                <div class="mt-2">
+                    <strong class="me-3">Type:</strong>
+                    <span data-field="weight">{{ $medicalRecord->insurance->type}}</span>
+                </div>
+                <div class="mt-2">
+                    <strong class="me-3">Numéro:</strong>
+                    <span data-field="height">{{ $medicalRecord->insurance->number}}</span>
+                </div>
+                <div class="mt-4">
+                <form method="POST" action="{{ route('insurance.destroy', ['insurance_id' => $medicalRecord->insurance->id]) }}">
+                    @csrf
+                    @method('DELETE')
+                    <a class="btn bg-gradient-blue text-white ms-2" type="button" data-bs-toggle="modal"
+                       data-bs-target="#updateInsuranceModal">
+                        <i class="fa fa-edit me-1"></i> Modifier
+                    </a>
+                    <button class="btn bg-gradient-primary ms-2" type="submit">
+                        <i class="fa fa-trash me-1"></i> Supprimer
+                    </button>
+                </form>
+                </div>
+                <div class="modal fade" id="updateInsuranceModal" tabindex="-1" role="dialog"
+                     aria-labelledby="updateInsuranceModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ __('Mettre à jour') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                            <span class="text-dark" aria-hidden="true"><i
+                                                    class="fa fa-close"></i></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="update-insurance-form" method="POST" action="{{ route('insurance.update', ['insurance_id' => $medicalRecord->insurance->id]) }}">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="insurance-type" class="form-label">Type</label>
+                                            <input type="text" class="form-control" id="insurance-type" name="type" value="{{ $medicalRecord->insurance->type }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="insurance-number" class="form-label">Numéro</label>
+                                            <input type="text" class="form-control" id="insurance-number" name="number" value="{{ $medicalRecord->insurance->number }}">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="save-update-insurance-button" class="btn btn-primary">Sauvegarder</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="my-3">
+                Pas d'assurance
+                </div>
+                <button class="btn bg-gradient-blue text-white m-4" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addInsuranceModal">
+                    <i class="fa fa-edit me-1"></i> Ajouter
+                </button>
+                <div class="modal fade" id="addInsuranceModal" tabindex="-1" role="dialog"
+                     aria-labelledby="addInsuranceModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ __('Ajouter une assurance') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                            <span class="text-dark" aria-hidden="true"><i
+                                                    class="fa fa-close"></i></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="add-insurance-form" method="POST" action="{{ route('insurance.store', ['medicalRecord_id' => $medicalRecord->id]) }}">
+                                    @csrf
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="type" class="form-label">Type</label>
+                                            <input type="text" class="form-control" id="add-type" name="type">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="number" class="form-label">Numéro</label>
+                                            <input type="text" class="form-control" id="number" name="number">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="save-add-insurance-button" class="btn btn-primary">Sauvegarder</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 <script>
@@ -212,7 +369,7 @@
         let form = document.getElementById('update-medical-infos-form');
         let formData = new FormData(form);
 
-        fetch(form.action, {  // Remplacez par l'URL appropriée pour la mise à jour
+        fetch(form.action, {
             method: 'POST',
             body: formData,
             headers: {
@@ -224,6 +381,7 @@
                 if (data.success) {
                     showMessage('Informations modifiées avec succès', true);
                     $('#updateMedicalInfosModal').hide();
+                    $('.modal-backdrop').remove();
                     // Mettre à jour le DOM avec les nouvelles valeurs
                     const fieldMap = {
                         weight: `${data.medicalRecord.weight}kg`,
@@ -237,7 +395,9 @@
 
                     for (const field in fieldMap) {
                         document.querySelector(`#medical-infos span[data-field="${field}"]`).textContent = fieldMap[field];
+
                     }
+
                 } else {
                     $('#updateMedicalInfosModal').hide();
                     showMessage('Erreur lors de la mise à jour des informations médicales.', false);

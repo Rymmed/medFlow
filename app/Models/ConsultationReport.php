@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ConsultationReport extends Model
 {
@@ -22,7 +23,7 @@ class ConsultationReport extends Model
 
     public function appointment(): BelongsTo
     {
-        return $this->belongsTo(Appointment::class);
+        return $this->belongsTo(Appointment::class, 'appointment_id');
     }
 
     public function doctor(): BelongsTo
@@ -30,8 +31,8 @@ class ConsultationReport extends Model
         return $this->belongsTo(User::class, 'doctor_id');
     }
 
-    public function prescriptions(): HasMany
+    public function prescription(): HasOne
     {
-        return $this->hasMany(Prescription::class);
+        return $this->hasOne(Prescription::class, 'consultation_report_id');
     }
 }

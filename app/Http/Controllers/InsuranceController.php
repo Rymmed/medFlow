@@ -4,67 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Models\Insurance;
 use App\Models\MedicalRecord;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class InsuranceController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(MedicalRecord::class, 'medicalRecord');
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(Request $request, $medicalRecord_id): RedirectResponse
     {
-        //
-    }
+        $medicalRecord = MedicalRecord::findOrFail($medicalRecord_id);
+        $patient = $medicalRecord->patient;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Insurance $insurance)
-    {
-        //
-    }
+        $this->authorize('create', [Insurance::class, $patient]);
+        $request->validate([
+            'type' => 'required|string',
+            'number' => 'required|string'
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Insurance $insurance)
-    {
-        //
+        Insurance::create([
+            'medicalRecord_id' => $medicalRecord_id,
+            'type' => $request->type,
+            'number' => $request->number,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
      * Update the specified resource in storage.
+     * @throws AuthorizationException
      */
-    public function update(Request $request, Insurance $insurance)
+    public function update(Request $request, $insurance_id): RedirectResponse
     {
-        //
+        $insurance = Insurance::findOrFail($insurance_id);
+        $this->authorize('update', $insurance);
+
+        $request->validate([
+            'type' => 'required|string',
+            'number' => 'required|string'
+        ]);
+
+        $insurance->type = $request->type;
+        $insurance->number = $request->number;
+        $insurance->save();
+
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Insurance $insurance)
+    public function destroy($insurance_id)
     {
-        //
+        $insurance = Insurance::findOrFail($insurance_id);
+        $this->authorize('delete', $insurance);
+
+        $insurance->delete();
+
+        return redirect()->back();
     }
 }

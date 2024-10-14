@@ -1,14 +1,3 @@
-// speciality selection
-document.addEventListener('DOMContentLoaded', function () {
-    const specialitySelect = document.getElementById('speciality');
-    const choices = new Choices(specialitySelect, {
-        removeItemButton: true,
-        placeholder: true,
-        placeholderValue: 'Tapez pour séléctinner',
-        itemSelectText: '',
-        allowHTML: true,
-    });
-});
 function showMessage(message, isSuccess) {
     const messageContainer = document.getElementById('message-container');
     const messageText = messageContainer.querySelector('.alert-text');
@@ -19,24 +8,40 @@ function showMessage(message, isSuccess) {
     messageContainer.style.display = 'block';
 }
 
-function toggleIcon(id) {
-    var chevronUpIcon = document.getElementById(id + "UpIcon");
-    var chevronDownIcon = document.getElementById(id + "DownIcon");
+document.addEventListener("DOMContentLoaded", function () {
+    let activeTabId = localStorage.getItem('activeTabId');
 
-    if (chevronUpIcon.style.display === "none") {
-        chevronUpIcon.style.display = "inline";
-        chevronDownIcon.style.display = "none";
-    } else {
-        chevronUpIcon.style.display = "none";
-        chevronDownIcon.style.display = "inline";
+    if (activeTabId) {
+        let activeTab = document.getElementById(activeTabId);
+        if (activeTab) {
+            let tabInstance = new bootstrap.Tab(activeTab);
+            tabInstance.show();
+        }
     }
-}
+    let tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
+    tabs.forEach(function (tab) {
+        tab.addEventListener('shown.bs.tab', function (event) {
+            localStorage.setItem('activeTabId', event.target.id);
+        });
+    });
+
+    const specialitySelect = document.getElementById('speciality');
+    const choices = new Choices(specialitySelect, {
+        removeItemButton: true,
+        placeholder: true,
+        placeholderValue: 'Tapez pour séléctinner',
+        itemSelectText: '',
+        allowHTML: true,
+    });
+});
+
 // Minimize Sidebar
 document.addEventListener("DOMContentLoaded", function () {
     var logoImg = document.getElementById("logo-img");
     var minimizedLogoImg = document.getElementById("minimized-img");
     var toggleLeftButton = document.getElementById("toggleLeftButton");
     var toggleRightButton = document.getElementById("toggleRightButton");
+
     var sidenav = document.getElementById("sidenav-main");
     var mainContent = document.getElementById("main-content");
 
@@ -48,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleRightButton.style.display = "block";
         toggleLeftButton.style.display = "none";
     });
+
     toggleRightButton.addEventListener("click", function () {
         sidenav.classList.remove("collapsed");
         mainContent.classList.remove("expanded");

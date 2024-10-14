@@ -13,14 +13,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
  use Illuminate\Support\Carbon;
  use Laravel\Sanctum\HasApiTokens;
- use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Traits\HasRoles;
-use Spatie\Permission\Models\Role;
 
 
  class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -103,6 +100,16 @@ use Spatie\Permission\Models\Role;
      public function consultationReports(): HasMany
      {
          return $this->hasMany(ConsultationReport::class, 'doctor_id');
+     }
+
+     public function feedbacks(): HasMany
+     {
+         return $this->hasMany(Feedback::class, 'doctor_id');
+     }
+
+     public function averageRating()
+     {
+         return $this->feedbacks()->avg('rating');
      }
 
      public function isAvailable($appointmentStartTime): array

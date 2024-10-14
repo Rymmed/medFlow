@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('finish_date')->nullable();
             $table->string('consultation_reason', 255)->nullable();
             $table->enum('consultation_type', ConsultationType::getValues());
-            $table->enum('status', AppointmentStatus::getValues())->default('pending');
+            $table->enum('status', AppointmentStatus::getValues())->default(AppointmentStatus::PENDING);
             $table->timestamps();
 
             $table->foreign('patient_id')->references('id')->on('users');

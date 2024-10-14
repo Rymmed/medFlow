@@ -64,6 +64,23 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Genre -->
+                        <div class="col-md-4">
+                            <label for="gender">{{__('Genre') }} *</label>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender" id="male"
+                                       value="{{ \App\Enums\Gender::MALE }}">
+                                <label class="custom-control-label"
+                                       for="male">{{__('Homme')}}</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" name="gender"
+                                       id="female"
+                                       value="{{ \App\Enums\Gender::FEMALE }}">
+                                <label class="custom-control-label"
+                                       for="female">{{__('Femme')}}</label>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="speciality" class="form-control-label">{{ __('Spécialité') }}</label>
@@ -113,17 +130,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="phone_number" class="form-control-label">{{ __('Numéro de téléphone') }}</label>
-                                <div class="@error('user.phone_number')border border-danger rounded-3 @enderror">
-                                    <input class="form-control" type="text" placeholder="{{ __('Entrez le numéro de téléphone') }}" id="phone_number" name="phone_number">
-                                    @error('phone_number')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
 
@@ -133,6 +139,5 @@
                 </form>
             </div>
         </div>
-
     </div>
 @endsection

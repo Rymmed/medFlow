@@ -1,9 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
+    <div class="container ">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
                 <h3>Créer le rapport de consultation</h3>
                 <div id="message-container" class="mt-3 alert alert-dismissible fade show" role="alert"
                      style="display: none;">
@@ -14,7 +14,6 @@
                 </div>
                 <form id="multi-step-form" method="POST" action="{{ route('consultationReport.store', $appointment->id) }}">
                     @csrf
-
                     <!-- Step 1: Consultation Report -->
                     <div id="step-1" class="form-step">
                         <div class="form-group">
@@ -54,7 +53,7 @@
 
                     <!-- Step 3: Prescription Lines (Optional) -->
                     <div id="step-3" class="form-step d-none">
-                        <div class="card">
+                        <div class="card mb-3">
                             <div class="card-header">
                                 <h5>Lignes de l'ordonnance</h5>
                             </div>
@@ -88,7 +87,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="lineModalLabel">Ajouter Ligne de Prescription</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close">
+                            <span class="text-dark" aria-hidden="true"><i
+                                    class="fa fa-close"></i></span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <form id="add-line-form">
@@ -188,15 +191,5 @@
                     .catch(error => showMessage('Erreur lors de la création du rapport de consultation et de l\'ordonnance', false));
             });
         });
-
-        function showMessage(message, isSuccess) {
-            const messageContainer = document.getElementById('message-container');
-            const messageText = messageContainer.querySelector('.alert-text');
-
-            messageText.textContent = message;
-            messageContainer.classList.remove('alert-primary', 'alert-success');
-            messageContainer.classList.add(isSuccess ? 'alert-success' : 'alert-primary');
-            messageContainer.style.display = 'block';
-        }
     </script>
 @endsection

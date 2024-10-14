@@ -2,7 +2,6 @@
 
 @section('content')
 
-    <div>
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4 mx-4">
@@ -41,20 +40,23 @@
                                         Photo
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Nom
-                                    </th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Prénom
+                                        Nom & Prénom
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Email
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Date d'affectation
+                                        N° téléphone
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Status
+                                        Sexe
                                     </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Date d'affectation
+                                    </th>
+{{--                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">--}}
+{{--                                        Status--}}
+{{--                                    </th>--}}
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Action
                                     </th>
@@ -65,54 +67,60 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
+                                            <x-profile-image :class="'avatar avatar-sm shadow-sm'"
+                                                              :image="$assistant->profile_image"></x-profile-image>
                                         </div>
-{{--                                        <div>--}}
-{{--                                            <img src="{{ asset('path/to/assistant/photos/'.$assistant->avatar) }}" class="avatar avatar-sm me-3">--}}
-{{--                                        </div>--}}
+
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->lastName }}</p>
-                                    </td>
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->firstName }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->lastName }} {{ $assistant->firstName }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $assistant->email }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->created_at->format('d/m/Y') }}</p>
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                        <x-status-badge :status="$assistant->status" />
+                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->phone_number ? : '---' }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('doctor-assistants.edit', $assistant->id) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
-                                            <i class="fa fa-user-edit text-secondary"></i>
+                                        <p class="text-xs font-weight-bold mb-0">@if($assistant->gender === 0)
+                                                {{ __('Homme') }}
+                                            @else
+                                                {{ __('Femme') }}
+                                            @endif</p>
+                                    </td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $assistant->created_at->format('d/m/Y') }}</p>
+                                    </td>
+                                    {{--                                    <td class="align-middle text-center text-sm">--}}
+                                    {{--                                        <x-status-badge :status="$assistant->status" />--}}
+                                    {{--                                    </td>--}}
+                                    <td class="text-center">
+                                        <a href="{{ route('doctor-assistants.edit', $assistant->id) }}" data-bs-toggle="tooltip" data-bs-original-title="Modifier">
+                                            <i class="fa fa-user-edit text-blue"></i>
                                         </a>
-                                        @if ($assistant->status === 0)
-                                        <form id="activate-status" action="{{ route('doctor-assistants.activate', $assistant->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">
-                                                <i class="fa fa-check text-secondary"></i>
-                                            </button>
-                                        </form>
-                                        @else
-                                            <form id="deactivate-status" action="{{ route('doctor-assistants.deactivate', $assistant->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">
-                                                <i class="fa fa-close text-secondary"></i>
-                                            </button>
-                                        </form>
-                                        @endif
+{{--                                        @if ($assistant->status === 0)--}}
+{{--                                        <form id="activate-status" action="{{ route('doctor-assistants.activate', $assistant->id) }}" method="POST" class="d-inline">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('PUT')--}}
+{{--                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Activer">--}}
+{{--                                                <i class="fa fa-check text-secondary"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </form>--}}
+{{--                                        @else--}}
+{{--                                            <form id="deactivate-status" action="{{ route('doctor-assistants.deactivate', $assistant->id) }}" method="POST" class="d-inline">--}}
+{{--                                                @csrf--}}
+{{--                                                @method('PUT')--}}
+{{--                                            <button type="submit" class="mx-3 border-0" data-bs-toggle="tooltip" data-bs-original-title="Désactiver">--}}
+{{--                                                <i class="fa fa-close text-secondary"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </form>--}}
+{{--                                        @endif--}}
                                         <form id="destroy" action="{{ route('doctor-assistants.destroy', $assistant->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="mx-3 border-0" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-original-title="Supprimer">
-                                                <i class="fa fa-trash text-secondary"></i>
-                                            </button>
+                                            <a type="button" class="mx-3 border-0" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-bs-original-title="Supprimer">
+                                                <i class="fa fa-trash text-primary"></i>
+                                            </a>
                                         </form>
                                     </td>
                                 </tr>
@@ -129,7 +137,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="confirmationModalLabel">Confirmer la suppression</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span class="text-dark" aria-hidden="true"><i
+                                                                            class="fa fa-close"></i></span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         Êtes-vous sûr de vouloir supprimer cet assistant ?
@@ -141,12 +153,12 @@
                 </div>
             </div>
         </div>
-    </div>
+
     <script>
-        document.getElementById('deactivate-status').addEventListener('click', function() {
-            document.getElementById('activate-status').style.display = 'none';
-            document.getElementById('deactivate-status').style.display = 'block';
-        });
+        // document.getElementById('deactivate-status').addEventListener('click', function() {
+        //     document.getElementById('activate-status').style.display = 'none';
+        //     document.getElementById('deactivate-status').style.display = 'block';
+        // });
         document.getElementById('confirmDelete').addEventListener('click', function() {
             const form = document.querySelector('#destroy');
             form.submit();

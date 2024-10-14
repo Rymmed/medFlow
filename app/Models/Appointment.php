@@ -20,6 +20,8 @@ class Appointment extends Model
         'consultation_reason',
         'consultation_type',
         'status',
+        'doctor_token',
+        'patient_token'
     ];
 
     public function patient(): BelongsTo

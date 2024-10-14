@@ -3,20 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AppointmentStatus;
+use App\Mail\AppointmentCanceledMail;
+use App\Mail\AppointmentConfirmedMail;
+use App\Mail\AppointmentUpdatedMail;
 use App\Models\Appointment;
 use App\Models\DoctorInfo;
 use App\Models\User;
+use App\Services\AppointmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class FullCalendarController extends Controller
 {
+    protected $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
     public function index(): View
     {
-        $doctor = auth()->user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $patients = $doctor->patients()->get();
         return view('doctor.myCalendar', compact('patients'));
     }
@@ -24,16 +40,25 @@ class FullCalendarController extends Controller
     public function getAppointments(): JsonResponse
     {
         $events = [];
-        $appointments = Appointment::where('doctor_id', Auth()->user()->id)
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
+        $appointments = Appointment::where('doctor_id', $doctor->id)
             ->where('status', AppointmentStatus::CONFIRMED)
             ->get();
 
         foreach ($appointments as $appointment) {
+            $start = Carbon::parse($appointment->start_date);
+            $doctorInfo = DoctorInfo::where('doctor_id', $appointment->doctor->id)->first();
+            $defaultDuration = $doctorInfo->consultation_duration;
             $events[] = [
                 'id' => $appointment->id,
                 'title' => $appointment->patient->firstName . ' ' . $appointment->patient->lastName,
                 'start' => $appointment->start_date,
-                'end' => $appointment->finish_date,
+                'end' => $appointment->finish_date ?: $start->copy()->addMinutes($defaultDuration),
                 'consultation_duration' => $appointment->doctor()->first()->doctor_info()->first()->consultation_duration,
                 'consultation_type' => $appointment->consultation_type,
                 'consultation_reason' => $appointment->consultation_reason,
@@ -48,37 +73,27 @@ class FullCalendarController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = AppointmentStatus::CANCELLED;
         $appointment->save();
+        Mail::to($appointment->patient->email)->send(new AppointmentCanceledMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous annulé avec succès']);
     }
 
 
-    public function createAppointment(Request $request): JsonResponse
+    public function createAppointment(Request $request)
     {
-        $doctor = auth()->user();
+        $user = auth()->user();
+        if ($user->role === 'doctor') {
+            $doctor = $user;
+        } elseif ($user->role === 'assistant') {
+            $doctor = $user->doctor;
+        }
         $doctor_id = $doctor->id;
         $request->validate([
             'start_date' => 'required|date|after_or_equal:now',
         ]);
 
-        if ($request->patient_id === 'new') {
-            $patient = User::create([
-                'firstName' => $request->new_patient_firstName,
-                'lastName' => $request->new_patient_lastName,
-                'role' => 'patient',
-            ]);
-
-            $doctor->patients()->attach($patient->id);
-        } else {
-            $patient = User::find($request->patient_id);
-
-            if (!$doctor->patients()->where('patient_id', $patient->id)->exists()) {
-                $doctor->patients()->attach($patient->id);
-            }
-        }
         $doctorInfo = DoctorInfo::where('doctor_id', $doctor_id)->first();
         $consultationDuration = $request->consultation_duration;
         $defaultDuration = $doctorInfo->consultation_duration;
-        var_dump($defaultDuration);
         $start = Carbon::parse($request->start_date);
         $appointment = Appointment::create([
             'doctor_id' => $doctor_id,
@@ -88,7 +103,13 @@ class FullCalendarController extends Controller
             'consultation_type' => $request->consultation_type,
             'status' => AppointmentStatus::CONFIRMED,
         ]);
-        return response()->json(['success' => true, 'message' => 'Rendez-vous créé avec succès', 'event' => $appointment]);
+        Mail::to($appointment->patient->email)->send(new AppointmentConfirmedMail($appointment));
+        $message = 'Rendez-vous créé avec succès';
+        if($user->role === 'assistant')
+        {
+            return back()->with(['success' => $message]);
+        }
+        return response()->json(['success' => true, 'message' => $message, 'event' => $appointment]);
     }
 
     public function dropAppointment(Request $request, $id): JsonResponse
@@ -121,25 +142,13 @@ class FullCalendarController extends Controller
             'start_date' => $updatedStartDate,
             'finish_date' => $updatedFinishDate,
         ]);
+        Mail::to($appointment->patient->email)->send(new AppointmentUpdatedMail($appointment));
         return response()->json(['success' => true, 'message' => 'Rendez-vous déplacé avec succès']);
     }
 
     public function updateAppointment(Request $request, $id): JsonResponse
     {
-        $appointment = Appointment::findOrFail($id);
-        $request->validate([
-            'update-start_date' => 'required|date|after_or_equal:now',
-            'update-finish_date' => 'required|date|after:update-start_date',
-        ]);
-        $newStartDate = Carbon::parse($request->input('update-start_date'));
-        $newFinishDate = Carbon::parse($request->input('update-finish_date'));
-        $consultation_type = $request->input('update-consultation_type');
-
-        $appointment->update([
-            'start_date' => $newStartDate,
-            'finish_date' => $newFinishDate,
-            'consultation_type' => $consultation_type,
-        ]);
+        $appointment = $this->appointmentService->update($request, $id);
         return response()->json(['success' => true, 'message' => 'Rendez-vous mis à jour avec succès']);
 
     }
